@@ -1,0 +1,278 @@
+/* =========================
+   FOOTER
+   ========================= */
+
+.footer {
+    margin-top: 80px;
+
+    background-color: #0f172a;
+
+    border-top: 1px solid #1e293b;
+
+    color: #94a3b8;
+}
+
+
+/* Contenedor */
+
+.footer-container {
+    max-width: 1280px;
+
+    margin: 0 auto;
+
+    padding: 48px 24px 24px;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================
+   CONTENIDO
+   ========================= */
+.footer-content {
+    display: grid;
+
+    grid-template-columns:
+        1.5fr
+        1fr
+        1fr
+        1.2fr;
+
+    gap: 50px;
+
+    text-align: left;
+}
+
+
+/* =========================
+   MARCA
+   ========================= */
+
+.footer-brand {
+    max-width: 300px;
+}
+
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 0;
+
+    border: none;
+    background: none;
+
+    color: #f1f5f9;
+
+    font-size: 18px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+.footer-logo-icon {
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: #2563eb;
+
+    border-radius: 6px;
+}
+
+
+.footer-brand p {
+    margin: 14px 0 0;
+
+    color: #64748b;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================
+   COLUMNAS
+   ========================= */
+
+.footer-column h3 {
+    margin: 0 0 16px;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.08em;
+}
+
+
+.footer-column ul {
+    list-style: none;
+
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+
+.footer-column button {
+    padding: 0;
+
+    border: none;
+    background: none;
+
+    color: #64748b;
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    transition: color 0.2s ease;
+}
+
+
+.footer-column button:hover {
+    color: #60a5fa;
+}
+
+
+/* =========================
+   CONTACTO
+   ========================= */
+
+.footer-contact {
+    gap: 14px !important;
+}
+
+
+.footer-contact li {
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+
+    font-size: 13px;
+
+    color: #64748b;
+}
+
+
+.footer-contact-label {
+    color: #94a3b8;
+
+    font-size: 12px;
+}
+
+
+/* =========================
+   PARTE INFERIOR
+   ========================= */
+
+.footer-bottom {
+    margin-top: 42px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid #1e293b;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    font-size: 12px;
+
+    color: #475569;
+}
+
+
+.footer-bottom-links {
+    display: flex;
+
+    gap: 20px;
+}
+
+
+.footer-bottom-links button {
+    padding: 0;
+
+    border: none;
+    background: none;
+
+    color: #475569;
+
+    font-size: 12px;
+
+    cursor: pointer;
+
+    transition: color 0.2s ease;
+}
+
+
+.footer-bottom-links button:hover {
+    color: #94a3b8;
+}
+
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 850px) {
+
+    .footer-content {
+        grid-template-columns:
+            1fr 1fr;
+
+        gap: 40px;
+    }
+
+    .footer-brand {
+        max-width: 100%;
+    }
+
+}
+
+
+@media (max-width: 550px) {
+
+    .footer-container {
+        padding: 40px 20px 20px;
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr;
+
+        gap: 32px;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+    .footer-bottom-links {
+        flex-direction: column;
+
+        gap: 8px;
+    }
+
+}

@@ -1,0 +1,105 @@
+import { createContext, useContext, useEffect, useState } from "react";
+import type { ReactNode } from "react";
+import { PRODUCTOS } from "../data/productos";
+
+// Un item del carrito solo guarda id + cantidad.
+// Los datos (precio, stock, imagen) se leen de PRODUCTOS.
+export interface ItemCarrito {
+    id: number;
+    cantidad: number;
+}
+
+interface CarritoContexto {
+    items: ItemCarrito[];
+    agregar: (id: number, cantidad?: number) => void;
+    quitar: (id: number) => void;
+    cambiarCantidad: (id: number, cantidad: number) => void;
+    vaciar: () => void;
+    totalItems: number;
+    subtotal: number;
+}
+
+const CarritoContext = createContext<CarritoContexto | null>(null);
+const CLAVE_STORAGE = "techstore-carrito";
+
+// Lee el carrito guardado en el navegador (si existe y es válido)
+function leerInicial(): ItemCarrito[] {
+    try {
+        const raw = localStorage.getItem(CLAVE_STORAGE);
+        if (!raw) return [];
+        const datos = JSON.parse(raw);
+        if (!Array.isArray(datos)) return [];
+        return datos.filter(
+            (i) =>
+                typeof i?.id === "number" &&
+                typeof i?.cantidad === "number" &&
+                i.cantidad > 0 &&
+                PRODUCTOS.some((p) => p.id === i.id)
+        );
+    } catch {
+        return [];
+    }
+}
+
+export function CarritoProvider({ children }: { children: ReactNode }) {
+    const [items, setItems] = useState<ItemCarrito[]>(leerInicial);
+
+    // Guarda cada cambio en el navegador
+    useEffect(() => {
+        localStorage.setItem(CLAVE_STORAGE, JSON.stringify(items));
+    }, [items]);
+
+    // Agrega un producto respetando su stock
+    const agregar = (id: number, cantidad = 1) => {
+        const prod = PRODUCTOS.find((p) => p.id === id);
+        if (!prod || prod.stock === 0) return;
+        setItems((prev) => {
+            const existe = prev.find((i) => i.id === id);
+            if (existe) {
+                const nueva = Math.min(existe.cantidad + cantidad, prod.stock);
+                return prev.map((i) => (i.id === id ? { ...i, cantidad: nueva } : i));
+            }
+            return [...prev, { id, cantidad: Math.min(cantidad, prod.stock) }];
+        });
+    };
+
+    const quitar = (id: number) => {
+        setItems((prev) => prev.filter((i) => i.id !== id));
+    };
+
+    // Cambia la cantidad (0 o menos = quitar), sin pasar el stock
+    const cambiarCantidad = (id: number, cantidad: number) => {
+        const prod = PRODUCTOS.find((p) => p.id === id);
+        if (!prod) return;
+        if (cantidad <= 0) {
+            quitar(id);
+            return;
+        }
+        const limitada = Math.min(cantidad, prod.stock);
+        setItems((prev) => prev.map((i) => (i.id === id ? { ...i, cantidad: limitada } : i)));
+    };
+
+    const vaciar = () => setItems([]);
+
+    const totalItems = items.reduce((acc, i) => acc + i.cantidad, 0);
+
+    const subtotal = items.reduce((acc, i) => {
+        const prod = PRODUCTOS.find((p) => p.id === i.id);
+        return acc + (prod ? prod.precio * i.cantidad : 0);
+    }, 0);
+
+    return (
+        <CarritoContext.Provider
+            value={{ items, agregar, quitar, cambiarCantidad, vaciar, totalItems, subtotal }}
+        >
+            {children}
+        </CarritoContext.Provider>
+    );
+}
+
+// Hook para usar el carrito en cualquier página o componente
+export function useCarrito(): CarritoContexto {
+    const ctx = useContext(CarritoContext);
+    if (!ctx) throw new Error("useCarrito debe usarse dentro de <CarritoProvider>");
+    return ctx;
+}

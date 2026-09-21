@@ -1,0 +1,161 @@
+.compras-vacio {
+    margin-top: 20px;
+    background-color: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    padding: 56px 24px;
+    text-align: center;
+}
+
+.compras-vacio h3 {
+    margin: 0 0 6px;
+    font-size: 18px;
+    color: #f1f5f9;
+}
+
+.compras-vacio p {
+    margin: 0 0 20px;
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+/* Lista simple: código, fecha, total */
+.pedidos-tabla {
+    margin-top: 20px;
+    background-color: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.pedidos-head,
+.pedidos-fila {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 14px 20px;
+}
+
+.pedidos-head {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #64748b;
+    background-color: #0b1226;
+    border-bottom: 1px solid #1e293b;
+}
+
+.pedidos-fila {
+    border-bottom: 1px solid #1e293b;
+    font-size: 14px;
+}
+
+.pedidos-fila:last-child {
+    border-bottom: none;
+}
+
+.pedidos-fecha {
+    color: #94a3b8;
+}
+
+.pedidos-total {
+    color: #4ade80;
+}
+
+.btn-detalle {
+    padding: 8px 16px;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    background: transparent;
+    color: #cbd5e1;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.btn-detalle:hover {
+    border-color: #2563eb;
+    color: #fff;
+}
+
+/* Modal */
+.modal-fondo {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background-color: rgba(2, 6, 23, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal {
+    width: 100%;
+    max-width: 640px;
+    max-height: 85vh;
+    overflow-y: auto;
+    background-color: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 24px;
+}
+
+.modal-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.modal-head h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.modal-cerrar {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    background-color: #1e293b;
+    color: #94a3b8;
+    font-size: 14px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.modal-cerrar:hover {
+    background-color: #334155;
+    color: #fff;
+}
+
+.modal-total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid #1e293b;
+    font-size: 14px;
+    color: #94a3b8;
+}
+
+.modal-total strong {
+    font-size: 20px;
+    color: #4ade80;
+}
+
+@media (max-width: 600px) {
+    .pedidos-head {
+        display: none;
+    }
+    .pedidos-fila {
+        grid-template-columns: 1fr 1fr;
+    }
+    .btn-detalle {
+        grid-column: span 2;
+    }
+}

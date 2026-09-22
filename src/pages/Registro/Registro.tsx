@@ -6,7 +6,9 @@ import "./Registro.css";
 
 function Registro() {
     const [nombre, setNombre] = useState("");
+    const [apellido, setApellido] = useState("");
     const [correo, setCorreo] = useState("");
+    const [direccion, setDireccion] = useState("");
     const [password, setPassword] = useState("");
     const [confirmar, setConfirmar] = useState("");
     const [verPass, setVerPass] = useState(false);
@@ -31,8 +33,12 @@ function Registro() {
         e.preventDefault();
         setError("");
 
-        if (nombre.trim().length < 3) {
-            setError("Ingresa tu nombre completo");
+        if (nombre.trim().length < 2) {
+            setError("Ingresa tu nombre");
+            return;
+        }
+        if (apellido.trim().length < 2) {
+            setError("Ingresa tu apellido");
             return;
         }
         if (!correo.includes("@") || !correo.includes(".")) {
@@ -58,7 +64,7 @@ function Registro() {
             setError("Ese correo ya está registrado, inicia sesión");
             return;
         }
-        guardados.push({ nombre: nombre.trim(), correo: correo.trim(), password, fechaRegistro: new Date().toLocaleDateString("es-PE") });
+        guardados.push({ nombre: `${nombre.trim()} ${apellido.trim()}`, apellido: apellido.trim(), correo: correo.trim(), direccion: direccion.trim(), password, fechaRegistro: new Date().toLocaleDateString("es-PE") });
         localStorage.setItem("techstore-usuarios", JSON.stringify(guardados));
         login(correo.trim(), password);
         setCreada(true);
@@ -141,15 +147,28 @@ function Registro() {
                             </div>
                         ) : (
                             <form className="registro-form" onSubmit={registrarse}>
-                                <div className="registro-field">
-                                    <label className="registro-label">Nombre completo</label>
-                                    <input
-                                        className="registro-input"
-                                        type="text"
-                                        value={nombre}
-                                        onChange={(e) => setNombre(e.target.value)}
-                                        placeholder="Juan Pérez"
-                                    />
+                                <div className="registro-doble">
+                                    <div className="registro-field">
+                                        <label className="registro-label">Nombre</label>
+                                        <input
+                                            className="registro-input"
+                                            type="text"
+                                            value={nombre}
+                                            onChange={(e) => setNombre(e.target.value)}
+                                            placeholder="Juan"
+                                        />
+                                    </div>
+
+                                    <div className="registro-field">
+                                        <label className="registro-label">Apellido</label>
+                                        <input
+                                            className="registro-input"
+                                            type="text"
+                                            value={apellido}
+                                            onChange={(e) => setApellido(e.target.value)}
+                                            placeholder="Pérez"
+                                        />
+                                    </div>
                                 </div>
 
                                 <div className="registro-field">
@@ -160,6 +179,17 @@ function Registro() {
                                         value={correo}
                                         onChange={(e) => setCorreo(e.target.value)}
                                         placeholder="correo@ejemplo.com"
+                                    />
+                                </div>
+
+                                <div className="registro-field">
+                                    <label className="registro-label">Dirección</label>
+                                    <input
+                                        className="registro-input"
+                                        type="text"
+                                        value={direccion}
+                                        onChange={(e) => setDireccion(e.target.value)}
+                                        placeholder="Av. Los Olivos 456"
                                     />
                                 </div>
 

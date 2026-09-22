@@ -59,12 +59,19 @@ function leerPerfil(id: string, nombreSesion: string, acceso: string): Perfil {
     }
     if (PERFILES_DEMO[id]) return PERFILES_DEMO[id];
     const fecha = new Date().toLocaleDateString("es-PE", { month: "long", year: "numeric" });
+    let direccion = "";
+    try {
+        const lista = JSON.parse(localStorage.getItem("techstore-usuarios") ?? "[]");
+        direccion = lista.find((u: { correo: string }) => u.correo === id)?.direccion ?? "";
+    } catch {
+        // Se queda vacío y se completa con Editar
+    }
     return {
         nombre: nombreSesion,
         correo: acceso,
         telefono: "",
         documento: "",
-        direccion: "",
+        direccion,
         ciudad: "",
         miembroDesde: fecha,
     };

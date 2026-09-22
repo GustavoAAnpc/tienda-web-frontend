@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import ProductCard from "../../components/ProductCard/ProductCard";
-import { PRODUCTOS } from "../../data/productos";
 import { useCarrito } from "../../context/CarritoContext";
+import { useInventario } from "../../context/InventarioContext";
 import { useAuth } from "../../context/AuthContext";
 import "./Carrito.css";
 
@@ -15,16 +15,17 @@ const COSTO_ENVIO = 19;
 function Carrito() {
     const navigate = useNavigate();
     const { items, cambiarCantidad, quitar, vaciar, subtotal } = useCarrito();
+    const { productos, registrarSalida } = useInventario();
     const { usuario } = useAuth();
 
     // Pedido confirmado (solo frontend): guarda el total y muestra éxito
     const [pedidoOk, setPedidoOk] = useState<string | null>(null);
     const [totalPagado, setTotalPagado] = useState(0);
 
-    // Une cada item con los datos de su producto
+    // Une cada item con los datos actuales del inventario
     const lineas = items
-        .map((item) => ({ ...item, producto: PRODUCTOS.find((p) => p.id === item.id)! }))
-        .filter((l) => l.producto);
+        .map((item) => ({ ...item, producto: productos.find((p) => p.id === item.id)! }))
+        .filter((l) => l.producto && l.producto.activo);
 
     const envioGratis = subtotal >= UMBRAL_ENVIO_GRATIS;
     const envio = lineas.length === 0 || envioGratis ? 0 : COSTO_ENVIO;
@@ -37,6 +38,11 @@ function Carrito() {
     const finalizarCompra = () => {
         const numero = `TS-${Date.now().toString().slice(-6)}`;
         const fecha = new Date().toLocaleDateString("es-PE");
+
+        // Venta confirmada: genera la salida automática en Kardex y baja el stock
+        lineas.forEach((l) =>
+            registrarSalida(l.producto.id, l.cantidad, `Venta ${numero}`, usuario?.nombre ?? "Invitado")
+        );
 
         // Guarda el pedido para mostrarlo en Mis compras (solo frontend)
         try {
@@ -65,7 +71,7 @@ function Carrito() {
     };
 
     // Productos sugeridos: los más vendidos que no estén en el carrito
-    const sugeridos = PRODUCTOS.filter((p) => !items.some((i) => i.id === p.id))
+    const sugeridos = productos.filter((p) => p.activo && !items.some((i) => i.id === p.id))
         .sort((a, b) => b.vendidos - a.vendidos)
         .slice(0, 4);
 

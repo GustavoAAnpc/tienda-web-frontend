@@ -7,16 +7,22 @@ import Contactanos from "./pages/Contactanos/Contactanos";
 import Carrito from "./pages/Carrito/Carrito";
 import Detalle from "./pages/Detalle/Detalle";
 import Admin from "./pages/Admin/Admin";
-import Almacen from "./pages/Almacen/Almacen";
+import AlmacenLayout from "./pages/Almacen/AlmacenLayout";
+import AlmacenDashboard from "./pages/Almacen/Dashboard/Dashboard";
+import AlmacenProductos from "./pages/Almacen/Productos/Productos";
+import AlmacenEntradas from "./pages/Almacen/Entradas/Entradas";
+import AlmacenKardex from "./pages/Almacen/Kardex/Kardex";
 import MisCompras from "./pages/MisCompras/MisCompras";
 import MiCuenta from "./pages/MiCuenta/MiCuenta";
 import { CarritoProvider } from "./context/CarritoContext";
 import { AuthProvider } from "./context/AuthContext";
+import { InventarioProvider } from "./context/InventarioContext";
 
 
 function App() {
   return (
     <AuthProvider>
+      <InventarioProvider>
       <CarritoProvider>
         <BrowserRouter>
           <Routes>
@@ -35,8 +41,13 @@ function App() {
             <Route path="/carrito" element={<Carrito />} />
             <Route path="/Admin" element={<Admin />} />
             <Route path="/admin" element={<Admin />} />
-            <Route path="/Almacen" element={<Almacen />} />
-            <Route path="/almacen" element={<Almacen />} />
+            <Route path="/almacen" element={<AlmacenLayout />}>
+              <Route index element={<AlmacenDashboard />} />
+              <Route path="dashboard" element={<AlmacenDashboard />} />
+              <Route path="productos" element={<AlmacenProductos />} />
+              <Route path="entradas" element={<AlmacenEntradas />} />
+              <Route path="kardex" element={<AlmacenKardex />} />
+            </Route>
             <Route path="/MisCompras" element={<MisCompras />} />
             <Route path="/mis-compras" element={<MisCompras />} />
             <Route path="/MiCuenta" element={<MiCuenta />} />
@@ -44,6 +55,7 @@ function App() {
           </Routes>
         </BrowserRouter>
       </CarritoProvider>
+      </InventarioProvider>
     </AuthProvider>
   );
 }

@@ -1,13 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
-import { PRODUCTOS } from "../../data/productos";
+import { useInventario } from "../../context/InventarioContext";
 import { useAuth } from "../../context/AuthContext";
 import "./Admin.css";
 
 function Admin() {
     const navigate = useNavigate();
     const { usuario } = useAuth();
+    const { productos } = useInventario();
 
     // Solo el admin puede ver esta página
     if (!usuario || usuario.rol !== "admin") {
@@ -26,9 +27,9 @@ function Admin() {
         );
     }
 
-    const ventasTotales = PRODUCTOS.reduce((acc, p) => acc + p.precio * p.vendidos, 0);
-    const unidadesVendidas = PRODUCTOS.reduce((acc, p) => acc + p.vendidos, 0);
-    const stockTotal = PRODUCTOS.reduce((acc, p) => acc + p.stock, 0);
+    const ventasTotales = productos.reduce((acc, p) => acc + p.precio * p.vendidos, 0);
+    const unidadesVendidas = productos.reduce((acc, p) => acc + p.vendidos, 0);
+    const stockTotal = productos.reduce((acc, p) => acc + p.stock, 0);
     const pedidos = JSON.parse(localStorage.getItem("techstore-pedidos") ?? "[]");
 
     return (
@@ -77,7 +78,7 @@ function Admin() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {PRODUCTOS.map((p) => (
+                                {productos.map((p) => (
                                     <tr key={p.id}>
                                         <td>{p.nombre}</td>
                                         <td>{p.categoria}</td>

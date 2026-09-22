@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
-import { PRODUCTOS } from "../data/productos";
+import { useInventario } from "./InventarioContext";
 
 // Un item del carrito solo guarda id + cantidad.
 // Los datos (precio, stock, imagen) se leen de PRODUCTOS.
@@ -22,7 +22,7 @@ interface CarritoContexto {
 const CarritoContext = createContext<CarritoContexto | null>(null);
 const CLAVE_STORAGE = "techstore-carrito";
 
-// Lee el carrito guardado en el navegador (si existe y es válido)
+// Lee el carrito guardado (solo valida la forma, el stock se verifica al usar)
 function leerInicial(): ItemCarrito[] {
     try {
         const raw = localStorage.getItem(CLAVE_STORAGE);
@@ -33,8 +33,7 @@ function leerInicial(): ItemCarrito[] {
             (i) =>
                 typeof i?.id === "number" &&
                 typeof i?.cantidad === "number" &&
-                i.cantidad > 0 &&
-                PRODUCTOS.some((p) => p.id === i.id)
+                i.cantidad > 0
         );
     } catch {
         return [];
@@ -43,16 +42,17 @@ function leerInicial(): ItemCarrito[] {
 
 export function CarritoProvider({ children }: { children: ReactNode }) {
     const [items, setItems] = useState<ItemCarrito[]>(leerInicial);
+    const { productos } = useInventario();
 
     // Guarda cada cambio en el navegador
     useEffect(() => {
         localStorage.setItem(CLAVE_STORAGE, JSON.stringify(items));
     }, [items]);
 
-    // Agrega un producto respetando su stock
+    // Agrega un producto respetando su stock actual del inventario
     const agregar = (id: number, cantidad = 1) => {
-        const prod = PRODUCTOS.find((p) => p.id === id);
-        if (!prod || prod.stock === 0) return;
+        const prod = productos.find((p) => p.id === id);
+        if (!prod || !prod.activo || prod.stock === 0) return;
         setItems((prev) => {
             const existe = prev.find((i) => i.id === id);
             if (existe) {
@@ -69,7 +69,7 @@ export function CarritoProvider({ children }: { children: ReactNode }) {
 
     // Cambia la cantidad (0 o menos = quitar), sin pasar el stock
     const cambiarCantidad = (id: number, cantidad: number) => {
-        const prod = PRODUCTOS.find((p) => p.id === id);
+        const prod = productos.find((p) => p.id === id);
         if (!prod) return;
         if (cantidad <= 0) {
             quitar(id);
@@ -84,7 +84,7 @@ export function CarritoProvider({ children }: { children: ReactNode }) {
     const totalItems = items.reduce((acc, i) => acc + i.cantidad, 0);
 
     const subtotal = items.reduce((acc, i) => {
-        const prod = PRODUCTOS.find((p) => p.id === i.id);
+        const prod = productos.find((p) => p.id === i.id);
         return acc + (prod ? prod.precio * i.cantidad : 0);
     }, 0);
 

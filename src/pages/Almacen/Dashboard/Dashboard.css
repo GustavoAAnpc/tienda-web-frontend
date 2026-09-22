@@ -1,0 +1,107 @@
+.movs {
+    display: flex;
+    flex-direction: column;
+    background-color: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.mov {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid #1e293b;
+    font-size: 13px;
+}
+
+.mov:last-child {
+    border-bottom: none;
+}
+
+.mov-prod {
+    flex: 1;
+    color: #e2e8f0;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mov-fecha {
+    color: #64748b;
+    font-size: 12px;
+}
+
+.pill-tipo {
+    font-size: 11px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.pill-tipo.in {
+    background-color: rgba(34, 197, 94, 0.12);
+    color: #4ade80;
+}
+
+.pill-tipo.out {
+    background-color: rgba(239, 68, 68, 0.12);
+    color: #f87171;
+}
+
+.cant-in {
+    color: #4ade80;
+}
+
+.cant-out {
+    color: #f87171;
+}
+
+.vacio {
+    padding: 16px;
+    color: #64748b;
+    font-size: 13px;
+    margin: 0;
+}
+
+.accesos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.accesos button {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: left;
+    padding: 18px;
+    background-color: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.accesos button:hover {
+    border-color: #2563eb;
+}
+
+.accesos strong {
+    font-size: 15px;
+    color: #f1f5f9;
+}
+
+.accesos span {
+    font-size: 12px;
+    color: #64748b;
+}
+
+@media (max-width: 700px) {
+    .accesos {
+        grid-template-columns: 1fr;
+    }
+}

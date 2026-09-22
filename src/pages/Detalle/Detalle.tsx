@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import ProductCard from "../../components/ProductCard/ProductCard";
-import { PRODUCTOS } from "../../data/productos";
+import { useInventario } from "../../context/InventarioContext";
 import { useCarrito } from "../../context/CarritoContext";
 import "./Detalle.css";
 
@@ -13,7 +13,8 @@ function Detalle() {
     const { agregar } = useCarrito();
     const [cantidad, setCantidad] = useState(1);
 
-    const producto = PRODUCTOS.find((p) => p.id === Number(id));
+    const { productos } = useInventario();
+    const producto = productos.find((p) => p.id === Number(id));
 
     if (!producto) {
         return (
@@ -31,8 +32,8 @@ function Detalle() {
     }
 
     const agotado = producto.stock === 0;
-    const relacionados = PRODUCTOS.filter(
-        (p) => p.categoria === producto.categoria && p.id !== producto.id
+    const relacionados = productos.filter(
+        (p) => p.activo && p.categoria === producto.categoria && p.id !== producto.id
     ).slice(0, 4);
 
     const subir = () => setCantidad((c) => Math.min(c + 1, producto.stock));

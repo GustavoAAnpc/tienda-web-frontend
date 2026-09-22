@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import ProductCard from "../../components/ProductCard/ProductCard";
-import { PRODUCTOS, CATEGORIAS } from "../../data/productos";
+import { CATEGORIAS } from "../../data/productos";
+import { useInventario } from "../../context/InventarioContext";
 import "./inicio.css";
 
 // Iconos SVG estilo línea (mismo trazo que el Header).
@@ -81,14 +82,16 @@ const ICONOS_BENEFICIO = {
 function Inicio() {
 
     const navigate = useNavigate();
+    const { productos } = useInventario();
 
-    // Productos destacados: solo productos disponibles
-    const destacados = PRODUCTOS
-        .filter((p) => p.stock > 0)
+    // Productos destacados: activos y con stock
+    const destacados = productos
+        .filter((p) => p.activo && p.stock > 0)
         .slice(0, 4);
 
     // Productos más vendidos
-    const masVendidos = [...PRODUCTOS]
+    const masVendidos = [...productos]
+        .filter((p) => p.activo)
         .sort((a, b) => b.vendidos - a.vendidos)
         .slice(0, 4);
 

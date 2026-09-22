@@ -1,0 +1,294 @@
+/* Layout del panel de Almacén (mismos colores de la tienda) */
+.almacen-shell {
+    min-height: 100vh;
+    display: flex;
+    background-color: #020617;
+    color: #f1f5f9;
+    text-align: left;
+}
+
+/* Barra lateral */
+.almacen-sidebar {
+    width: 230px;
+    flex-shrink: 0;
+    background-color: #0f172a;
+    border-right: 1px solid #1e293b;
+    padding: 20px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+.almacen-marca {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: none;
+    background: none;
+    color: #f1f5f9;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 6px 10px 16px;
+}
+
+.almacen-marca-icon {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2563eb;
+    border-radius: 7px;
+}
+
+.almacen-seccion {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #475569;
+    padding: 12px 10px 4px;
+}
+
+.almacen-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.almacen-nav a {
+    padding: 10px 12px;
+    border-radius: 8px;
+    color: #94a3b8;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.almacen-nav a:hover {
+    background-color: #1e293b;
+    color: #f1f5f9;
+}
+
+.almacen-nav a.active {
+    background-color: #2563eb;
+    color: #fff;
+}
+
+/* Contenido */
+.almacen-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.almacen-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 28px;
+    background-color: #0f172a;
+    border-bottom: 1px solid #1e293b;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.almacen-topbar strong {
+    font-size: 15px;
+}
+
+.almacen-usuario {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    color: #94a3b8;
+}
+
+.almacen-usuario button {
+    padding: 7px 14px;
+    border: 1px solid #334155;
+    border-radius: 7px;
+    background: transparent;
+    color: #cbd5e1;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.almacen-usuario button:hover {
+    border-color: #2563eb;
+    color: #fff;
+}
+
+.almacen-usuario .btn-icono {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.almacen-contenido {
+    flex: 1;
+    padding: 28px;
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.almacen-contenido h1 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.almacen-sub {
+    margin: 6px 0 0;
+    font-size: 13px;
+    color: #64748b;
+}
+
+/* Acceso denegado */
+.almacen-denegado {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: #020617;
+    color: #f1f5f9;
+}
+
+.almacen-denegado p {
+    color: #64748b;
+}
+
+.almacen-denegado button {
+    margin-top: 12px;
+    padding: 10px 22px;
+    border: none;
+    border-radius: 8px;
+    background-color: #2563eb;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* Tarjetas y tablas compartidas del panel */
+.panel-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.panel-card {
+    background-color: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.panel-card span {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.panel-card small {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.panel-card strong {
+    font-size: 22px;
+}
+
+.panel-section {
+    margin-top: 28px;
+}
+
+.panel-section h2 {
+    margin: 0 0 12px;
+    font-size: 17px;
+}
+
+.tabla-wrap {
+    overflow-x: auto;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+}
+
+.tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    background-color: #0f172a;
+}
+
+.tabla th,
+.tabla td {
+    padding: 12px 14px;
+    text-align: left;
+    border-bottom: 1px solid #1e293b;
+    white-space: nowrap;
+}
+
+.tabla th {
+    color: #94a3b8;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background-color: #0b1226;
+}
+
+.tabla tr:last-child td {
+    border-bottom: none;
+}
+
+.tabla td {
+    color: #cbd5e1;
+}
+
+@media (max-width: 900px) {
+    .almacen-sidebar {
+        width: 190px;
+    }
+    .panel-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 700px) {
+    .almacen-shell {
+        flex-direction: column;
+    }
+    .almacen-sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+    }
+    .almacen-nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    .almacen-contenido {
+        padding: 20px 16px;
+    }
+    .panel-cards {
+        grid-template-columns: 1fr;
+    }
+}

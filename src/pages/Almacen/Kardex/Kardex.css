@@ -1,0 +1,182 @@
+/* Resumen de movimientos */
+.kardex-resumen {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0 14px;
+    flex-wrap: wrap;
+}
+
+.chip {
+    font-size: 14px;
+    font-weight: 700;
+    padding: 9px 18px;
+    border-radius: 999px;
+}
+
+.chip.in {
+    background-color: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.35);
+    color: #4ade80;
+}
+
+.chip.out {
+    background-color: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    color: #f87171;
+}
+
+.chip.total {
+    background-color: rgba(37, 99, 235, 0.12);
+    border: 1px solid rgba(37, 99, 235, 0.35);
+    color: #60a5fa;
+}
+
+/* Tabla más grande para leer bien sobre el fondo oscuro */
+.kardex-grande .tabla {
+    font-size: 14px;
+}
+
+.kardex-grande .tabla th,
+.kardex-grande .tabla td {
+    padding: 15px 18px;
+}
+
+.kardex-grande .tabla td {
+    color: #e2e8f0;
+}
+
+/* Producto y Motivo pueden partirse en 2 líneas: así no hay scroll horizontal */
+.kardex-grande .tabla th:nth-child(2),
+.kardex-grande .tabla td:nth-child(2),
+.kardex-grande .tabla th:nth-child(7),
+.kardex-grande .tabla td:nth-child(7) {
+    white-space: normal;
+    min-width: 170px;
+}
+
+/* Paginación */
+.paginacion {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+}
+
+.pag-info {
+    font-size: 13px;
+    color: #64748b;
+}
+
+.pag-botones {
+    display: flex;
+    gap: 6px;
+}
+
+.pag-botones button {
+    min-width: 36px;
+    height: 36px;
+    padding: 0 10px;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    background-color: #0f172a;
+    color: #cbd5e1;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.pag-botones button:hover:not(:disabled) {
+    border-color: #2563eb;
+    color: #fff;
+}
+
+.pag-botones button.activo {
+    background-color: #2563eb;
+    border-color: #2563eb;
+    color: #fff;
+}
+
+.pag-botones button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.kardex-filtros {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0 14px;
+    flex-wrap: wrap;
+}
+
+.kardex-filtros select,
+.kardex-filtros input {
+    height: 40px;
+    padding: 0 12px;
+    background-color: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    color: #f1f5f9;
+    font-size: 13px;
+    outline: none;
+    color-scheme: dark;
+}
+
+.kardex-filtros select:focus,
+.kardex-filtros input:focus {
+    border-color: #2563eb;
+}
+
+.btn-limpiar {
+    height: 40px;
+    padding: 0 18px;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    background: transparent;
+    color: #cbd5e1;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-limpiar:hover {
+    border-color: #2563eb;
+    color: #fff;
+}
+
+.pill-tipo {
+    font-size: 11px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.pill-tipo.in {
+    background-color: rgba(34, 197, 94, 0.12);
+    color: #4ade80;
+}
+
+.pill-tipo.out {
+    background-color: rgba(239, 68, 68, 0.12);
+    color: #f87171;
+}
+
+.cant-in {
+    color: #4ade80;
+    font-weight: 700;
+}
+
+.cant-out {
+    color: #f87171;
+    font-weight: 700;
+}
+
+.tabla-vacia {
+    padding: 20px;
+    text-align: center;
+    color: #64748b;
+    font-size: 13px;
+    margin: 0;
+}

@@ -2,7 +2,8 @@ import { useState, useMemo } from "react";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import ProductCard from "../../components/ProductCard/ProductCard";
-import { PRODUCTOS, CATEGORIAS } from "../../data/productos";
+import { CATEGORIAS } from "../../data/productos";
+import { useInventario } from "../../context/InventarioContext";
 import "./Productos.css";
 
 // Opciones de orden disponibles en el select
@@ -16,12 +17,15 @@ function Productos() {
     const [orden, setOrden] = useState<Orden>("relevancia");
     const [busqueda, setBusqueda] = useState("");
 
+    // Productos del inventario (la tienda solo muestra los activos)
+    const { productos } = useInventario();
+
     // Nombres de categoría para las píldoras
     const nombresCategorias = [FILTRO_TODOS, ...CATEGORIAS.map((c) => c.nombre)];
 
     // Lista filtrada + ordenada (se recalcula solo si cambia un filtro)
     const filtrados = useMemo(() => {
-        let lista = [...PRODUCTOS];
+        let lista = productos.filter((p) => p.activo);
 
         // 1. Filtrar por categoría
         if (categoria !== FILTRO_TODOS) {
@@ -52,7 +56,7 @@ function Productos() {
             default:
                 return lista;
         }
-    }, [categoria, orden, busqueda]);
+    }, [productos, categoria, orden, busqueda]);
 
     const limpiarFiltros = () => {
         setBusqueda("");
@@ -102,7 +106,7 @@ function Productos() {
                         onChange={(e) => setOrden(e.target.value as Orden)}
                         className="productos-select"
                     >
-                        <option value="relevancia">Ordenar: Relevancia</option>
+                        <option value="relevancia">Todos</option>
                         <option value="precio-asc">Precio: Menor a mayor</option>
                         <option value="precio-desc">Precio: Mayor a menor</option>
                         <option value="popular">Más vendidos</option>

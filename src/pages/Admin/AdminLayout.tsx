@@ -1,19 +1,19 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import "./AlmacenLayout.css";
+import "./AdminLayout.css";
 
-// Estructura del área de Almacén: barra lateral + contenido.
-// Las subpáginas (Dashboard, Productos, Entradas, Kardex) se muestran en <Outlet />.
-function AlmacenLayout() {
+// Estructura del área de Administrador: barra lateral + contenido.
+// Las secciones (Dashboard, Ventas, Productos, Usuarios, Reportes) se muestran en <Outlet />.
+function AdminLayout() {
     const navigate = useNavigate();
     const { usuario, logout } = useAuth();
 
-    // Solo Almacén y Admin pueden entrar aquí
-    if (!usuario || (usuario.rol !== "almacen" && usuario.rol !== "admin")) {
+    // Solo el admin puede entrar aquí
+    if (!usuario || usuario.rol !== "admin") {
         return (
-            <div className="almacen-denegado">
+            <div className="admin-denegado">
                 <h1>Acceso denegado</h1>
-                <p>Ingresa con la cuenta almacen / 123.</p>
+                <p>Ingresa con la cuenta admin / 123.</p>
                 <button onClick={() => navigate("/login")}>Ir al login</button>
             </div>
         );
@@ -25,11 +25,11 @@ function AlmacenLayout() {
     };
 
     return (
-        <div className="almacen-shell">
+        <div className="admin-shell">
             {/* Barra lateral */}
-            <aside className="almacen-sidebar">
-                <button className="almacen-marca" onClick={() => navigate("/inicio")}>
-                    <span className="almacen-marca-icon">
+            <aside className="admin-sidebar">
+                <button className="admin-marca" onClick={() => navigate("/inicio")}>
+                    <span className="admin-marca-icon">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                             <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
                         </svg>
@@ -37,10 +37,10 @@ function AlmacenLayout() {
                     <span>TechStore</span>
                 </button>
 
-                <span className="almacen-seccion">INVENTARIO</span>
+                <span className="admin-seccion">ADMINISTRACIÓN</span>
 
-                <nav className="almacen-nav">
-                    <NavLink to="/almacen" end>
+                <nav className="admin-nav">
+                    <NavLink to="/admin" end>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <rect x="3" y="3" width="7" height="7" rx="1" />
                             <rect x="14" y="3" width="7" height="7" rx="1" />
@@ -49,7 +49,15 @@ function AlmacenLayout() {
                         </svg>
                         Dashboard
                     </NavLink>
-                    <NavLink to="/almacen/productos">
+                    <NavLink to="/admin/ventas">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                            <line x1="3" y1="6" x2="21" y2="6" />
+                            <path d="M16 10a4 4 0 0 1-8 0" />
+                        </svg>
+                        Ventas
+                    </NavLink>
+                    <NavLink to="/admin/productos">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M21 8l-9-5-9 5v8l9 5 9-5V8z" />
                             <line x1="3" y1="8" x2="12" y2="13" />
@@ -58,26 +66,28 @@ function AlmacenLayout() {
                         </svg>
                         Productos
                     </NavLink>
-                    <NavLink to="/almacen/entradas">
+                    <NavLink to="/admin/usuarios">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <circle cx="12" cy="12" r="10" />
-                            <line x1="12" y1="8" x2="12" y2="16" />
-                            <line x1="8" y1="12" x2="16" y2="12" />
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                         </svg>
-                        Registrar entrada
+                        Usuarios
                     </NavLink>
-                    <NavLink to="/almacen/kardex">
+                    <NavLink to="/admin/reportes">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                            <line x1="18" y1="20" x2="18" y2="10" />
+                            <line x1="12" y1="20" x2="12" y2="4" />
+                            <line x1="6" y1="20" x2="6" y2="14" />
                         </svg>
-                        Kardex
+                        Reportes
                     </NavLink>
                 </nav>
 
-                <span className="almacen-seccion">TIENDA</span>
+                <span className="admin-seccion">TIENDA</span>
 
-                <nav className="almacen-nav">
+                <nav className="admin-nav">
                     <NavLink to="/inicio">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <circle cx="9" cy="21" r="1" />
@@ -90,10 +100,10 @@ function AlmacenLayout() {
             </aside>
 
             {/* Contenido */}
-            <div className="almacen-main">
-                <header className="almacen-topbar">
-                    <strong>Panel de Almacén</strong>
-                    <div className="almacen-usuario">
+            <div className="admin-main">
+                <header className="admin-topbar">
+                    <strong>Panel Administrador</strong>
+                    <div className="admin-usuario">
                         <button className="btn-icono" onClick={() => navigate("/mi-cuenta")} title="Mi cuenta">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
@@ -110,7 +120,7 @@ function AlmacenLayout() {
                     </div>
                 </header>
 
-                <main className="almacen-contenido">
+                <main className="admin-contenido">
                     <Outlet />
                 </main>
             </div>
@@ -118,4 +128,4 @@ function AlmacenLayout() {
     );
 }
 
-export default AlmacenLayout;
+export default AdminLayout;

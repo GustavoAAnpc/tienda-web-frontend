@@ -47,23 +47,23 @@ function estadoInicial(): { productos: ProductoInv[]; movimientos: Movimiento[] 
     const nombre = (id: number) => productos.find((p) => p.id === id)!.nombre;
 
     const movimientos: Movimiento[] = [
-        { id: "seed-01", fecha: haceDias(1), productoId: 7, producto: nombre(7), tipo: "Entrada", cantidad: 6, stockAnterior: 0, stockNuevo: stock(7), motivo: "Primer ingreso", usuario: "Carlos (Almacén)" },
+        { id: "seed-01", fecha: haceDias(1), productoId: 7, producto: nombre(7), tipo: "Entrada", cantidad: 6, stockAnterior: 0, stockNuevo: stock(7), motivo: "Primer ingreso", usuario: "Carlos" },
         { id: "seed-02", fecha: haceDias(1), productoId: 3, producto: nombre(3), tipo: "Salida", cantidad: 15, stockAnterior: 15, stockNuevo: stock(3), motivo: "Venta #VTA-005", usuario: "Sistema" },
-        { id: "seed-03", fecha: haceDias(2), productoId: 3, producto: nombre(3), tipo: "Entrada", cantidad: 15, stockAnterior: 0, stockNuevo: 15, motivo: "Ingreso de mercadería", usuario: "Carlos (Almacén)" },
+        { id: "seed-03", fecha: haceDias(2), productoId: 3, producto: nombre(3), tipo: "Entrada", cantidad: 15, stockAnterior: 0, stockNuevo: 15, motivo: "Ingreso de mercadería", usuario: "Carlos" },
         { id: "seed-04", fecha: haceDias(2), productoId: 8, producto: nombre(8), tipo: "Salida", cantidad: 3, stockAnterior: 21, stockNuevo: stock(8), motivo: "Venta #VTA-004", usuario: "Sistema" },
         { id: "seed-05", fecha: haceDias(3), productoId: 4, producto: nombre(4), tipo: "Salida", cantidad: 2, stockAnterior: 10, stockNuevo: stock(4), motivo: "Venta #VTA-004", usuario: "Sistema" },
         { id: "seed-06", fecha: haceDias(4), productoId: 1, producto: nombre(1), tipo: "Salida", cantidad: 4, stockAnterior: 24, stockNuevo: stock(1), motivo: "Venta #VTA-003", usuario: "Sistema" },
         { id: "seed-07", fecha: haceDias(5), productoId: 2, producto: nombre(2), tipo: "Salida", cantidad: 8, stockAnterior: 20, stockNuevo: stock(2), motivo: "Venta #VTA-003", usuario: "Sistema" },
-        { id: "seed-08", fecha: haceDias(6), productoId: 4, producto: nombre(4), tipo: "Entrada", cantidad: 10, stockAnterior: 0, stockNuevo: 10, motivo: "Ingreso de mercadería", usuario: "Carlos (Almacén)" },
+        { id: "seed-08", fecha: haceDias(6), productoId: 4, producto: nombre(4), tipo: "Entrada", cantidad: 10, stockAnterior: 0, stockNuevo: 10, motivo: "Ingreso de mercadería", usuario: "Carlos" },
         { id: "seed-09", fecha: haceDias(6), productoId: 5, producto: nombre(5), tipo: "Salida", cantidad: 5, stockAnterior: 20, stockNuevo: stock(5), motivo: "Venta #VTA-002", usuario: "Sistema" },
         { id: "seed-10", fecha: haceDias(7), productoId: 8, producto: nombre(8), tipo: "Salida", cantidad: 4, stockAnterior: 25, stockNuevo: 21, motivo: "Venta #VTA-002", usuario: "Sistema" },
         { id: "seed-11", fecha: haceDias(8), productoId: 1, producto: nombre(1), tipo: "Salida", cantidad: 6, stockAnterior: 30, stockNuevo: 24, motivo: "Venta #VTA-001", usuario: "Sistema" },
         { id: "seed-12", fecha: haceDias(9), productoId: 6, producto: nombre(6), tipo: "Salida", cantidad: 10, stockAnterior: 60, stockNuevo: stock(6), motivo: "Venta #VTA-001", usuario: "Sistema" },
-        { id: "seed-13", fecha: haceDias(10), productoId: 2, producto: nombre(2), tipo: "Entrada", cantidad: 20, stockAnterior: 0, stockNuevo: 20, motivo: "Primer ingreso", usuario: "Carlos (Almacén)" },
-        { id: "seed-14", fecha: haceDias(11), productoId: 1, producto: nombre(1), tipo: "Entrada", cantidad: 30, stockAnterior: 0, stockNuevo: 30, motivo: "Primer ingreso", usuario: "Carlos (Almacén)" },
-        { id: "seed-15", fecha: haceDias(12), productoId: 5, producto: nombre(5), tipo: "Entrada", cantidad: 20, stockAnterior: 0, stockNuevo: 20, motivo: "Primer ingreso", usuario: "Carlos (Almacén)" },
-        { id: "seed-16", fecha: haceDias(13), productoId: 8, producto: nombre(8), tipo: "Entrada", cantidad: 25, stockAnterior: 0, stockNuevo: 25, motivo: "Primer ingreso", usuario: "Carlos (Almacén)" },
-        { id: "seed-17", fecha: haceDias(14), productoId: 6, producto: nombre(6), tipo: "Entrada", cantidad: 60, stockAnterior: 0, stockNuevo: 60, motivo: "Primer ingreso", usuario: "Carlos (Almacén)" },
+        { id: "seed-13", fecha: haceDias(10), productoId: 2, producto: nombre(2), tipo: "Entrada", cantidad: 20, stockAnterior: 0, stockNuevo: 20, motivo: "Primer ingreso", usuario: "Carlos" },
+        { id: "seed-14", fecha: haceDias(11), productoId: 1, producto: nombre(1), tipo: "Entrada", cantidad: 30, stockAnterior: 0, stockNuevo: 30, motivo: "Primer ingreso", usuario: "Carlos" },
+        { id: "seed-15", fecha: haceDias(12), productoId: 5, producto: nombre(5), tipo: "Entrada", cantidad: 20, stockAnterior: 0, stockNuevo: 20, motivo: "Primer ingreso", usuario: "Carlos" },
+        { id: "seed-16", fecha: haceDias(13), productoId: 8, producto: nombre(8), tipo: "Entrada", cantidad: 25, stockAnterior: 0, stockNuevo: 25, motivo: "Primer ingreso", usuario: "Carlos" },
+        { id: "seed-17", fecha: haceDias(14), productoId: 6, producto: nombre(6), tipo: "Entrada", cantidad: 60, stockAnterior: 0, stockNuevo: 60, motivo: "Primer ingreso", usuario: "Carlos" },
     ];
 
     return { productos, movimientos };

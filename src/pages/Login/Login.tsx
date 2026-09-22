@@ -34,15 +34,13 @@ function Login() {
         }
 
         const res = login(acceso, password);
-        if (!res.ok) {
+        if (!res.ok || !res.usuario) {
             setError(res.error ?? "No se pudo iniciar sesión");
             return;
         }
 
-        // Lee la sesión recién guardada para redirigir por rol
-        const id = localStorage.getItem("techstore-sesion") ?? "";
-        const rol: Rol = id === "admin" ? "admin" : id === "almacen" ? "almacen" : "cliente";
-        navigate(RUTA_POR_ROL[rol]);
+        // Redirige según el rol del usuario que acaba de ingresar
+        navigate(RUTA_POR_ROL[res.usuario.rol]);
     }
 
     // Rellena el formulario con una cuenta demo

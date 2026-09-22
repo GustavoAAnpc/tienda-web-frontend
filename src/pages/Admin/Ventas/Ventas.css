@@ -1,0 +1,120 @@
+.ventas-filtros {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0 14px;
+    flex-wrap: wrap;
+}
+
+.ventas-filtros input,
+.ventas-filtros select {
+    height: 40px;
+    padding: 0 12px;
+    background-color: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    color: #f1f5f9;
+    font-size: 13px;
+    outline: none;
+    color-scheme: dark;
+}
+
+.ventas-filtros input:first-child {
+    flex: 1;
+    min-width: 180px;
+}
+
+.ventas-filtros input:focus,
+.ventas-filtros select:focus {
+    border-color: #2563eb;
+}
+
+.btn-mini {
+    padding: 7px 12px;
+    border: none;
+    border-radius: 7px;
+    background-color: #2563eb;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.btn-mini:hover {
+    background-color: #3b82f6;
+}
+
+.tabla-vacia {
+    padding: 20px;
+    text-align: center;
+    color: #64748b;
+    font-size: 13px;
+    margin: 0;
+}
+
+.modal-fondo {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background-color: rgba(2, 6, 23, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal {
+    width: 100%;
+    max-width: 600px;
+    max-height: 85vh;
+    overflow-y: auto;
+    background-color: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 24px;
+}
+
+.modal-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.modal-head h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.modal-cerrar {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    background-color: #1e293b;
+    color: #94a3b8;
+    font-size: 14px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.modal-cerrar:hover {
+    background-color: #334155;
+    color: #fff;
+}
+
+.modal-total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid #1e293b;
+    font-size: 14px;
+    color: #94a3b8;
+}
+
+.modal-total strong {
+    font-size: 20px;
+    color: #4ade80;
+}

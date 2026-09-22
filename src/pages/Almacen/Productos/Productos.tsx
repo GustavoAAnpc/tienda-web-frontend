@@ -79,7 +79,6 @@ function Productos() {
     return (
         <>
             <h1>Productos</h1>
-            <p className="almacen-sub">Si un producto ya tiene ventas, no se borra: se desactiva.</p>
 
             <div className="prod-toolbar">
                 <input

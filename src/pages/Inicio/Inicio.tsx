@@ -7,8 +7,6 @@ import { CATEGORIAS } from "../../data/productos";
 import { useInventario } from "../../context/InventarioContext";
 import "./inicio.css";
 
-// Iconos SVG estilo línea (mismo trazo que el Header).
-// Se usan en vez de emojis para un acabado más profesional.
 const ICONOS_CATEGORIA: Record<string, ReactNode> = {
     smartphone: (
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

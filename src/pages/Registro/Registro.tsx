@@ -58,7 +58,7 @@ function Registro() {
             setError("Ese correo ya está registrado, inicia sesión");
             return;
         }
-        guardados.push({ nombre: nombre.trim(), correo: correo.trim(), password });
+        guardados.push({ nombre: nombre.trim(), correo: correo.trim(), password, fechaRegistro: new Date().toLocaleDateString("es-PE") });
         localStorage.setItem("techstore-usuarios", JSON.stringify(guardados));
         login(correo.trim(), password);
         setCreada(true);

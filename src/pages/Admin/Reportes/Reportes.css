@@ -1,0 +1,173 @@
+.rep-periodos {
+    display: flex;
+    gap: 8px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+.rep-periodos button {
+    padding: 9px 18px;
+    border: 1px solid #334155;
+    border-radius: 999px;
+    background-color: #0f172a;
+    color: #94a3b8;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.rep-periodos button.activo {
+    background-color: #2563eb;
+    border-color: #2563eb;
+    color: #fff;
+}
+
+.rep-periodos input {
+    height: 38px;
+    padding: 0 12px;
+    background-color: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    color: #f1f5f9;
+    font-size: 13px;
+    outline: none;
+    color-scheme: dark;
+}
+
+.grafico {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+    background: linear-gradient(180deg, #0f172a, #0b1226);
+    border: 1px solid #1e293b;
+    border-radius: 8px;
+    padding: 24px 18px 16px;
+    overflow-x: auto;
+}
+
+.barra-col {
+    flex: 1;
+    min-width: 52px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    border-radius: 4px;
+    padding: 4px 2px;
+    transition: background-color 0.2s ease;
+}
+
+.barra-col:hover {
+    background-color: rgba(37, 99, 235, 0.08);
+}
+
+.barra-val {
+    font-size: 11px;
+    color: #94a3b8;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.barra-col:hover .barra-val {
+    color: #e2e8f0;
+}
+
+.barra-track {
+    width: 100%;
+    max-width: 56px;
+    height: 150px;
+    border-radius: 4px;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    background-color: rgba(2, 6, 23, 0.6);
+    background-image: repeating-linear-gradient(
+        180deg,
+        transparent 0,
+        transparent 34px,
+        rgba(51, 65, 85, 0.5) 34px,
+        rgba(51, 65, 85, 0.5) 35px
+    );
+}
+
+.barra-fill {
+    width: 100%;
+    background: linear-gradient(180deg, #93c5fd 0%, #2563eb 70%, #1e40af 100%);
+    border-radius: 3px 3px 0 0;
+    border-top: 2px solid rgba(147, 197, 253, 0.8);
+    min-height: 3px;
+    transform-origin: bottom;
+    animation: crecer 0.5s ease;
+    transition: filter 0.2s ease;
+}
+
+.barra-col:hover .barra-fill {
+    filter: brightness(1.25);
+}
+
+@keyframes crecer {
+    from {
+        transform: scaleY(0);
+    }
+    to {
+        transform: scaleY(1);
+    }
+}
+
+.barra-dia {
+    font-size: 11px;
+    color: #64748b;
+    font-weight: 600;
+}
+
+.rep-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+.ranking {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background-color: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 18px;
+}
+
+.rank-fila {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 10px;
+    align-items: center;
+    font-size: 13px;
+}
+
+.rank-nombre {
+    color: #e2e8f0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.rank-barra {
+    height: 8px;
+    background-color: #1e293b;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.rank-barra div {
+    height: 100%;
+    background: linear-gradient(90deg, #2563eb, #60a5fa);
+    border-radius: 999px;
+}
+
+@media (max-width: 900px) {
+    .rep-grid {
+        grid-template-columns: 1fr;
+    }
+}

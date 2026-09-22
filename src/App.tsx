@@ -6,7 +6,12 @@ import Productos from "./pages/Productos/Productos";
 import Contactanos from "./pages/Contactanos/Contactanos";
 import Carrito from "./pages/Carrito/Carrito";
 import Detalle from "./pages/Detalle/Detalle";
-import Admin from "./pages/Admin/Admin";
+import AdminLayout from "./pages/Admin/AdminLayout";
+import AdminDashboard from "./pages/Admin/Dashboard/Dashboard";
+import AdminVentas from "./pages/Admin/Ventas/Ventas";
+import AdminProductos from "./pages/Admin/Productos/Productos";
+import AdminUsuarios from "./pages/Admin/Usuarios/Usuarios";
+import AdminReportes from "./pages/Admin/Reportes/Reportes";
 import AlmacenLayout from "./pages/Almacen/AlmacenLayout";
 import AlmacenDashboard from "./pages/Almacen/Dashboard/Dashboard";
 import AlmacenProductos from "./pages/Almacen/Productos/Productos";
@@ -39,8 +44,22 @@ function App() {
             <Route path="/contactanos" element={<Contactanos />} />
             <Route path="/Carrito" element={<Carrito />} />
             <Route path="/carrito" element={<Carrito />} />
-            <Route path="/Admin" element={<Admin />} />
-            <Route path="/admin" element={<Admin />} />
+            <Route path="/Admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="ventas" element={<AdminVentas />} />
+              <Route path="productos" element={<AdminProductos />} />
+              <Route path="usuarios" element={<AdminUsuarios />} />
+              <Route path="reportes" element={<AdminReportes />} />
+            </Route>
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="ventas" element={<AdminVentas />} />
+              <Route path="productos" element={<AdminProductos />} />
+              <Route path="usuarios" element={<AdminUsuarios />} />
+              <Route path="reportes" element={<AdminReportes />} />
+            </Route>
             <Route path="/almacen" element={<AlmacenLayout />}>
               <Route index element={<AlmacenDashboard />} />
               <Route path="dashboard" element={<AlmacenDashboard />} />

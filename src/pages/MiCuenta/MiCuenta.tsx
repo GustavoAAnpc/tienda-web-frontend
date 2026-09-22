@@ -31,8 +31,8 @@ const PERFILES_DEMO: Record<string, Perfil> = {
         miembroDesde: "Marzo 2024",
     },
     admin: {
-        nombre: "Diego Ramos",
-        correo: "diego.admin@techstore.com",
+        nombre: "Luis Fernández",
+        correo: "luis.admin@techstore.com",
         telefono: "+51 999 111 222",
         documento: "DNI 45217896",
         direccion: "Av. Garcilaso 1234, Of. 501",

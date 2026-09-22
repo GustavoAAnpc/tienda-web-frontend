@@ -1,0 +1,94 @@
+.prodadm-filtros {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0 16px;
+    flex-wrap: wrap;
+}
+
+.prodadm-filtros input,
+.prodadm-filtros select {
+    height: 40px;
+    padding: 0 12px;
+    background-color: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    color: #f1f5f9;
+    font-size: 13px;
+    outline: none;
+}
+
+.prodadm-filtros input:first-child {
+    flex: 1;
+    min-width: 180px;
+}
+
+.prodadm-filtros input:focus,
+.prodadm-filtros select:focus {
+    border-color: #2563eb;
+}
+
+.prodadm-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+.prodadm-card {
+    display: flex;
+    gap: 14px;
+    background-color: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 14px;
+}
+
+.prodadm-card img {
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    border-radius: 10px;
+    background-color: #1e293b;
+    flex-shrink: 0;
+}
+
+.prodadm-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+    align-items: flex-start;
+}
+
+.prodadm-cat {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #60a5fa;
+    font-weight: 600;
+}
+
+.prodadm-info strong {
+    font-size: 14px;
+}
+
+.prodadm-precio {
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.prodadm-stock {
+    font-size: 12px;
+    color: #64748b;
+}
+
+@media (max-width: 1000px) {
+    .prodadm-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 650px) {
+    .prodadm-grid {
+        grid-template-columns: 1fr;
+    }
+}

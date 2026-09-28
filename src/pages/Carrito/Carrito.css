@@ -421,3 +421,385 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* ===== MODAL PASARELA DE PAGOS & SUNAT ===== */
+.modal-checkout {
+    max-width: 620px;
+    padding: 28px;
+    border-radius: var(--radius-lg);
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+}
+
+.checkout-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.checkout-head h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: var(--text-main);
+}
+
+.checkout-sub {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.checkout-tabs {
+    display: flex;
+    gap: 8px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 10px 14px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.tab-btn.activo {
+    background-color: var(--accent-subtle);
+    color: var(--accent);
+}
+
+.paso-contenido {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Selector de tipo comprobante */
+.tipo-comp-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.btn-comp-tipo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: left;
+    padding: 14px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background-color: var(--bg-subtle);
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.btn-comp-tipo strong {
+    font-size: 14px;
+    color: var(--text-main);
+}
+
+.btn-comp-tipo span {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.btn-comp-tipo.activo {
+    border-color: var(--accent);
+    background-color: var(--accent-subtle);
+}
+
+.btn-comp-tipo.activo strong {
+    color: var(--accent);
+}
+
+/* Campos de formulario checkout */
+.checkout-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.checkout-campo label {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.checkout-campo input {
+    height: 42px;
+    padding: 0 14px;
+    background-color: var(--bg-subtle);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-main);
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.checkout-campo input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-subtle);
+}
+
+.input-con-boton {
+    display: flex;
+    gap: 8px;
+}
+
+.input-con-boton input {
+    flex: 1;
+}
+
+.btn-consultar-api {
+    height: 42px;
+    padding: 0 16px;
+    border: none;
+    border-radius: var(--radius-md);
+    background-color: var(--accent);
+    color: #fff;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.15s ease;
+}
+
+.btn-consultar-api:hover:not(:disabled) {
+    background-color: var(--accent-hover);
+}
+
+.btn-consultar-api:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.api-error {
+    margin: 4px 0 0;
+    font-size: 12px;
+    color: #dc2626;
+    font-weight: 500;
+}
+
+.api-exito {
+    margin: 4px 0 0;
+    font-size: 12px;
+    color: #16a34a;
+    font-weight: 600;
+}
+
+/* Desglose SUNAT */
+.desglose-sunat-box {
+    background-color: var(--bg-subtle);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.desglose-fila {
+    display: flex;
+    justify-content: space-between;
+    color: var(--text-muted);
+}
+
+.desglose-fila.total {
+    border-top: 1px dashed var(--border-color);
+    padding-top: 8px;
+    color: var(--text-main);
+    font-size: 14px;
+}
+
+.desglose-fila.total strong {
+    color: var(--accent);
+    font-size: 16px;
+}
+
+/* Métodos de pago */
+.metodos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.metodo-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 14px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background-color: var(--bg-subtle);
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.metodo-card .metodo-icon {
+    font-size: 24px;
+}
+
+.metodo-card strong {
+    font-size: 13px;
+    color: var(--text-main);
+}
+
+.metodo-card small {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.metodo-card.activo {
+    border-color: var(--accent);
+    background-color: var(--accent-subtle);
+}
+
+.doble-campo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+/* Yape box */
+.yape-qr-box {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background-color: var(--bg-subtle);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 16px;
+}
+
+.yape-qr-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 12px;
+    background-color: #fff;
+    color: #1e293b;
+    border-radius: var(--radius-sm);
+}
+
+.yape-qr-placeholder span {
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.yape-datos {
+    font-size: 13px;
+    color: var(--text-secondary);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.yape-datos p {
+    margin: 0;
+}
+
+.bancos-box {
+    background-color: var(--bg-subtle);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 14px;
+    font-size: 12.5px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    color: var(--text-main);
+}
+
+.transf-nota {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin: 6px 0 0;
+}
+
+.checkout-acciones {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 12px;
+}
+
+.checkout-acciones button {
+    flex: 1;
+}
+
+/* Comprobante en pantalla de éxito */
+.comprobante-card-exito {
+    background-color: var(--bg-subtle);
+    border: 1px dashed var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 18px 24px;
+    margin: 20px auto;
+    max-width: 480px;
+    text-align: left;
+}
+
+.comp-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+    margin-bottom: 12px;
+}
+
+.comp-badge {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--accent);
+    text-transform: uppercase;
+}
+
+.comp-ruc {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.comp-cuerpo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-main);
+}
+
+.comp-tributos {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 10px;
+    margin-top: 8px;
+    color: var(--text-muted);
+    font-size: 12.5px;
+}
+
+.comp-tributos .comp-total {
+    font-size: 15px;
+    color: #16a34a;
+}

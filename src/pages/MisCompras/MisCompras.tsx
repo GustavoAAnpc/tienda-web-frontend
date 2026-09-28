@@ -93,6 +93,16 @@ function MisCompras() {
                                 </button>
                             </div>
 
+                            {detalle.comprobante && (
+                                <div style={{ marginBottom: "16px", padding: "12px 14px", background: "var(--bg-subtle)", borderRadius: "var(--radius-md)", fontSize: "13px", display: "flex", flexDirection: "column", gap: "4px" }}>
+                                    <div><strong>Comprobante:</strong> {detalle.comprobante.tipo} Electrónica ({detalle.comprobante.documento})</div>
+                                    <div><strong>Titular:</strong> {detalle.comprobante.nombreRazonSocial}</div>
+                                    {detalle.metodoPago && (
+                                        <div><strong>Método de pago:</strong> {detalle.metodoPago === "tarjeta" ? "Tarjeta Débito/Crédito" : detalle.metodoPago === "yape" ? "Yape / Plin" : "Transferencia Bancaria"}</div>
+                                    )}
+                                </div>
+                            )}
+
                             <table className="tabla">
                                 <thead>
                                     <tr>

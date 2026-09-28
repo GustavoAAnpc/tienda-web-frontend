@@ -6,12 +6,27 @@ export interface ItemPedido {
     imagen: string;
 }
 
+export type TipoComprobante = "Boleta" | "Factura";
+export type MetodoPago = "tarjeta" | "yape" | "transferencia";
+
+export interface ComprobanteInfo {
+    tipo: TipoComprobante;
+    documento: string; // DNI (8) o RUC (11)
+    nombreRazonSocial: string;
+    direccion?: string;
+    subtotal: number; // Base imponible
+    igv: number;      // 18%
+    total: number;
+}
+
 export interface Pedido {
     numero: string;
     fecha: string;
     usuarioId: string;
     items: ItemPedido[];
     total: number;
+    metodoPago?: MetodoPago;
+    comprobante?: ComprobanteInfo;
 }
 
 export const CLAVE_PEDIDOS = "techstore-pedidos";
@@ -39,5 +54,3 @@ export function guardarPedido(pedido: Pedido): void {
 export function generarNumeroPedido(): string {
     return `TS-${Date.now().toString().slice(-6)}`;
 }
-
-

@@ -6,43 +6,55 @@
 }
 
 .rep-periodos button {
-    padding: 9px 18px;
-    border: 1px solid #334155;
-    border-radius: 999px;
-    background-color: #0f172a;
-    color: #94a3b8;
+    padding: 8px 18px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-full);
+    background-color: var(--bg-surface);
+    color: var(--text-secondary);
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.rep-periodos button:hover {
+    border-color: var(--accent);
+    color: var(--text-main);
 }
 
 .rep-periodos button.activo {
-    background-color: #2563eb;
-    border-color: #2563eb;
+    background-color: var(--accent);
+    border-color: var(--accent);
     color: #fff;
 }
 
 .rep-periodos input {
     height: 38px;
     padding: 0 12px;
-    background-color: #0f172a;
-    border: 1px solid #334155;
-    border-radius: 8px;
-    color: #f1f5f9;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-main);
     font-size: 13px;
+    font-family: inherit;
     outline: none;
-    color-scheme: dark;
+    transition: border-color 0.15s ease;
+}
+
+.rep-periodos input:focus {
+    border-color: var(--accent);
 }
 
 .grafico {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     align-items: stretch;
-    background: linear-gradient(180deg, #0f172a, #0b1226);
-    border: 1px solid #1e293b;
-    border-radius: 8px;
-    padding: 24px 18px 16px;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 24px 20px 18px;
     overflow-x: auto;
+    box-shadow: var(--shadow-card);
 }
 
 .barra-col {
@@ -52,58 +64,51 @@
     flex-direction: column;
     align-items: center;
     gap: 8px;
-    border-radius: 4px;
-    padding: 4px 2px;
-    transition: background-color 0.2s ease;
+    border-radius: var(--radius-sm);
+    padding: 6px 4px;
+    transition: background-color 0.15s ease;
 }
 
 .barra-col:hover {
-    background-color: rgba(37, 99, 235, 0.08);
+    background-color: var(--bg-subtle);
 }
 
 .barra-val {
-    font-size: 11px;
-    color: #94a3b8;
+    font-size: 11.5px;
+    color: var(--text-muted);
     font-weight: 700;
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
 }
 
 .barra-col:hover .barra-val {
-    color: #e2e8f0;
+    color: var(--text-main);
 }
 
 .barra-track {
     width: 100%;
     max-width: 56px;
-    height: 150px;
-    border-radius: 4px;
+    height: 160px;
+    border-radius: var(--radius-sm);
     display: flex;
     align-items: flex-end;
     overflow: hidden;
-    background-color: rgba(2, 6, 23, 0.6);
-    background-image: repeating-linear-gradient(
-        180deg,
-        transparent 0,
-        transparent 34px,
-        rgba(51, 65, 85, 0.5) 34px,
-        rgba(51, 65, 85, 0.5) 35px
-    );
+    background-color: var(--bg-subtle);
+    border: 1px solid var(--border-color);
 }
 
 .barra-fill {
     width: 100%;
-    background: linear-gradient(180deg, #93c5fd 0%, #2563eb 70%, #1e40af 100%);
-    border-radius: 3px 3px 0 0;
-    border-top: 2px solid rgba(147, 197, 253, 0.8);
-    min-height: 3px;
+    background: linear-gradient(180deg, #60a5fa 0%, var(--accent) 100%);
+    border-radius: 4px 4px 0 0;
+    min-height: 4px;
     transform-origin: bottom;
-    animation: crecer 0.5s ease;
-    transition: filter 0.2s ease;
+    animation: crecer 0.4s ease;
+    transition: filter 0.15s ease;
 }
 
 .barra-col:hover .barra-fill {
-    filter: brightness(1.25);
+    filter: brightness(1.15);
 }
 
 @keyframes crecer {
@@ -116,8 +121,8 @@
 }
 
 .barra-dia {
-    font-size: 11px;
-    color: #64748b;
+    font-size: 11.5px;
+    color: var(--text-muted);
     font-weight: 600;
 }
 
@@ -132,22 +137,24 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
-    background-color: #0f172a;
-    border: 1px solid #1e293b;
-    border-radius: 12px;
-    padding: 18px;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    box-shadow: var(--shadow-card);
 }
 
 .rank-fila {
     display: grid;
     grid-template-columns: 1fr 1fr auto;
-    gap: 10px;
+    gap: 12px;
     align-items: center;
     font-size: 13px;
 }
 
 .rank-nombre {
-    color: #e2e8f0;
+    color: var(--text-main);
+    font-weight: 500;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -155,15 +162,15 @@
 
 .rank-barra {
     height: 8px;
-    background-color: #1e293b;
-    border-radius: 999px;
+    background-color: var(--bg-subtle);
+    border-radius: var(--radius-full);
     overflow: hidden;
 }
 
 .rank-barra div {
     height: 100%;
-    background: linear-gradient(90deg, #2563eb, #60a5fa);
-    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent), #60a5fa);
+    border-radius: var(--radius-full);
 }
 
 @media (max-width: 900px) {

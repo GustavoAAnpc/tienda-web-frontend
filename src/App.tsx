@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Inicio from "./pages/Inicio/Inicio";
 import Login from "./pages/Login/Login";
 import Registro from "./pages/Registro/Registro";
@@ -19,64 +19,73 @@ import AlmacenEntradas from "./pages/Almacen/Entradas/Entradas";
 import AlmacenKardex from "./pages/Almacen/Kardex/Kardex";
 import MisCompras from "./pages/MisCompras/MisCompras";
 import MiCuenta from "./pages/MiCuenta/MiCuenta";
+import NotFound from "./pages/NotFound/NotFound";
 import { CarritoProvider } from "./context/CarritoContext";
 import { AuthProvider } from "./context/AuthContext";
 import { InventarioProvider } from "./context/InventarioContext";
-
+import { ThemeProvider } from "./context/ThemeContext";
 
 function App() {
   return (
-    <AuthProvider>
-      <InventarioProvider>
-      <CarritoProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Registro />} />
-            <Route path="/registro" element={<Registro />} />
-            <Route path="/Inicio" element={<Inicio />} />
-            <Route path="/inicio" element={<Inicio />} />
-            <Route path="/Productos" element={<Productos />} />
-            <Route path="/productos" element={<Productos />} />
-            <Route path="/productos/:id" element={<Detalle />} />
-            <Route path="/Contactanos" element={<Contactanos />} />
-            <Route path="/contactanos" element={<Contactanos />} />
-            <Route path="/Carrito" element={<Carrito />} />
-            <Route path="/carrito" element={<Carrito />} />
-            <Route path="/Admin" element={<AdminLayout />}>
-              <Route index element={<AdminDashboard />} />
-              <Route path="dashboard" element={<AdminDashboard />} />
-              <Route path="ventas" element={<AdminVentas />} />
-              <Route path="productos" element={<AdminProductos />} />
-              <Route path="usuarios" element={<AdminUsuarios />} />
-              <Route path="reportes" element={<AdminReportes />} />
-            </Route>
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<AdminDashboard />} />
-              <Route path="dashboard" element={<AdminDashboard />} />
-              <Route path="ventas" element={<AdminVentas />} />
-              <Route path="productos" element={<AdminProductos />} />
-              <Route path="usuarios" element={<AdminUsuarios />} />
-              <Route path="reportes" element={<AdminReportes />} />
-            </Route>
-            <Route path="/almacen" element={<AlmacenLayout />}>
-              <Route index element={<AlmacenDashboard />} />
-              <Route path="dashboard" element={<AlmacenDashboard />} />
-              <Route path="productos" element={<AlmacenProductos />} />
-              <Route path="entradas" element={<AlmacenEntradas />} />
-              <Route path="kardex" element={<AlmacenKardex />} />
-            </Route>
-            <Route path="/MisCompras" element={<MisCompras />} />
-            <Route path="/mis-compras" element={<MisCompras />} />
-            <Route path="/MiCuenta" element={<MiCuenta />} />
-            <Route path="/mi-cuenta" element={<MiCuenta />} />
-          </Routes>
-        </BrowserRouter>
-      </CarritoProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <InventarioProvider>
+          <CarritoProvider>
+            <BrowserRouter>
+            <Routes>
+              {/* Autenticación */}
+              <Route path="/" element={<Navigate to="/login" replace />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/registro" element={<Registro />} />
+              <Route path="/register" element={<Navigate to="/registro" replace />} />
+
+              {/* Cliente / Tienda */}
+              <Route path="/inicio" element={<Inicio />} />
+              <Route path="/productos" element={<Productos />} />
+              <Route path="/productos/:id" element={<Detalle />} />
+              <Route path="/contactanos" element={<Contactanos />} />
+              <Route path="/carrito" element={<Carrito />} />
+              <Route path="/mis-compras" element={<MisCompras />} />
+              <Route path="/mi-cuenta" element={<MiCuenta />} />
+
+              {/* Redirecciones de rutas con mayúsculas */}
+              <Route path="/Inicio" element={<Navigate to="/inicio" replace />} />
+              <Route path="/Productos" element={<Navigate to="/productos" replace />} />
+              <Route path="/Contactanos" element={<Navigate to="/contactanos" replace />} />
+              <Route path="/Carrito" element={<Navigate to="/carrito" replace />} />
+              <Route path="/MisCompras" element={<Navigate to="/mis-compras" replace />} />
+              <Route path="/MiCuenta" element={<Navigate to="/mi-cuenta" replace />} />
+              <Route path="/Admin/*" element={<Navigate to="/admin" replace />} />
+
+              {/* Área Administrador */}
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<AdminDashboard />} />
+                <Route path="dashboard" element={<AdminDashboard />} />
+                <Route path="ventas" element={<AdminVentas />} />
+                <Route path="productos" element={<AdminProductos />} />
+                <Route path="usuarios" element={<AdminUsuarios />} />
+                <Route path="reportes" element={<AdminReportes />} />
+              </Route>
+
+              {/* Área Almacén */}
+              <Route path="/almacen" element={<AlmacenLayout />}>
+                <Route index element={<AlmacenDashboard />} />
+                <Route path="dashboard" element={<AlmacenDashboard />} />
+                <Route path="productos" element={<AlmacenProductos />} />
+                <Route path="entradas" element={<AlmacenEntradas />} />
+                <Route path="kardex" element={<AlmacenKardex />} />
+              </Route>
+
+              {/* 404 No encontrado */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </CarritoProvider>
       </InventarioProvider>
     </AuthProvider>
+    </ThemeProvider>
   );
 }
 
 export default App;
+

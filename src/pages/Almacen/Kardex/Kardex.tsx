@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useInventario } from "../../../context/InventarioContext";
 import "./Kardex.css";
 
@@ -34,6 +34,26 @@ function Kardex() {
         return true;
     });
 
+    const cambiarProducto = (val: string) => {
+        setProducto(val);
+        setPagina(1);
+    };
+
+    const cambiarTipo = (val: string) => {
+        setTipo(val);
+        setPagina(1);
+    };
+
+    const cambiarDesde = (val: string) => {
+        setDesde(val);
+        setPagina(1);
+    };
+
+    const cambiarHasta = (val: string) => {
+        setHasta(val);
+        setPagina(1);
+    };
+
     const limpiar = () => {
         setProducto("Todos");
         setTipo("Todos");
@@ -41,11 +61,6 @@ function Kardex() {
         setHasta("");
         setPagina(1);
     };
-
-    // Si cambian los filtros, vuelve a la primera página
-    useEffect(() => {
-        setPagina(1);
-    }, [producto, tipo, desde, hasta]);
 
     const totalPaginas = Math.max(1, Math.ceil(filtrados.length / POR_PAGINA));
     const paginaActual = Math.min(pagina, totalPaginas);
@@ -60,7 +75,7 @@ function Kardex() {
             <h1>Kardex</h1>
 
             <div className="kardex-filtros">
-                <select value={producto} onChange={(e) => setProducto(e.target.value)}>
+                <select value={producto} onChange={(e) => cambiarProducto(e.target.value)}>
                     <option>Todos</option>
                     {productos.map((p) => (
                         <option key={p.id} value={p.nombre}>
@@ -69,14 +84,14 @@ function Kardex() {
                     ))}
                 </select>
 
-                <select value={tipo} onChange={(e) => setTipo(e.target.value)}>
+                <select value={tipo} onChange={(e) => cambiarTipo(e.target.value)}>
                     <option>Todos</option>
                     <option>Entrada</option>
                     <option>Salida</option>
                 </select>
 
-                <input type="date" value={desde} onChange={(e) => setDesde(e.target.value)} />
-                <input type="date" value={hasta} onChange={(e) => setHasta(e.target.value)} />
+                <input type="date" value={desde} onChange={(e) => cambiarDesde(e.target.value)} />
+                <input type="date" value={hasta} onChange={(e) => cambiarHasta(e.target.value)} />
 
                 <button className="btn-limpiar" onClick={limpiar}>
                     Limpiar

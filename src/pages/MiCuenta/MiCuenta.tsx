@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import { useAuth } from "../../context/AuthContext";
-import { leerPedidos } from "../MisCompras/MisCompras";
+import { leerPedidos } from "../../data/pedidos";
 import "../Admin/Admin.css";
 import "./MiCuenta.css";
 
@@ -77,26 +77,16 @@ function leerPerfil(id: string, nombreSesion: string, acceso: string): Perfil {
     };
 }
 
-function MiCuenta() {
+import type { Usuario } from "../../data/usuarios";
+
+interface MiCuentaDetalleProps {
+    usuario: Usuario;
+    logout: () => void;
+    actualizarNombre: (nombre: string) => void;
+}
+
+function MiCuentaDetalle({ usuario, logout, actualizarNombre }: MiCuentaDetalleProps) {
     const navigate = useNavigate();
-    const { usuario, logout, actualizarNombre } = useAuth();
-
-    if (!usuario) {
-        return (
-            <div className="admin-page">
-                <Header />
-                <main className="admin-content">
-                    <h1>Mi cuenta</h1>
-                    <p className="admin-muted">Inicia sesión para ver tu cuenta.</p>
-                    <button className="btn-primary-lg" onClick={() => navigate("/login")}>
-                        Ir al login
-                    </button>
-                </main>
-                <Footer />
-            </div>
-        );
-    }
-
     const [perfil, setPerfil] = useState<Perfil>(() =>
         leerPerfil(usuario.id, usuario.nombre, usuario.acceso)
     );
@@ -104,6 +94,7 @@ function MiCuenta() {
     const [guardado, setGuardado] = useState(false);
 
     const pedidos = leerPedidos().filter((p) => p.usuarioId === usuario.id);
+
     const totalGastado = pedidos.reduce((acc, p) => acc + p.total, 0);
     const unidades = pedidos.reduce(
         (acc, p) => acc + p.items.reduce((a, it) => a + it.cantidad, 0),
@@ -278,6 +269,36 @@ function MiCuenta() {
 
             <Footer />
         </div>
+    );
+}
+
+function MiCuenta() {
+    const navigate = useNavigate();
+    const { usuario, logout, actualizarNombre } = useAuth();
+
+    if (!usuario) {
+        return (
+            <div className="admin-page">
+                <Header />
+                <main className="admin-content">
+                    <h1>Mi cuenta</h1>
+                    <p className="admin-muted">Inicia sesión para ver tu cuenta.</p>
+                    <button className="btn-primary-lg" onClick={() => navigate("/login")}>
+                        Ir al login
+                    </button>
+                </main>
+                <Footer />
+            </div>
+        );
+    }
+
+    return (
+        <MiCuentaDetalle
+            key={usuario.id}
+            usuario={usuario}
+            logout={logout}
+            actualizarNombre={actualizarNombre}
+        />
     );
 }
 

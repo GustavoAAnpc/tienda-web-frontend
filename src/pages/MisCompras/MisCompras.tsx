@@ -5,24 +5,8 @@ import Footer from "../../components/Footer/Footer";
 import { useAuth } from "../../context/AuthContext";
 import "../Admin/Admin.css";
 import "./MisCompras.css";
-
-export interface Pedido {
-    numero: string;
-    fecha: string;
-    usuarioId: string;
-    items: { id: number; nombre: string; precio: number; cantidad: number; imagen: string }[];
-    total: number;
-}
-
-export function leerPedidos(): Pedido[] {
-    try {
-        const raw = localStorage.getItem("techstore-pedidos");
-        const datos = raw ? JSON.parse(raw) : [];
-        return Array.isArray(datos) ? datos : [];
-    } catch {
-        return [];
-    }
-}
+import { leerPedidos } from "../../data/pedidos";
+import type { Pedido } from "../../data/pedidos";
 
 function MisCompras() {
     const navigate = useNavigate();

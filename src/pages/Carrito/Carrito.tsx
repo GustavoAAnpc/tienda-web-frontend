@@ -6,6 +6,7 @@ import ProductCard from "../../components/ProductCard/ProductCard";
 import { useCarrito } from "../../context/CarritoContext";
 import { useInventario } from "../../context/InventarioContext";
 import { useAuth } from "../../context/AuthContext";
+import { generarNumeroPedido, guardarPedido } from "../../data/pedidos";
 import "./Carrito.css";
 
 // Envío gratis desde este monto, si no, cuesta fijo
@@ -36,7 +37,7 @@ function Carrito() {
     const faltante = UMBRAL_ENVIO_GRATIS - subtotal;
 
     const finalizarCompra = () => {
-        const numero = `TS-${Date.now().toString().slice(-6)}`;
+        const numero = generarNumeroPedido();
         const fecha = new Date().toLocaleDateString("es-PE");
 
         // Venta confirmada: genera la salida automática en Kardex y baja el stock
@@ -44,26 +45,20 @@ function Carrito() {
             registrarSalida(l.producto.id, l.cantidad, `Venta ${numero}`, usuario?.nombre ?? "Invitado")
         );
 
-        // Guarda el pedido para mostrarlo en Mis compras (solo frontend)
-        try {
-            const previos = JSON.parse(localStorage.getItem("techstore-pedidos") ?? "[]");
-            previos.unshift({
-                numero,
-                fecha,
-                usuarioId: usuario?.id ?? "invitado",
-                items: lineas.map((l) => ({
-                    id: l.producto.id,
-                    nombre: l.producto.nombre,
-                    precio: l.producto.precio,
-                    cantidad: l.cantidad,
-                    imagen: l.producto.imagen,
-                })),
-                total,
-            });
-            localStorage.setItem("techstore-pedidos", JSON.stringify(previos));
-        } catch {
-            // Si falla el guardado, la compra igual se confirma
-        }
+        // Guarda el pedido para mostrarlo en Mis compras
+        guardarPedido({
+            numero,
+            fecha,
+            usuarioId: usuario?.id ?? "invitado",
+            items: lineas.map((l) => ({
+                id: l.producto.id,
+                nombre: l.producto.nombre,
+                precio: l.producto.precio,
+                cantidad: l.cantidad,
+                imagen: l.producto.imagen,
+            })),
+            total,
+        });
 
         setTotalPagado(total);
         setPedidoOk(numero);

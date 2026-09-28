@@ -1,7 +1,8 @@
 import { useState } from "react";
-import type { SubmitEvent } from "react";
+import type { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import ThemeToggle from "../../components/ThemeToggle/ThemeToggle";
 import "./Registro.css";
 
 function Registro() {
@@ -29,7 +30,7 @@ function Registro() {
 
     const etiquetaFuerza = ["", "Débil", "Media", "Buena", "Fuerte"][fuerza];
 
-    function registrarse(e: SubmitEvent) {
+    function registrarse(e: FormEvent) {
         e.preventDefault();
         setError("");
 
@@ -72,6 +73,9 @@ function Registro() {
 
     return (
         <div className="registro-container">
+            <div className="registro-theme-toggle">
+                <ThemeToggle />
+            </div>
             {/* Lado izquierdo - Beneficios */}
             <div className="registro-image-section">
                 <img

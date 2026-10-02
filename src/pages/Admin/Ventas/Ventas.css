@@ -1,54 +1,57 @@
 .ventas-filtros {
     display: flex;
-    gap: 10px;
-    margin: 20px 0 14px;
+    gap: 12px;
+    margin: 20px 0 16px;
     flex-wrap: wrap;
 }
 
 .ventas-filtros input,
 .ventas-filtros select {
-    height: 40px;
-    padding: 0 12px;
-    background-color: #0f172a;
-    border: 1px solid #334155;
-    border-radius: 8px;
-    color: #f1f5f9;
-    font-size: 13px;
+    height: 42px;
+    padding: 0 14px;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-main);
+    font-size: 13.5px;
+    font-family: inherit;
     outline: none;
-    color-scheme: dark;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .ventas-filtros input:first-child {
     flex: 1;
-    min-width: 180px;
+    min-width: 200px;
 }
 
 .ventas-filtros input:focus,
 .ventas-filtros select:focus {
-    border-color: #2563eb;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-subtle);
 }
 
 .btn-mini {
     padding: 7px 12px;
     border: none;
-    border-radius: 7px;
-    background-color: #2563eb;
+    border-radius: var(--radius-sm);
+    background-color: var(--accent);
     color: #fff;
     font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
+    transition: background-color 0.15s ease;
 }
 
 .btn-mini:hover {
-    background-color: #3b82f6;
+    background-color: var(--accent-hover);
 }
 
 .tabla-vacia {
-    padding: 20px;
+    padding: 28px;
     text-align: center;
-    color: #64748b;
-    font-size: 13px;
+    color: var(--text-muted);
+    font-size: 13.5px;
     margin: 0;
 }
 
@@ -56,7 +59,8 @@
     position: fixed;
     inset: 0;
     z-index: 100;
-    background-color: rgba(2, 6, 23, 0.75);
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -68,10 +72,12 @@
     max-width: 600px;
     max-height: 85vh;
     overflow-y: auto;
-    background-color: #0f172a;
-    border: 1px solid #334155;
-    border-radius: 16px;
-    padding: 24px;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 26px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    color: var(--text-main);
 }
 
 .modal-head {
@@ -83,38 +89,50 @@
 
 .modal-head h2 {
     margin: 0;
-    font-size: 18px;
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--text-main);
 }
 
 .modal-cerrar {
     width: 32px;
     height: 32px;
-    border: none;
-    border-radius: 8px;
-    background-color: #1e293b;
-    color: #94a3b8;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    background-color: var(--bg-subtle);
+    color: var(--text-muted);
     font-size: 14px;
     cursor: pointer;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .modal-cerrar:hover {
-    background-color: #334155;
-    color: #fff;
+    background-color: var(--border-color);
+    color: var(--text-main);
 }
 
 .modal-total {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 16px;
+    margin-top: 18px;
     padding-top: 14px;
-    border-top: 1px solid #1e293b;
-    font-size: 14px;
-    color: #94a3b8;
+    border-top: 1px solid var(--border-color);
+    font-size: 14.5px;
+    color: var(--text-muted);
 }
 
 .modal-total strong {
     font-size: 20px;
+    font-weight: 800;
+    color: #16a34a;
+    font-variant-numeric: tabular-nums;
+}
+
+[data-theme="dark"] .modal-total strong {
     color: #4ade80;
 }

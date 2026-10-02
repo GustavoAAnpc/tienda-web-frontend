@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { CUENTAS_BASE, obtenerEstado, cambiarEstado, cambiarRolRegistrado } from "../../../context/AuthContext";
-import type { Rol } from "../../../context/AuthContext";
+import { CUENTAS_BASE, obtenerEstado, cambiarEstado, cambiarRolRegistrado } from "../../../data/usuarios";
+import type { Rol } from "../../../data/usuarios";
 import "../Admin.css";
 import "./Usuarios.css";
 

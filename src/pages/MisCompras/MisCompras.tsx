@@ -5,24 +5,8 @@ import Footer from "../../components/Footer/Footer";
 import { useAuth } from "../../context/AuthContext";
 import "../Admin/Admin.css";
 import "./MisCompras.css";
-
-export interface Pedido {
-    numero: string;
-    fecha: string;
-    usuarioId: string;
-    items: { id: number; nombre: string; precio: number; cantidad: number; imagen: string }[];
-    total: number;
-}
-
-export function leerPedidos(): Pedido[] {
-    try {
-        const raw = localStorage.getItem("techstore-pedidos");
-        const datos = raw ? JSON.parse(raw) : [];
-        return Array.isArray(datos) ? datos : [];
-    } catch {
-        return [];
-    }
-}
+import { leerPedidos } from "../../data/pedidos";
+import type { Pedido } from "../../data/pedidos";
 
 function MisCompras() {
     const navigate = useNavigate();
@@ -108,6 +92,16 @@ function MisCompras() {
                                     ✕
                                 </button>
                             </div>
+
+                            {detalle.comprobante && (
+                                <div style={{ marginBottom: "16px", padding: "12px 14px", background: "var(--bg-subtle)", borderRadius: "var(--radius-md)", fontSize: "13px", display: "flex", flexDirection: "column", gap: "4px" }}>
+                                    <div><strong>Comprobante:</strong> {detalle.comprobante.tipo} Electrónica ({detalle.comprobante.documento})</div>
+                                    <div><strong>Titular:</strong> {detalle.comprobante.nombreRazonSocial}</div>
+                                    {detalle.metodoPago && (
+                                        <div><strong>Método de pago:</strong> {detalle.metodoPago === "tarjeta" ? "Tarjeta Débito/Crédito" : detalle.metodoPago === "yape" ? "Yape / Plin" : "Transferencia Bancaria"}</div>
+                                    )}
+                                </div>
+                            )}
 
                             <table className="tabla">
                                 <thead>

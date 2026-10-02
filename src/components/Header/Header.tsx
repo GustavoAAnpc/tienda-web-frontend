@@ -1,13 +1,22 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useCarrito } from "../../context/CarritoContext";
 import { useAuth } from "../../context/AuthContext";
+import ThemeToggle from "../ThemeToggle/ThemeToggle";
 import "./Header.css";
 
 function Header() {
 
     const navigate = useNavigate();
+    const location = useLocation();
     const { totalItems } = useCarrito();
     const { usuario, logout } = useAuth();
+
+    const pathname = location.pathname;
+    const isInicio = pathname === "/" || pathname === "/inicio";
+    const isProductos = pathname === "/productos" || pathname.startsWith("/producto/");
+    const isContactanos = pathname === "/contactanos";
+    const isAdmin = pathname.startsWith("/admin");
+    const isAlmacen = pathname.startsWith("/almacen");
 
     const salir = () => {
         logout();
@@ -49,21 +58,21 @@ function Header() {
                 <nav className="header-nav">
 
                     <button
-                        className="header-nav-button active"
+                        className={`header-nav-button ${isInicio ? "active" : ""}`}
                         onClick={() => navigate("/inicio")}
                     >
                         Inicio
                     </button>
 
                     <button
-                        className="header-nav-button"
+                        className={`header-nav-button ${isProductos ? "active" : ""}`}
                         onClick={() => navigate("/productos")}
                     >
                         Productos
                     </button>
 
                     <button
-                        className="header-nav-button"
+                        className={`header-nav-button ${isContactanos ? "active" : ""}`}
                         onClick={() => navigate("/contactanos")}
                     >
                         Contáctanos
@@ -72,7 +81,7 @@ function Header() {
                     {/* Accesos por rol */}
                     {usuario?.rol === "admin" && (
                         <button
-                            className="header-nav-button"
+                            className={`header-nav-button ${isAdmin ? "active" : ""}`}
                             onClick={() => navigate("/admin")}
                         >
                             Panel Admin
@@ -81,7 +90,7 @@ function Header() {
 
                     {usuario?.rol === "almacen" && (
                         <button
-                            className="header-nav-button"
+                            className={`header-nav-button ${isAlmacen ? "active" : ""}`}
                             onClick={() => navigate("/almacen")}
                         >
                             Almacén
@@ -93,6 +102,9 @@ function Header() {
 
                 {/* Acciones */}
                 <div className="header-actions">
+
+                    {/* Selector de Tema */}
+                    <ThemeToggle />
 
                     {/* Carrito */}
                     <button

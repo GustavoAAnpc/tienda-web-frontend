@@ -1,17 +1,18 @@
-/* Layout del panel Admin (igual estructura que Almacén) */
+/* Layout del panel Admin (con soporte completo light/dark) */
 .admin-shell {
     min-height: 100vh;
     display: flex;
-    background-color: #020617;
-    color: #f1f5f9;
+    background-color: var(--bg-page);
+    color: var(--text-main);
     text-align: left;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .admin-sidebar {
-    width: 230px;
+    width: 240px;
     flex-shrink: 0;
-    background-color: #0f172a;
-    border-right: 1px solid #1e293b;
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid var(--sidebar-border);
     padding: 20px 14px;
     display: flex;
     flex-direction: column;
@@ -20,6 +21,7 @@
     top: 0;
     height: 100vh;
     box-sizing: border-box;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .admin-marca {
@@ -28,7 +30,7 @@
     gap: 10px;
     border: none;
     background: none;
-    color: #f1f5f9;
+    color: var(--text-main);
     font-size: 17px;
     font-weight: 700;
     cursor: pointer;
@@ -36,37 +38,39 @@
 }
 
 .admin-marca-icon {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #2563eb;
-    border-radius: 7px;
+    background-color: var(--accent);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(37, 99, 235, 0.25);
 }
 
 .admin-seccion {
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.08em;
-    color: #475569;
-    padding: 12px 10px 4px;
+    color: var(--text-muted);
+    padding: 14px 10px 4px;
+    text-transform: uppercase;
 }
 
 .admin-nav {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 3px;
 }
 
 .admin-nav a {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 10px 12px;
+    padding: 9px 12px;
     border-radius: 8px;
-    color: #94a3b8;
-    font-size: 14px;
+    color: var(--sidebar-text);
+    font-size: 13.5px;
     font-weight: 500;
     text-decoration: none;
     border: none;
@@ -75,17 +79,18 @@
     width: 100%;
     box-sizing: border-box;
     font-family: inherit;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .admin-nav a:hover {
-    background-color: #1e293b;
-    color: #f1f5f9;
+    background-color: var(--bg-subtle);
+    color: var(--text-main);
 }
 
 .admin-nav a.active {
-    background-color: #2563eb;
-    color: #fff;
+    background-color: var(--sidebar-active);
+    color: var(--sidebar-text-active);
+    font-weight: 600;
 }
 
 .admin-main {
@@ -93,6 +98,7 @@
     min-width: 0;
     display: flex;
     flex-direction: column;
+    background-color: var(--bg-page);
 }
 
 .admin-topbar {
@@ -100,24 +106,28 @@
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    padding: 14px 28px;
-    background-color: #0f172a;
-    border-bottom: 1px solid #1e293b;
+    padding: 12px 28px;
+    background-color: var(--header-bg);
+    border-bottom: 1px solid var(--header-border);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     position: sticky;
     top: 0;
     z-index: 10;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .admin-topbar strong {
     font-size: 15px;
+    color: var(--text-main);
 }
 
 .admin-usuario {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     font-size: 13px;
-    color: #94a3b8;
+    color: var(--text-secondary);
 }
 
 .admin-usuario .btn-icono {
@@ -127,22 +137,24 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #334155;
-    border-radius: 7px;
-    background: transparent;
-    color: #cbd5e1;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-surface);
+    color: var(--text-secondary);
     cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
 }
 
 .admin-usuario .btn-icono:hover {
-    border-color: #2563eb;
-    color: #fff;
+    border-color: var(--accent);
+    color: var(--text-main);
+    background-color: var(--bg-subtle);
 }
 
 .admin-contenido {
     flex: 1;
-    padding: 28px;
-    max-width: 1100px;
+    padding: 32px 28px;
+    max-width: 1140px;
     width: 100%;
     margin: 0 auto;
     box-sizing: border-box;
@@ -150,7 +162,9 @@
 
 .admin-contenido h1 {
     margin: 0;
-    font-size: 22px;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-main);
 }
 
 .admin-denegado {
@@ -159,13 +173,13 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    background-color: #020617;
-    color: #f1f5f9;
+    gap: 10px;
+    background-color: var(--bg-page);
+    color: var(--text-main);
 }
 
 .admin-denegado p {
-    color: #64748b;
+    color: var(--text-muted);
 }
 
 .admin-denegado button {
@@ -173,13 +187,18 @@
     padding: 10px 22px;
     border: none;
     border-radius: 8px;
-    background-color: #2563eb;
+    background-color: var(--accent);
     color: #fff;
-    font-weight: 700;
+    font-weight: 600;
     cursor: pointer;
+    transition: background-color 0.15s ease;
 }
 
-@media (max-width: 700px) {
+.admin-denegado button:hover {
+    background-color: var(--accent-hover);
+}
+
+@media (max-width: 768px) {
     .admin-shell {
         flex-direction: column;
     }
@@ -187,13 +206,14 @@
         width: 100%;
         height: auto;
         position: static;
+        border-right: none;
+        border-bottom: 1px solid var(--sidebar-border);
     }
     .admin-nav {
         flex-direction: row;
         flex-wrap: wrap;
     }
-    .admin-nav a,
-    .admin-salir {
+    .admin-nav a {
         width: auto;
     }
     .admin-contenido {

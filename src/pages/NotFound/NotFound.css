@@ -1,0 +1,100 @@
+.notfound-container {
+    min-height: calc(100vh - 160px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 3rem 1.5rem;
+    background: radial-gradient(circle at center, var(--accent-subtle) 0%, transparent 70%);
+}
+
+.notfound-card {
+    max-width: 520px;
+    width: 100%;
+    padding: 2.5rem 2rem;
+    border-radius: var(--radius-lg);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-modal);
+}
+
+.notfound-badge {
+    display: inline-block;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-subtle);
+    border: 1px solid var(--accent-border);
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-full);
+    margin-bottom: 1.25rem;
+}
+
+.notfound-code {
+    font-size: clamp(4rem, 10vw, 6.5rem);
+    font-weight: 900;
+    line-height: 1;
+    color: var(--text-main);
+    margin: 0 0 1rem;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+}
+
+.notfound-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 0.75rem;
+}
+
+.notfound-desc {
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.notfound-actions {
+    display: flex;
+    gap: 0.875rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.notfound-btn-primary {
+    background: var(--accent);
+    color: #ffffff;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.notfound-btn-primary:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+    color: #ffffff;
+}
+
+.notfound-btn-secondary {
+    background: var(--bg-subtle);
+    color: var(--text-main);
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.notfound-btn-secondary:hover {
+    background: var(--bg-surface-elevated);
+    border-color: var(--border-hover);
+}

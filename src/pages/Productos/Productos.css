@@ -1,11 +1,12 @@
-/* Página: mismo fondo y alineación que Inicio */
+/* Página Productos (Con soporte Light / Dark) */
 .productos-page {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background-color: #020617;
-    color: #f1f5f9;
+    background-color: var(--bg-page);
+    color: var(--text-main);
     text-align: left;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .productos-content {
@@ -13,47 +14,50 @@
     width: 100%;
     max-width: 1280px;
     margin: 0 auto;
-    padding: 32px 24px 40px;
+    padding: 36px 24px 48px;
     box-sizing: border-box;
 }
 
 /* Título */
 .productos-header h1 {
     margin: 0;
-    font-size: 24px;
+    font-size: 26px;
     font-weight: 700;
-    color: #f1f5f9;
+    color: var(--text-main);
 }
 
 .productos-header p {
     margin: 6px 0 0;
-    font-size: 13px;
-    color: #64748b;
+    font-size: 14px;
+    color: var(--text-muted);
 }
 
 /* Buscador + select */
 .productos-toolbar {
     display: flex;
     gap: 12px;
-    margin: 20px 0 16px;
+    margin: 24px 0 18px;
 }
 
 .productos-search {
     flex: 1;
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 0 12px;
-    height: 42px;
-    background-color: #0f172a;
-    border: 1px solid #334155;
-    border-radius: 8px;
-    color: #64748b;
+    gap: 10px;
+    padding: 0 14px;
+    height: 44px;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-muted);
     box-sizing: border-box;
+    box-shadow: var(--shadow-sm);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .productos-search:focus-within {
-    border-color: #2563eb;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-subtle);
 }
 
 .productos-search input {
@@ -61,28 +65,30 @@
     border: none;
     outline: none;
     background: transparent;
-    color: #f1f5f9;
+    color: var(--text-main);
     font-size: 14px;
 }
 
 .productos-search input::placeholder {
-    color: #64748b;
+    color: var(--text-muted);
 }
 
 .productos-select {
-    height: 42px;
-    padding: 0 12px;
-    background-color: #0f172a;
-    border: 1px solid #334155;
-    border-radius: 8px;
-    color: #cbd5e1;
-    font-size: 13px;
+    height: 44px;
+    padding: 0 14px;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-main);
+    font-size: 13.5px;
     cursor: pointer;
     outline: none;
+    box-shadow: var(--shadow-sm);
+    transition: border-color 0.15s ease;
 }
 
 .productos-select:focus {
-    border-color: #2563eb;
+    border-color: var(--accent);
 }
 
 /* Píldoras de categoría */
@@ -90,76 +96,81 @@
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin-bottom: 24px;
+    margin-bottom: 28px;
 }
 
 .pill {
-    padding: 7px 16px;
-    border-radius: 999px;
+    padding: 8px 18px;
+    border-radius: var(--radius-full);
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
-    background-color: #0f172a;
-    border: 1px solid #334155;
-    color: #94a3b8;
-    transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    box-shadow: var(--shadow-sm);
+    transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
 }
 
 .pill:hover {
-    border-color: #475569;
-    color: #e2e8f0;
+    border-color: var(--border-hover);
+    color: var(--text-main);
+    background-color: var(--bg-subtle);
 }
 
 .pill.active {
-    background-color: #2563eb;
-    border-color: #2563eb;
-    color: #fff;
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: #ffffff;
+    font-weight: 600;
 }
 
-/* Grid de productos (reusa ProductCard) */
+/* Grid de productos */
 .productos-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
+    gap: 18px;
 }
 
-/* Estado vacío (sin emoji, con SVG) */
+/* Estado vacío */
 .productos-vacio {
     text-align: center;
-    padding: 80px 20px;
-    color: #64748b;
+    padding: 70px 20px;
+    color: var(--text-muted);
 }
 
 .productos-vacio svg {
-    color: #334155;
+    color: var(--text-muted);
     margin-bottom: 12px;
 }
 
 .productos-vacio h3 {
     margin: 0 0 6px;
-    font-size: 17px;
-    color: #cbd5e1;
+    font-size: 18px;
+    color: var(--text-main);
 }
 
 .productos-vacio p {
     margin: 0;
-    font-size: 13px;
+    font-size: 14px;
+    color: var(--text-muted);
 }
 
 .productos-vacio button {
     margin-top: 16px;
-    padding: 9px 18px;
+    padding: 10px 20px;
     border: none;
-    border-radius: 8px;
-    background-color: #2563eb;
-    color: #fff;
-    font-size: 13px;
+    border-radius: var(--radius-sm);
+    background-color: var(--accent);
+    color: #ffffff;
+    font-size: 13.5px;
     font-weight: 600;
     cursor: pointer;
+    transition: background-color 0.15s ease;
 }
 
 .productos-vacio button:hover {
-    background-color: #3b82f6;
+    background-color: var(--accent-hover);
 }
 
 @media (max-width: 1000px) {
@@ -170,7 +181,7 @@
 
 @media (max-width: 600px) {
     .productos-content {
-        padding: 24px 16px 32px;
+        padding: 24px 16px 36px;
     }
     .productos-toolbar {
         flex-direction: column;

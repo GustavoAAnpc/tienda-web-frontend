@@ -3,6 +3,7 @@ import type { SubmitEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import type { Rol } from "../../context/AuthContext";
+import ThemeToggle from "../../components/ThemeToggle/ThemeToggle";
 import "./Login.css";
 
 // A dónde va cada rol después de ingresar
@@ -52,6 +53,9 @@ function Login() {
 
     return (
         <div className="login-container">
+            <div className="login-theme-toggle">
+                <ThemeToggle />
+            </div>
 
             {/* Lado izquierdo - Imagen */}
             <div className="login-image-section">

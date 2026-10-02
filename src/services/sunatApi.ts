@@ -1,5 +1,5 @@
-// Servicio de consulta de comprobantes (SUNAT / RENIEC)
-// Realiza llamadas HTTP (fetch) a APIs públicas para validación de DNI y RUC
+// Servicio de consulta de comprobantes (SUNAT / RENIEC) en tiempo real
+// Realiza llamadas HTTP (fetch) a la API de apis.net.pe v2 para obtener datos oficiales reales
 
 export interface ResultadoDNI {
     dni: string;
@@ -20,107 +20,74 @@ export interface ResultadoRUC {
     distrito?: string;
 }
 
-// Base de datos de prueba offline para demostración inmediata
-const MOCK_RUCS: Record<string, ResultadoRUC> = {
-    "20100070970": {
-        ruc: "20100070970",
-        razonSocial: "SUPERMERCADOS PERUANOS SOCIEDAD ANONIMA",
-        estado: "ACTIVO",
-        condicion: "HABIDO",
-        direccion: "CAL. MORELLI NRO. 181 INT. P-2, SAN BORJA, LIMA",
-    },
-    "20131312955": {
-        ruc: "20131312955",
-        razonSocial: "SUPERINTENDENCIA NACIONAL DE ADUANAS Y DE ADMINISTRACION TRIBUTARIA",
-        estado: "ACTIVO",
-        condicion: "HABIDO",
-        direccion: "AV. GARCILASO DE LA VEGA NRO. 1472, LIMA, LIMA",
-    },
-    "20601234567": {
-        ruc: "20601234567",
-        razonSocial: "TECHSTORE IMPORTACIONES & TECNOLOGÍA S.A.C.",
-        estado: "ACTIVO",
-        condicion: "HABIDO",
-        direccion: "AV. GARCILASO 1234 OF. 402, LIMA, LIMA",
-    },
-};
-
-const MOCK_DNIS: Record<string, ResultadoDNI> = {
-    "72819402": {
-        dni: "72819402",
-        nombreCompleto: "GUSTAVO ADOLFO ALVAREZ NINA",
-        nombres: "GUSTAVO ADOLFO",
-        apellidoPaterno: "ALVAREZ",
-        apellidoMaterno: "NINA",
-    },
-    "45678901": {
-        dni: "45678901",
-        nombreCompleto: "CARLOS ALBERTO MENDOZA RÍOS",
-        nombres: "CARLOS ALBERTO",
-        apellidoPaterno: "MENDOZA",
-        apellidoMaterno: "RÍOS",
-    },
-};
-
 /**
- * Consulta un DNI a través de API REST
+ * Consulta un DNI real en RENIEC a través de la API oficial
  */
 export async function consultarDNI(dni: string): Promise<ResultadoDNI> {
-    const limpio = dni.trim();
-    if (!/^\d{8}$/.test(limpio)) {
+    const limpio = dni.trim().replace(/\D/g, "");
+    if (limpio.length !== 8) {
         throw new Error("El DNI debe contener exactamente 8 dígitos numéricos");
     }
 
-    // Intentar consulta a servicio público
-    try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 4000);
+    // Rutas a consultar: proxy local de Vite (evita CORS) y endpoint directo
+    const urls = [
+        `/api-peru/reniec/dni?numero=${limpio}`,
+        `https://api.apis.net.pe/v2/reniec/dni?numero=${limpio}`,
+    ];
 
-        const response = await fetch(`https://api.apis.net.pe/v1/dni?numero=${limpio}`, {
-            signal: controller.signal,
-            headers: {
-                Accept: "application/json",
-            },
-        });
-        clearTimeout(timeoutId);
+    let ultimoError = "No se pudo conectar con el servicio de RENIEC";
 
-        if (response.ok) {
-            const data = await response.json();
-            if (data && (data.nombre || data.nombres)) {
-                const nombreCompleto = data.nombre || `${data.nombres} ${data.apellidoPaterno} ${data.apellidoMaterno}`;
-                return {
-                    dni: limpio,
-                    nombreCompleto: nombreCompleto.trim(),
-                    nombres: data.nombres || "",
-                    apellidoPaterno: data.apellidoPaterno || "",
-                    apellidoMaterno: data.apellidoMaterno || "",
-                };
+    for (const url of urls) {
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 6000);
+
+            const response = await fetch(url, {
+                signal: controller.signal,
+                headers: {
+                    Accept: "application/json",
+                },
+            });
+            clearTimeout(timeoutId);
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data && (data.nombreCompleto || data.nombres)) {
+                    const nombreCompleto =
+                        data.nombreCompleto ||
+                        `${data.nombres || ""} ${data.apellidoPaterno || ""} ${data.apellidoMaterno || ""}`.trim();
+
+                    return {
+                        dni: limpio,
+                        nombreCompleto,
+                        nombres: data.nombres || "",
+                        apellidoPaterno: data.apellidoPaterno || "",
+                        apellidoMaterno: data.apellidoMaterno || "",
+                    };
+                }
+            } else if (response.status === 404 || response.status === 422) {
+                throw new Error(`El DNI ${limpio} no fue encontrado en los registros de RENIEC.`);
             }
+        } catch (err: unknown) {
+            const error = err as Error;
+            if (error.message && error.message.includes("no fue encontrado")) {
+                throw error;
+            }
+            ultimoError = error.message;
         }
-    } catch {
-        // En caso de CORS o rate-limit en frontend, usar el fallback estructurado
     }
 
-    // Fallback con base local o generación válida de demostración
-    if (MOCK_DNIS[limpio]) {
-        return MOCK_DNIS[limpio];
-    }
-
-    return {
-        dni: limpio,
-        nombreCompleto: `CLIENTE VERIFICADO (DNI ${limpio})`,
-        nombres: "CLIENTE",
-        apellidoPaterno: "VERIFICADO",
-        apellidoMaterno: "RENIEC",
-    };
+    throw new Error(
+        `No se pudo obtener datos para el DNI ${limpio} (${ultimoError}). Verifica el número ingresado o digita tu nombre manualmente.`
+    );
 }
 
 /**
- * Consulta un RUC a través de API REST de SUNAT
+ * Consulta un RUC real en SUNAT a través de la API oficial
  */
 export async function consultarRUC(ruc: string): Promise<ResultadoRUC> {
-    const limpio = ruc.trim();
-    if (!/^\d{11}$/.test(limpio)) {
+    const limpio = ruc.trim().replace(/\D/g, "");
+    if (limpio.length !== 11) {
         throw new Error("El RUC debe contener exactamente 11 dígitos numéricos");
     }
 
@@ -128,48 +95,59 @@ export async function consultarRUC(ruc: string): Promise<ResultadoRUC> {
         throw new Error("El RUC debe iniciar con 10, 15, 17 o 20");
     }
 
-    // Intentar consulta a servicio público de SUNAT
-    try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 4000);
+    // Rutas a consultar: proxy local de Vite y endpoint directo
+    const urls = [
+        `/api-peru/sunat/ruc?numero=${limpio}`,
+        `https://api.apis.net.pe/v2/sunat/ruc?numero=${limpio}`,
+    ];
 
-        const response = await fetch(`https://api.apis.net.pe/v1/ruc?numero=${limpio}`, {
-            signal: controller.signal,
-            headers: {
-                Accept: "application/json",
-            },
-        });
-        clearTimeout(timeoutId);
+    let ultimoError = "No se pudo conectar con el servicio de SUNAT";
 
-        if (response.ok) {
-            const data = await response.json();
-            if (data && (data.nombre || data.razonSocial)) {
-                return {
-                    ruc: limpio,
-                    razonSocial: data.nombre || data.razonSocial,
-                    estado: data.estado || "ACTIVO",
-                    condicion: data.condicion || "HABIDO",
-                    direccion: data.direccion || `${data.distrito || ""}, ${data.provincia || "LIMA"}`,
-                    departamento: data.departamento,
-                    provincia: data.provincia,
-                    distrito: data.distrito,
-                };
+    for (const url of urls) {
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 6000);
+
+            const response = await fetch(url, {
+                signal: controller.signal,
+                headers: {
+                    Accept: "application/json",
+                },
+            });
+            clearTimeout(timeoutId);
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data && (data.razonSocial || data.nombre)) {
+                    const razonSocial = data.razonSocial || data.nombre;
+                    const direccion =
+                        data.direccion ||
+                        `${data.distrito || ""}, ${data.provincia || "LIMA"}, ${data.departamento || "LIMA"}`.trim();
+
+                    return {
+                        ruc: limpio,
+                        razonSocial,
+                        estado: data.estado || "ACTIVO",
+                        condicion: data.condicion || "HABIDO",
+                        direccion: direccion || "LIMA - PERÚ",
+                        departamento: data.departamento,
+                        provincia: data.provincia,
+                        distrito: data.distrito,
+                    };
+                }
+            } else if (response.status === 404 || response.status === 422) {
+                throw new Error(`El RUC ${limpio} no fue encontrado en el padrón de SUNAT.`);
             }
+        } catch (err: unknown) {
+            const error = err as Error;
+            if (error.message && error.message.includes("no fue encontrado")) {
+                throw error;
+            }
+            ultimoError = error.message;
         }
-    } catch {
-        // En caso de CORS o límite de peticiones en frontend, usar fallback
     }
 
-    // Fallback con base de empresas conocidas o generación válida
-    if (MOCK_RUCS[limpio]) {
-        return MOCK_RUCS[limpio];
-    }
-
-    return {
-        ruc: limpio,
-        razonSocial: `EMPRESA ASOCIADA ${limpio.slice(-4)} S.A.C.`,
-        estado: "ACTIVO",
-        condicion: "HABIDO",
-        direccion: "AV. PRINCIPAL 450, LIMA - PERÚ",
-    };
+    throw new Error(
+        `No se pudo obtener datos para el RUC ${limpio} (${ultimoError}). Verifica el número ingresado o digita tu razón social manualmente.`
+    );
 }

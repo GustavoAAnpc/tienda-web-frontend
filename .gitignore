@@ -22,3 +22,14 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# AI Assistants, Skills & Agents
+.agent/
+.agents/
+.cursor/
+.cursorrules
+.gemini/
+.impeccable/
+.codex/
+.dsh/
+.claude/

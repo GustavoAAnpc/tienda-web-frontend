@@ -11,7 +11,7 @@ function Ventas() {
     const [desde, setDesde] = useState("");
     const [hasta, setHasta] = useState("");
     const [detalle, setDetalle] = useState<Venta | null>(null);
-    const [refresh, setRefresh] = useState(0);
+    const [, setRefresh] = useState(0);
 
     const filtradas = todasLasVentas().filter((v) => {
         if (desde && v.fecha.slice(0, 10) < desde) return false;

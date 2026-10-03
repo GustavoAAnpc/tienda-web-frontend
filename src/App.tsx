@@ -24,6 +24,7 @@ import { CarritoProvider } from "./context/CarritoContext";
 import { AuthProvider } from "./context/AuthContext";
 import { InventarioProvider } from "./context/InventarioContext";
 import { ThemeProvider } from "./context/ThemeContext";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   return (
@@ -32,9 +33,12 @@ function App() {
         <InventarioProvider>
           <CarritoProvider>
             <BrowserRouter>
+            <ScrollToTop />
             <Routes>
+              {/* Inicio / Redirección */}
+              <Route path="/" element={<Navigate to="/inicio" replace />} />
+
               {/* Autenticación */}
-              <Route path="/" element={<Navigate to="/login" replace />} />
               <Route path="/login" element={<Login />} />
               <Route path="/registro" element={<Registro />} />
               <Route path="/register" element={<Navigate to="/registro" replace />} />

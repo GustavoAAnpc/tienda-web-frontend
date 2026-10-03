@@ -34,7 +34,7 @@
 .pedidos-head,
 .pedidos-fila {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr auto;
+    grid-template-columns: 1fr 1fr 1fr 1fr auto;
     gap: 16px;
     align-items: center;
     padding: 14px 22px;
@@ -69,6 +69,18 @@
     color: var(--text-muted);
     font-size: 13.5px;
 }
+
+.pedidos-estado {
+    display: flex;
+    flex-direction: column;
+    font-size: 13px;
+    font-weight: 600;
+}
+.pedidos-estado.pendiente { color: var(--status-warning); }
+.pedidos-estado.procesando { color: var(--accent); }
+.pedidos-estado.enviado, .pedidos-estado.listo-para-recojo { color: #3b82f6; }
+.pedidos-estado.entregado, .pedidos-estado.pagada { color: var(--status-success); }
+.pedidos-estado.cancelado { color: var(--status-danger); }
 
 .pedidos-total {
     color: #16a34a;

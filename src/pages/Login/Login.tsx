@@ -70,8 +70,8 @@ function Login() {
                     <h2>TechStore</h2>
 
                     <p>
-                        Tu tienda de tecnología: smartphones, audio,
-                        periféricos y accesorios en un solo lugar.
+                        Tu tienda minorista de tecnología en San Juan de Lurigancho:
+                        laptops, pantallas, audífonos y periféricos con control logístico en tiempo real.
                     </p>
                 </div>
 

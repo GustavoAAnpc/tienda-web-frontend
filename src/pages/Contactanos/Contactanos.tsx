@@ -63,8 +63,8 @@ function Contactanos() {
                                 </svg>
                             </div>
                             <div>
-                                <strong>Tienda</strong>
-                                <span>Av. Garcilaso 1234, Lima – Perú</span>
+                                <strong>Tienda y Almacén</strong>
+                                <span>Av. Próceres de la Independencia 2450, San Juan de Lurigancho, Lima – Perú</span>
                             </div>
                         </div>
 

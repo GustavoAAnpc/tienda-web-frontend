@@ -58,6 +58,7 @@ function MisCompras() {
                         <div className="pedidos-head">
                             <span>Código</span>
                             <span>Fecha</span>
+                            <span>Estado / Entrega</span>
                             <span>Total</span>
                             <span></span>
                         </div>
@@ -66,6 +67,12 @@ function MisCompras() {
                             <div key={p.numero} className="pedidos-fila">
                                 <strong>{p.numero}</strong>
                                 <span className="pedidos-fecha">{p.fecha}</span>
+                                <span className={`pedidos-estado ${p.estado?.toLowerCase().replace(/\s/g, "-")}`}>
+                                    {p.estado || "Pendiente"}
+                                    <small style={{display:"block", color:"var(--text-muted)", fontSize:"11px"}}>
+                                        {p.tipoEntrega === "recojo" ? "Recojo en tienda" : "Envío a domicilio"}
+                                    </small>
+                                </span>
                                 <strong className="pedidos-total">
                                     S/ {p.total.toLocaleString("es-PE")}
                                 </strong>
@@ -94,7 +101,12 @@ function MisCompras() {
                             </div>
 
                             {detalle.comprobante && (
-                                <div style={{ marginBottom: "16px", padding: "12px 14px", background: "var(--bg-subtle)", borderRadius: "var(--radius-md)", fontSize: "13px", display: "flex", flexDirection: "column", gap: "4px" }}>
+                                <div style={{ marginBottom: "16px", padding: "12px 14px", background: "var(--bg-subtle)", borderRadius: "var(--radius-md)", fontSize: "13px", display: "flex", flexDirection: "column", gap: "6px" }}>
+                                    <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                        <span><strong>Estado:</strong> <span style={{ color: "var(--accent)", fontWeight: 700 }}>{detalle.estado || "Pendiente"}</span></span>
+                                        <span><strong>Entrega:</strong> {detalle.tipoEntrega === "recojo" ? "Recojo en tienda" : "Envío a domicilio"}</span>
+                                    </div>
+                                    <hr style={{ border: 0, borderTop: "1px solid var(--border-color)", margin: "4px 0" }} />
                                     <div><strong>Comprobante:</strong> {detalle.comprobante.tipo} Electrónica ({detalle.comprobante.documento})</div>
                                     <div><strong>Titular:</strong> {detalle.comprobante.nombreRazonSocial}</div>
                                     {detalle.metodoPago && (

@@ -1,6 +1,8 @@
 // Ventas de ejemplo + ventas reales del carrito (solo frontend).
 // Cuando haya backend, todo esto viene de la API y este archivo desaparece.
 
+import type { EstadoPedido, TipoEntrega } from "./pedidos";
+
 export interface ItemVenta {
     id: number;
     nombre: string;
@@ -8,14 +10,13 @@ export interface ItemVenta {
     cantidad: number;
 }
 
-export type EstadoVenta = "Pagada" | "Pendiente";
-
 export interface Venta {
     numero: string;
     cliente: string;
     fecha: string; // ISO, para filtrar por rango
     total: number;
-    estado: EstadoVenta;
+    estado: EstadoPedido;
+    tipoEntrega?: TipoEntrega;
     items: ItemVenta[];
 }
 
@@ -78,18 +79,18 @@ export function nombreCliente(usuarioId: string): string {
     return usuarioId;
 }
 
-// Pedidos reales del carrito convertidos a ventas (siempre Pagada en esta demo)
 export function leerVentasReales(): Venta[] {
     try {
         const raw = localStorage.getItem("techstore-pedidos");
         const datos = raw ? JSON.parse(raw) : [];
         if (!Array.isArray(datos)) return [];
-        return datos.map((p: { numero: string; fecha: string; usuarioId: string; total: number; items: ItemVenta[] }) => ({
+        return datos.map((p: any) => ({
             numero: p.numero,
             cliente: nombreCliente(p.usuarioId),
             fecha: p.fecha,
             total: p.total,
-            estado: "Pagada" as EstadoVenta,
+            estado: p.estado || "Pendiente",
+            tipoEntrega: p.tipoEntrega || "envio",
             items: p.items ?? [],
         }));
     } catch {

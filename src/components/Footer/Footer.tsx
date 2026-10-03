@@ -45,9 +45,9 @@ function Footer() {
                         </button>
 
                         <p>
-                            Tu tienda de tecnología para encontrar
-                            productos electrónicos, accesorios y
-                            soluciones para tu día a día.
+                            Tu tienda minorista de tecnología en San Juan de Lurigancho:
+                            laptops, pantallas, audífonos y periféricos con control de
+                            inventarios y trazabilidad con Kardex.
                         </p>
 
                     </div>
@@ -153,6 +153,16 @@ function Footer() {
 
                             <li>
                                 <span className="footer-contact-label">
+                                    Ubicación
+                                </span>
+
+                                <span>
+                                    San Juan de Lurigancho, Lima
+                                </span>
+                            </li>
+
+                            <li>
+                                <span className="footer-contact-label">
                                     Correo
                                 </span>
 
@@ -167,7 +177,7 @@ function Footer() {
                                 </span>
 
                                 <span>
-                                    Lunes a Viernes
+                                    Lunes a Sábado
                                 </span>
                             </li>
 
@@ -177,7 +187,7 @@ function Footer() {
                                 </span>
 
                                 <span>
-                                    9:00 a. m. – 6:00 p. m.
+                                    9:00 a. m. – 7:00 p. m.
                                 </span>
                             </li>
 
@@ -195,7 +205,7 @@ function Footer() {
                 <div className="footer-bottom">
 
                     <span>
-                        © 2026 TechStore. Todos los derechos reservados.
+                        © 2026 TechStore — Proyecto Desarrollo Full Stack (UTP - San Juan de Lurigancho).
                     </span>
 
                     <div className="footer-bottom-links">

@@ -19,6 +19,9 @@ export interface ComprobanteInfo {
     total: number;
 }
 
+export type TipoEntrega = "envio" | "recojo";
+export type EstadoPedido = "Pendiente" | "Procesando" | "Enviado" | "Listo para recojo" | "Entregado" | "Cancelado";
+
 export interface Pedido {
     numero: string;
     fecha: string;
@@ -27,6 +30,8 @@ export interface Pedido {
     total: number;
     metodoPago?: MetodoPago;
     comprobante?: ComprobanteInfo;
+    tipoEntrega?: TipoEntrega;
+    estado?: EstadoPedido;
 }
 
 export const CLAVE_PEDIDOS = "techstore-pedidos";
@@ -53,4 +58,14 @@ export function guardarPedido(pedido: Pedido): void {
 
 export function generarNumeroPedido(): string {
     return `TS-${Date.now().toString().slice(-6)}`;
+}
+
+export function actualizarEstadoPedido(numero: string, nuevoEstado: EstadoPedido): void {
+    try {
+        const actuales = leerPedidos();
+        const actualizados = actuales.map(p => p.numero === numero ? { ...p, estado: nuevoEstado } : p);
+        localStorage.setItem(CLAVE_PEDIDOS, JSON.stringify(actualizados));
+    } catch {
+        // Fallback
+    }
 }

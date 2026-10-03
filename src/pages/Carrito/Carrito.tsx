@@ -28,7 +28,15 @@ function Carrito() {
 
     // Modal de pasarela de pagos y comprobante
     const [mostrarCheckout, setMostrarCheckout] = useState(false);
-    const [pasoCheckout, setPasoCheckout] = useState<1 | 2>(1);
+    const [pasoCheckout, setPasoCheckout] = useState<1 | 2 | 3>(1);
+
+    // Datos de Envío y Contacto (Paso 1)
+    const [tipoEntrega, setTipoEntrega] = useState<"envio" | "recojo">("envio");
+    const [correoContacto, setCorreoContacto] = useState("");
+    const [celularContacto, setCelularContacto] = useState("");
+    const [direccionEnvio, setDireccionEnvio] = useState("");
+    const [referenciaEnvio, setReferenciaEnvio] = useState("");
+    const [distritoEnvio, setDistritoEnvio] = useState("San Juan de Lurigancho");
 
     // Datos del comprobante (SUNAT / RENIEC)
     const [tipoComprobante, setTipoComprobante] = useState<TipoComprobante>("Boleta");
@@ -54,7 +62,8 @@ function Carrito() {
         .filter((l) => l.producto && l.producto.activo);
 
     const envioGratis = subtotal >= UMBRAL_ENVIO_GRATIS;
-    const envio = lineas.length === 0 || envioGratis ? 0 : COSTO_ENVIO;
+    const costoEnvioActual = tipoEntrega === "recojo" ? 0 : COSTO_ENVIO;
+    const envio = lineas.length === 0 || envioGratis ? 0 : costoEnvioActual;
     const total = subtotal + envio;
 
     // Cálculo tributario SUNAT (18% IGV incluido)
@@ -162,6 +171,8 @@ function Carrito() {
                 total,
                 metodoPago,
                 comprobante: infoComprobante,
+                tipoEntrega,
+                estado: "Pendiente"
             });
 
             setComprobanteEmitido(infoComprobante);
@@ -170,6 +181,9 @@ function Carrito() {
             setProcesandoPago(false);
             setMostrarCheckout(false);
             vaciar();
+
+            // Mover la vista hacia arriba suavemente para ver el mensaje de éxito
+            window.scrollTo({ top: 0, behavior: "smooth" });
         }, 1200);
     };
 
@@ -394,26 +408,140 @@ function Carrito() {
                             </div>
 
                             {/* Pestañas de pasos */}
-                            <div className="checkout-tabs">
+                            <div className="checkout-tabs checkout-tabs-3">
                                 <button
                                     type="button"
                                     className={`tab-btn ${pasoCheckout === 1 ? "activo" : ""}`}
                                     onClick={() => setPasoCheckout(1)}
                                 >
-                                    1. Comprobante SUNAT
+                                    1. Envío
                                 </button>
                                 <button
                                     type="button"
                                     className={`tab-btn ${pasoCheckout === 2 ? "activo" : ""}`}
                                     onClick={() => setPasoCheckout(2)}
                                 >
-                                    2. Método de Pago
+                                    2. Comprobante
+                                </button>
+                                <button
+                                    type="button"
+                                    className={`tab-btn ${pasoCheckout === 3 ? "activo" : ""}`}
+                                    onClick={() => setPasoCheckout(3)}
+                                >
+                                    3. Pago
                                 </button>
                             </div>
 
                             <form onSubmit={ejecutarPago} className="checkout-form">
-                                {/* ===== PASO 1: DATOS DE FACTURACIÓN SUNAT ===== */}
+                                {/* ===== PASO 1: DATOS DE ENVÍO Y CONTACTO ===== */}
                                 {pasoCheckout === 1 && (
+                                    <div className="paso-contenido paso-envio">
+                                        {!usuario && (
+                                            <div className="checkout-invitado-alerta">
+                                                <p><strong>¿Ya tienes una cuenta?</strong> Inicia sesión para guardar tu información y ganar puntos.</p>
+                                                <button type="button" className="btn-outline-sm" onClick={() => navigate("/login")}>
+                                                    Iniciar Sesión
+                                                </button>
+                                            </div>
+                                        )}
+
+                                        <div className="tipo-comp-selector" style={{ marginBottom: "16px" }}>
+                                            <button
+                                                type="button"
+                                                className={`btn-comp-tipo ${tipoEntrega === "envio" ? "activo" : ""}`}
+                                                onClick={() => setTipoEntrega("envio")}
+                                            >
+                                                <strong>Envío a Domicilio</strong>
+                                                <span>A todo San Juan de Lurigancho</span>
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className={`btn-comp-tipo ${tipoEntrega === "recojo" ? "activo" : ""}`}
+                                                onClick={() => setTipoEntrega("recojo")}
+                                            >
+                                                <strong>Recojo en Tienda</strong>
+                                                <span>Av. Próceres de la Ind. 2450</span>
+                                            </button>
+                                        </div>
+
+                                        <div className="checkout-campo">
+                                            <label>Correo Electrónico *</label>
+                                            <input 
+                                                type="email" 
+                                                placeholder="Ej. usuario@correo.com" 
+                                                value={correoContacto}
+                                                onChange={(e) => setCorreoContacto(e.target.value)}
+                                                required
+                                            />
+                                        </div>
+
+                                        <div className="checkout-campo">
+                                            <label>Teléfono Celular *</label>
+                                            <input 
+                                                type="tel" 
+                                                placeholder="Ej. 999 888 777" 
+                                                value={celularContacto}
+                                                onChange={(e) => setCelularContacto(e.target.value)}
+                                                required
+                                            />
+                                        </div>
+
+                                        {tipoEntrega === "envio" && (
+                                            <>
+                                                <div className="checkout-campo">
+                                                    <label>Dirección de Envío *</label>
+                                                    <input 
+                                                        type="text" 
+                                                        placeholder="Calle, Avenida, Jr." 
+                                                        value={direccionEnvio}
+                                                        onChange={(e) => setDireccionEnvio(e.target.value)}
+                                                        required
+                                                    />
+                                                </div>
+
+                                                <div className="checkout-campo-fila">
+                                                    <div className="checkout-campo">
+                                                        <label>Distrito *</label>
+                                                        <input 
+                                                            type="text" 
+                                                            value={distritoEnvio}
+                                                            onChange={(e) => setDistritoEnvio(e.target.value)}
+                                                            required
+                                                        />
+                                                    </div>
+                                                    <div className="checkout-campo">
+                                                        <label>Referencia</label>
+                                                        <input 
+                                                            type="text" 
+                                                            placeholder="Cerca de..." 
+                                                            value={referenciaEnvio}
+                                                            onChange={(e) => setReferenciaEnvio(e.target.value)}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </>
+                                        )}
+
+                                        <div className="checkout-acciones">
+                                            <button
+                                                type="button"
+                                                className="btn-primary-lg"
+                                                onClick={() => {
+                                                    if (correoContacto && celularContacto && (tipoEntrega === "recojo" || (direccionEnvio && distritoEnvio))) {
+                                                        setPasoCheckout(2);
+                                                    } else {
+                                                        alert("Por favor completa los campos obligatorios de contacto y envío.");
+                                                    }
+                                                }}
+                                            >
+                                                Continuar al Comprobante →
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* ===== PASO 2: DATOS DE FACTURACIÓN SUNAT ===== */}
+                                {pasoCheckout === 2 && (
                                     <div className="paso-contenido">
                                         <div className="tipo-comp-selector">
                                             <button
@@ -521,7 +649,7 @@ function Carrito() {
                                                     if (!nombreRazonSocial.trim()) {
                                                         handleConsultarDocumento();
                                                     }
-                                                    setPasoCheckout(2);
+                                                    setPasoCheckout(3);
                                                 }}
                                             >
                                                 Continuar a Medios de Pago →
@@ -530,8 +658,8 @@ function Carrito() {
                                     </div>
                                 )}
 
-                                {/* ===== PASO 2: MEDIO DE PAGO ===== */}
-                                {pasoCheckout === 2 && (
+                                {/* ===== PASO 3: MEDIO DE PAGO ===== */}
+                                {pasoCheckout === 3 && (
                                     <div className="paso-contenido">
                                         <div className="metodos-grid">
                                             <button

@@ -1,6 +1,16 @@
-   # TechStore — Plataforma E-Commerce & Control de Inventarios (Kardex)
+# TechStore — Plataforma E-Commerce & Control de Inventarios (Kardex)
 
-   ## 1. Descripcion General
+> **Asignatura:** Desarrollo Full Stack — Sección 38344  
+> **Docente:** Ventura Aguilar, Jeyson Junior  
+> **Integrantes:**  
+> - Asto Aiquipa, Gustavo Blas (U22300144)  
+> - Diego Armando Caire Quino (U23231103)  
+> **Periodo:** 2026-II — San Juan de Lurigancho, Lima  
+> **Repositorio:** [https://github.com/GustavoAAnpc/tienda-web-frontend.git](https://github.com/GustavoAAnpc/tienda-web-frontend.git)
+
+---
+
+## 1. Descripcion General
 
    **TechStore** es una plataforma web integral de comercio electronico y control logistico orientada al sector minorista de tecnologia en el Peru. Resuelve la desconexion frecuente entre el canal de ventas digital y la administracion de almacen al unificar una tienda virtual con facturacion electronica (**SUNAT/RENIEC**) y un sistema interno de **Kardex permanente** sincronizado en tiempo real, brindando soporte tanto a clientes como a administradores y personal de almacen.
 
@@ -47,7 +57,7 @@
 
    1. **Clonar el repositorio:**
       ```bash
-      git clone [URL_DE_TU_REPOSITORIO]
+      git clone https://github.com/GustavoAAnpc/tienda-web-frontend.git
       cd tienda-web-frontend
       ```
 
@@ -81,7 +91,7 @@
    ```
 
    ### Compilacion para Produccion (Build)
-   Genera el paquete optimizado para despliegue en la carpeta `dist/`:
+   Genera el paquete optimizado para despliegue en la carpeta `dist/`:     
    ```bash
    npm run build
    ```

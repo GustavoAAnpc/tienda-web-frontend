@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
@@ -15,6 +15,11 @@ function Detalle() {
 
     const { productos } = useInventario();
     const producto = productos.find((p) => p.id === Number(id));
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+        setCantidad(1);
+    }, [id]);
 
     if (!producto) {
         return (

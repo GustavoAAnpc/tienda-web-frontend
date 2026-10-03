@@ -80,28 +80,6 @@
    ```
    Accede desde tu navegador a `http://localhost:5173/`.
 
-   ### Validacion de Codigo y Calidad
-   Ejecuta las comprobaciones de tipado estricto y analisis de linter:
-   ```bash
-   # Validacion de tipos en TypeScript (debe retornar 0 errores)
-   npx tsc --noEmit
-
-   # Analisis estatico de codigo con ESLint
-   npm run lint
-   ```
-
-   ### Compilacion para Produccion (Build)
-   Genera el paquete optimizado para despliegue en la carpeta `dist/`:     
-   ```bash
-   npm run build
-   ```
-
-   ### Vista Previa del Paquete de Produccion
-   Sirve localmente los archivos compilados:
-   ```bash
-   npm run preview
-   ```
-
    ---
 
    ## 7. Cuentas de Acceso y Credenciales de Prueba
@@ -146,7 +124,3 @@
    5. Registra un Pull Request detallando el contexto tecnico de la propuesta.
 
    ---
-
-   ## 10. Licencia
-
-   Este proyecto se distribuye bajo los terminos de la Licencia **MIT**. Consulta el archivo `LICENSE` para mas informacion.

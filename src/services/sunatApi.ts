@@ -1,6 +1,3 @@
-// Servicio de consulta de comprobantes (SUNAT / RENIEC) en tiempo real
-// Realiza llamadas HTTP (fetch) a la API de apis.net.pe v2 para obtener datos oficiales reales
-
 export interface ResultadoDNI {
     dni: string;
     nombreCompleto: string;
@@ -20,16 +17,12 @@ export interface ResultadoRUC {
     distrito?: string;
 }
 
-/**
- * Consulta un DNI real en RENIEC a través de la API oficial
- */
 export async function consultarDNI(dni: string): Promise<ResultadoDNI> {
     const limpio = dni.trim().replace(/\D/g, "");
     if (limpio.length !== 8) {
         throw new Error("El DNI debe contener exactamente 8 dígitos numéricos");
     }
 
-    // Rutas a consultar: proxy local de Vite (evita CORS) y endpoint directo
     const urls = [
         `/api-peru/reniec/dni?numero=${limpio}`,
         `https://api.apis.net.pe/v2/reniec/dni?numero=${limpio}`,
@@ -82,9 +75,6 @@ export async function consultarDNI(dni: string): Promise<ResultadoDNI> {
     );
 }
 
-/**
- * Consulta un RUC real en SUNAT a través de la API oficial
- */
 export async function consultarRUC(ruc: string): Promise<ResultadoRUC> {
     const limpio = ruc.trim().replace(/\D/g, "");
     if (limpio.length !== 11) {
@@ -95,7 +85,6 @@ export async function consultarRUC(ruc: string): Promise<ResultadoRUC> {
         throw new Error("El RUC debe iniciar con 10, 15, 17 o 20");
     }
 
-    // Rutas a consultar: proxy local de Vite y endpoint directo
     const urls = [
         `/api-peru/sunat/ruc?numero=${limpio}`,
         `https://api.apis.net.pe/v2/sunat/ruc?numero=${limpio}`,

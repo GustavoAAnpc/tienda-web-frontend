@@ -33,60 +33,53 @@ function App() {
         <InventarioProvider>
           <CarritoProvider>
             <BrowserRouter>
-            <ScrollToTop />
-            <Routes>
-              {/* Inicio / Redirección */}
-              <Route path="/" element={<Navigate to="/inicio" replace />} />
+              <ScrollToTop />
+              <Routes>
+                <Route path="/" element={<Navigate to="/inicio" replace />} />
 
-              {/* Autenticación */}
-              <Route path="/login" element={<Login />} />
-              <Route path="/registro" element={<Registro />} />
-              <Route path="/register" element={<Navigate to="/registro" replace />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/registro" element={<Registro />} />
+                <Route path="/register" element={<Navigate to="/registro" replace />} />
 
-              {/* Cliente / Tienda */}
-              <Route path="/inicio" element={<Inicio />} />
-              <Route path="/productos" element={<Productos />} />
-              <Route path="/productos/:id" element={<Detalle />} />
-              <Route path="/contactanos" element={<Contactanos />} />
-              <Route path="/carrito" element={<Carrito />} />
-              <Route path="/mis-compras" element={<MisCompras />} />
-              <Route path="/mi-cuenta" element={<MiCuenta />} />
+                <Route path="/inicio" element={<Inicio />} />
+                <Route path="/productos" element={<Productos />} />
+                <Route path="/productos/:id" element={<Detalle />} />
+                <Route path="/contactanos" element={<Contactanos />} />
+                <Route path="/carrito" element={<Carrito />} />
+                <Route path="/mis-compras" element={<MisCompras />} />
+                <Route path="/mi-cuenta" element={<MiCuenta />} />
 
-              {/* Redirecciones de rutas con mayúsculas */}
-              <Route path="/Inicio" element={<Navigate to="/inicio" replace />} />
-              <Route path="/Productos" element={<Navigate to="/productos" replace />} />
-              <Route path="/Contactanos" element={<Navigate to="/contactanos" replace />} />
-              <Route path="/Carrito" element={<Navigate to="/carrito" replace />} />
-              <Route path="/MisCompras" element={<Navigate to="/mis-compras" replace />} />
-              <Route path="/MiCuenta" element={<Navigate to="/mi-cuenta" replace />} />
-              <Route path="/Admin/*" element={<Navigate to="/admin" replace />} />
+                <Route path="/Inicio" element={<Navigate to="/inicio" replace />} />
+                <Route path="/Productos" element={<Navigate to="/productos" replace />} />
+                <Route path="/Contactanos" element={<Navigate to="/contactanos" replace />} />
+                <Route path="/Carrito" element={<Navigate to="/carrito" replace />} />
+                <Route path="/MisCompras" element={<Navigate to="/mis-compras" replace />} />
+                <Route path="/MiCuenta" element={<Navigate to="/mi-cuenta" replace />} />
+                <Route path="/Admin/*" element={<Navigate to="/admin" replace />} />
 
-              {/* Área Administrador */}
-              <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<AdminDashboard />} />
-                <Route path="dashboard" element={<AdminDashboard />} />
-                <Route path="ventas" element={<AdminVentas />} />
-                <Route path="productos" element={<AdminProductos />} />
-                <Route path="usuarios" element={<AdminUsuarios />} />
-                <Route path="reportes" element={<AdminReportes />} />
-              </Route>
+                <Route path="/admin" element={<AdminLayout />}>
+                  <Route index element={<AdminDashboard />} />
+                  <Route path="dashboard" element={<AdminDashboard />} />
+                  <Route path="ventas" element={<AdminVentas />} />
+                  <Route path="productos" element={<AdminProductos />} />
+                  <Route path="usuarios" element={<AdminUsuarios />} />
+                  <Route path="reportes" element={<AdminReportes />} />
+                </Route>
 
-              {/* Área Almacén */}
-              <Route path="/almacen" element={<AlmacenLayout />}>
-                <Route index element={<AlmacenDashboard />} />
-                <Route path="dashboard" element={<AlmacenDashboard />} />
-                <Route path="productos" element={<AlmacenProductos />} />
-                <Route path="entradas" element={<AlmacenEntradas />} />
-                <Route path="kardex" element={<AlmacenKardex />} />
-              </Route>
+                <Route path="/almacen" element={<AlmacenLayout />}>
+                  <Route index element={<AlmacenDashboard />} />
+                  <Route path="dashboard" element={<AlmacenDashboard />} />
+                  <Route path="productos" element={<AlmacenProductos />} />
+                  <Route path="entradas" element={<AlmacenEntradas />} />
+                  <Route path="kardex" element={<AlmacenKardex />} />
+                </Route>
 
-              {/* 404 No encontrado */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </CarritoProvider>
-      </InventarioProvider>
-    </AuthProvider>
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </CarritoProvider>
+        </InventarioProvider>
+      </AuthProvider>
     </ThemeProvider>
   );
 }

@@ -17,7 +17,7 @@ function Ventas() {
         if (desde && v.fecha.slice(0, 10) < desde) return false;
         if (hasta && v.fecha.slice(0, 10) > hasta) return false;
         const q = busqueda.trim().toLowerCase();
-        if (q && !v.numero.toLowerCase().includes(q) && !v.cliente.toLowerCase().includes(q)) return false;
+        if (q && !v.numero.toLowerCase().includes(q) && !v.cliente.toLowerCase().includes(q) && !(v.documento && v.documento.includes(q))) return false;
         return true;
     });
 
@@ -28,7 +28,7 @@ function Ventas() {
 
             <div className="ventas-filtros">
                 <input
-                    placeholder="Buscar por número o cliente..."
+                    placeholder="Buscar por número, cliente, RUC o DNI..."
                     value={busqueda}
                     onChange={(e) => setBusqueda(e.target.value)}
                 />

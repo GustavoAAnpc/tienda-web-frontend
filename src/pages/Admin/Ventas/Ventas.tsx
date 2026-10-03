@@ -11,7 +11,7 @@ function Ventas() {
     const [desde, setDesde] = useState("");
     const [hasta, setHasta] = useState("");
     const [detalle, setDetalle] = useState<Venta | null>(null);
-    const [refresh, setRefresh] = useState(0); // Para forzar re-render tras actualizar estado
+    const [refresh, setRefresh] = useState(0);
 
     const filtradas = todasLasVentas().filter((v) => {
         if (desde && v.fecha.slice(0, 10) < desde) return false;
@@ -72,10 +72,10 @@ function Ventas() {
                             </div>
                             <button className="modal-cerrar" onClick={() => setDetalle(null)}>✕</button>
                         </div>
-                        
+
                         <div style={{ marginBottom: "16px", padding: "12px", background: "var(--bg-subtle)", borderRadius: "var(--radius-md)", display: "flex", alignItems: "center", gap: "12px" }}>
                             <label style={{ fontSize: "13px", fontWeight: 600 }}>Cambiar estado:</label>
-                            <select 
+                            <select
                                 style={{ padding: "6px 12px", borderRadius: "var(--radius-sm)", border: "1px solid var(--border-color)", background: "var(--bg-surface)", color: "var(--text-main)" }}
                                 value={detalle.estado}
                                 onChange={(e) => {

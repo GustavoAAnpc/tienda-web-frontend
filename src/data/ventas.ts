@@ -13,7 +13,7 @@ export interface ItemVenta {
 export interface Venta {
     numero: string;
     cliente: string;
-    fecha: string; // ISO, para filtrar por rango
+    fecha: string;
     total: number;
     estado: EstadoPedido;
     tipoEntrega?: TipoEntrega;
@@ -27,47 +27,70 @@ function haceDias(n: number): string {
     return d.toISOString();
 }
 
-// Historial de ejemplo con nuestros productos y clientes ficticios
 export const VENTAS_DEMO: Venta[] = [
-    { numero: "VTA-012", cliente: "María Torres", fecha: haceDias(0), total: 517, estado: "Entregado", items: [
-        { id: 1, nombre: "Mouse Logitech G502 HERO", precio: 229, cantidad: 2 },
-        { id: 6, nombre: "Kit Cargador Xiaomi 65W USB-C", precio: 59, cantidad: 1 },
-    ]},
-    { numero: "VTA-011", cliente: "José Ramírez", fecha: haceDias(0), total: 329, estado: "Entregado", items: [
-        { id: 8, nombre: "Parlante JBL Flip 7 Bluetooth", precio: 329, cantidad: 1 },
-    ]},
-    { numero: "VTA-010", cliente: "Ana Quispe", fecha: haceDias(1), total: 1481, estado: "Entregado", items: [
-        { id: 5, nombre: "Samsung Galaxy A55 5G 8GB / 128GB", precio: 1481, cantidad: 1 },
-    ]},
-    { numero: "VTA-009", cliente: "Pedro Huamán", fecha: haceDias(1), total: 444, estado: "Pendiente", items: [
-        { id: 3, nombre: "Teclado Redragon Fizz Pro K616 RGB", precio: 215, cantidad: 1 },
-        { id: 1, nombre: "Mouse Logitech G502 HERO", precio: 229, cantidad: 1 },
-    ]},
-    { numero: "VTA-008", cliente: "Rosa Díaz", fecha: haceDias(3), total: 1049, estado: "Entregado", items: [
-        { id: 2, nombre: "Audífonos Sony WH-1000XM4", precio: 1049, cantidad: 1 },
-    ]},
-    { numero: "VTA-007", cliente: "Miguel Torres", fecha: haceDias(5), total: 729, estado: "Entregado", items: [
-        { id: 7, nombre: "Monitor Xiaomi G27Qi 27\" 2K 200Hz", precio: 729, cantidad: 1 },
-    ]},
-    { numero: "VTA-006", cliente: "Carmen Ruiz", fecha: haceDias(6), total: 177, estado: "Entregado", items: [
-        { id: 6, nombre: "Kit Cargador Xiaomi 65W USB-C", precio: 59, cantidad: 3 },
-    ]},
-    { numero: "VTA-005", cliente: "Jorge Paredes", fecha: haceDias(9), total: 2599, estado: "Entregado", items: [
-        { id: 4, nombre: "Laptop Lenovo IdeaPad Slim 3 Ryzen 7 / 16GB / 512GB", precio: 2599, cantidad: 1 },
-    ]},
-    { numero: "VTA-004", cliente: "Lucía Fernández", fecha: haceDias(12), total: 658, estado: "Pendiente", items: [
-        { id: 8, nombre: "Parlante JBL Flip 7 Bluetooth", precio: 329, cantidad: 2 },
-    ]},
-    { numero: "VTA-003", cliente: "Diego Salazar", fecha: haceDias(15), total: 347, estado: "Entregado", items: [
-        { id: 1, nombre: "Mouse Logitech G502 HERO", precio: 229, cantidad: 1 },
-        { id: 6, nombre: "Kit Cargador Xiaomi 65W USB-C", precio: 59, cantidad: 2 },
-    ]},
-    { numero: "VTA-002", cliente: "Sofía Mendoza", fecha: haceDias(22), total: 1481, estado: "Entregado", items: [
-        { id: 5, nombre: "Samsung Galaxy A55 5G 8GB / 128GB", precio: 1481, cantidad: 1 },
-    ]},
-    { numero: "VTA-001", cliente: "Rosa Díaz", fecha: haceDias(28), total: 1049, estado: "Entregado", items: [
-        { id: 2, nombre: "Audífonos Sony WH-1000XM4", precio: 1049, cantidad: 1 },
-    ]},
+    {
+        numero: "VTA-012", cliente: "María Torres", fecha: haceDias(0), total: 517, estado: "Entregado", items: [
+            { id: 1, nombre: "Mouse Logitech G502 HERO", precio: 229, cantidad: 2 },
+            { id: 6, nombre: "Kit Cargador Xiaomi 65W USB-C", precio: 59, cantidad: 1 },
+        ]
+    },
+    {
+        numero: "VTA-011", cliente: "José Ramírez", fecha: haceDias(0), total: 329, estado: "Entregado", items: [
+            { id: 8, nombre: "Parlante JBL Flip 7 Bluetooth", precio: 329, cantidad: 1 },
+        ]
+    },
+    {
+        numero: "VTA-010", cliente: "Ana Quispe", fecha: haceDias(1), total: 1481, estado: "Entregado", items: [
+            { id: 5, nombre: "Samsung Galaxy A55 5G 8GB / 128GB", precio: 1481, cantidad: 1 },
+        ]
+    },
+    {
+        numero: "VTA-009", cliente: "Pedro Huamán", fecha: haceDias(1), total: 444, estado: "Pendiente", items: [
+            { id: 3, nombre: "Teclado Redragon Fizz Pro K616 RGB", precio: 215, cantidad: 1 },
+            { id: 1, nombre: "Mouse Logitech G502 HERO", precio: 229, cantidad: 1 },
+        ]
+    },
+    {
+        numero: "VTA-008", cliente: "Rosa Díaz", fecha: haceDias(3), total: 1049, estado: "Entregado", items: [
+            { id: 2, nombre: "Audífonos Sony WH-1000XM4", precio: 1049, cantidad: 1 },
+        ]
+    },
+    {
+        numero: "VTA-007", cliente: "Miguel Torres", fecha: haceDias(5), total: 729, estado: "Entregado", items: [
+            { id: 7, nombre: "Monitor Xiaomi G27Qi 27\" 2K 200Hz", precio: 729, cantidad: 1 },
+        ]
+    },
+    {
+        numero: "VTA-006", cliente: "Carmen Ruiz", fecha: haceDias(6), total: 177, estado: "Entregado", items: [
+            { id: 6, nombre: "Kit Cargador Xiaomi 65W USB-C", precio: 59, cantidad: 3 },
+        ]
+    },
+    {
+        numero: "VTA-005", cliente: "Jorge Paredes", fecha: haceDias(9), total: 2599, estado: "Entregado", items: [
+            { id: 4, nombre: "Laptop Lenovo IdeaPad Slim 3 Ryzen 7 / 16GB / 512GB", precio: 2599, cantidad: 1 },
+        ]
+    },
+    {
+        numero: "VTA-004", cliente: "Lucía Fernández", fecha: haceDias(12), total: 658, estado: "Pendiente", items: [
+            { id: 8, nombre: "Parlante JBL Flip 7 Bluetooth", precio: 329, cantidad: 2 },
+        ]
+    },
+    {
+        numero: "VTA-003", cliente: "Diego Salazar", fecha: haceDias(15), total: 347, estado: "Entregado", items: [
+            { id: 1, nombre: "Mouse Logitech G502 HERO", precio: 229, cantidad: 1 },
+            { id: 6, nombre: "Kit Cargador Xiaomi 65W USB-C", precio: 59, cantidad: 2 },
+        ]
+    },
+    {
+        numero: "VTA-002", cliente: "Sofía Mendoza", fecha: haceDias(22), total: 1481, estado: "Entregado", items: [
+            { id: 5, nombre: "Samsung Galaxy A55 5G 8GB / 128GB", precio: 1481, cantidad: 1 },
+        ]
+    },
+    {
+        numero: "VTA-001", cliente: "Rosa Díaz", fecha: haceDias(28), total: 1049, estado: "Entregado", items: [
+            { id: 2, nombre: "Audífonos Sony WH-1000XM4", precio: 1049, cantidad: 1 },
+        ]
+    },
 ];
 
 // Nombre visible para los pedidos hechos desde el carrito

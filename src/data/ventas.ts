@@ -18,6 +18,7 @@ export interface Venta {
     estado: EstadoPedido;
     tipoEntrega?: TipoEntrega;
     items: ItemVenta[];
+    documento?: string;
 }
 
 function haceDias(n: number): string {
@@ -29,23 +30,23 @@ function haceDias(n: number): string {
 
 export const VENTAS_DEMO: Venta[] = [
     {
-        numero: "VTA-012", cliente: "María Torres", fecha: haceDias(0), total: 517, estado: "Entregado", items: [
+        numero: "VTA-012", cliente: "María Torres", documento: "73214569", fecha: haceDias(0), total: 517, estado: "Entregado", items: [
             { id: 1, nombre: "Mouse Logitech G502 HERO", precio: 229, cantidad: 2 },
             { id: 6, nombre: "Kit Cargador Xiaomi 65W USB-C", precio: 59, cantidad: 1 },
         ]
     },
     {
-        numero: "VTA-011", cliente: "José Ramírez", fecha: haceDias(0), total: 329, estado: "Entregado", items: [
+        numero: "VTA-011", cliente: "José Ramírez", documento: "45678912", fecha: haceDias(0), total: 329, estado: "Entregado", items: [
             { id: 8, nombre: "Parlante JBL Flip 7 Bluetooth", precio: 329, cantidad: 1 },
         ]
     },
     {
-        numero: "VTA-010", cliente: "Ana Quispe", fecha: haceDias(1), total: 1481, estado: "Entregado", items: [
+        numero: "VTA-010", cliente: "Ana Quispe", documento: "20546987123", fecha: haceDias(1), total: 1481, estado: "Entregado", items: [
             { id: 5, nombre: "Samsung Galaxy A55 5G 8GB / 128GB", precio: 1481, cantidad: 1 },
         ]
     },
     {
-        numero: "VTA-009", cliente: "Pedro Huamán", fecha: haceDias(1), total: 444, estado: "Pendiente", items: [
+        numero: "VTA-009", cliente: "Pedro Huamán", documento: "12345678", fecha: haceDias(1), total: 444, estado: "Pendiente", items: [
             { id: 3, nombre: "Teclado Redragon Fizz Pro K616 RGB", precio: 215, cantidad: 1 },
             { id: 1, nombre: "Mouse Logitech G502 HERO", precio: 229, cantidad: 1 },
         ]
@@ -110,6 +111,7 @@ export function leerVentasReales(): Venta[] {
         return datos.map((p: any) => ({
             numero: p.numero,
             cliente: nombreCliente(p.usuarioId),
+            documento: p.comprobante?.documento || "",
             fecha: p.fecha,
             total: p.total,
             estado: p.estado || "Pendiente",

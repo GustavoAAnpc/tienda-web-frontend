@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import type { Rol } from "../../context/AuthContext";
 import ThemeToggle from "../../components/ThemeToggle/ThemeToggle";
-import "./Login.css";
 
 // A dónde va cada rol después de ingresar
 const RUTA_POR_ROL: Record<Rol, string> = {
@@ -17,13 +16,20 @@ function Login() {
     const [acceso, setAcceso] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [bloqueado, setBloqueado] = useState(false);
+    const [cargando, setCargando] = useState(false);
 
     const navigate = useNavigate();
     const { login } = useAuth();
 
-    function iniciarSesion(e: SubmitEvent) {
+    async function iniciarSesion(e: SubmitEvent) {
         e.preventDefault();
         setError("");
+
+        if (bloqueado) {
+            setError("Cuenta bloqueada por seguridad tras 3 intentos erróneos.");
+            return;
+        }
 
         if (acceso.trim() === "") {
             setError("Ingresa tu usuario o correo");
@@ -34,8 +40,14 @@ function Login() {
             return;
         }
 
-        const res = login(acceso, password);
+        setCargando(true);
+        const res = await login(acceso, password);
+        setCargando(false);
+
         if (!res.ok || !res.usuario) {
+            if (res.bloqueado) {
+                setBloqueado(true);
+            }
             setError(res.error ?? "No se pudo iniciar sesión");
             return;
         }
@@ -52,44 +64,42 @@ function Login() {
     }
 
     return (
-        <div className="login-container">
-            <div className="login-theme-toggle">
+        <div className="min-h-screen w-full flex bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 relative transition-colors">
+            {/* Theme Toggle flotante */}
+            <div className="absolute top-4 right-4 z-20">
                 <ThemeToggle />
             </div>
 
-            {/* Lado izquierdo - Imagen */}
-            <div className="login-image-section">
-
+            {/* Lado izquierdo - Imagen Hero (Desktop) */}
+            <div className="hidden lg:flex lg:w-1/2 relative bg-slate-900 overflow-hidden">
                 <img
                     src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3"
                     alt="Imagen de la tienda"
-                    className="login-image"
+                    className="w-full h-full object-cover opacity-60"
                 />
-
-                <div className="login-image-overlay">
-                    <h2>TechStore</h2>
-
-                    <p>
-                        Tu tienda minorista de tecnología en San Juan de Lurigancho:
-                        laptops, pantallas, audífonos y periféricos con control logístico en tiempo real.
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent flex flex-col justify-end p-12 text-white">
+                    <span className="text-blue-400 font-bold tracking-wider text-xs uppercase mb-2">
+                        Plataforma Full Stack
+                    </span>
+                    <h2 className="text-3xl font-extrabold tracking-tight mb-3 text-white">
+                        TechStore San Juan de Lurigancho
+                    </h2>
+                    <p className="text-slate-300 text-sm max-w-md leading-relaxed">
+                        Tu tienda minorista de tecnología: laptops, pantallas, periféricos y control logístico en tiempo real con trazabilidad Kardex.
                     </p>
                 </div>
-
             </div>
 
-            {/* Lado derecho - Login */}
-            <div className="login-form-section">
-
-                <div className="login-wrapper">
-
-                    {/* Logo */}
-                    <div className="login-header">
-
+            {/* Lado derecho - Formulario Login */}
+            <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12">
+                <div className="w-full max-w-md space-y-6">
+                    {/* Logo & Header */}
+                    <div className="text-center sm:text-left space-y-2">
                         <button
-                            className="login-logo"
+                            className="inline-flex items-center gap-2.5 cursor-pointer group"
                             onClick={() => navigate("/inicio")}
                         >
-                            <div className="login-logo-icon">
+                            <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
                                 <svg
                                     viewBox="0 0 24 24"
                                     fill="none"
@@ -97,130 +107,119 @@ function Login() {
                                     strokeWidth="2.5"
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
+                                    className="w-5 h-5"
                                 >
                                     <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
                                 </svg>
                             </div>
-
-                            <span className="login-logo-text">
+                            <span className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
                                 TechStore
                             </span>
                         </button>
-
-                        <h1 className="login-title">
+                        <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white pt-2">
                             Iniciar sesión
                         </h1>
-
-                        <p className="login-subtitle">
-                            Bienvenido de vuelta
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                            Bienvenido de vuelta. Ingresa a tu cuenta para continuar.
                         </p>
-
                     </div>
 
-                    {/* Tarjeta */}
-                    <div className="login-card">
-
-                        <form
-                            className="login-form"
-                            onSubmit={iniciarSesion}
-                        >
-
+                    {/* Tarjeta de Formulario */}
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-sm">
+                        <form className="space-y-4" onSubmit={iniciarSesion}>
                             {/* Usuario o correo */}
-                            <div className="login-field">
-
-                                <label className="login-label">
+                            <div className="space-y-1.5">
+                                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">
                                     Usuario o correo
                                 </label>
-
                                 <input
-                                    className="login-input"
+                                    className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                                     type="text"
                                     value={acceso}
-                                    onChange={(e) =>
-                                        setAcceso(e.target.value)
-                                    }
+                                    disabled={bloqueado || cargando}
+                                    onChange={(e) => setAcceso(e.target.value)}
                                     placeholder="admin, almacen o tu correo"
                                 />
-
                             </div>
 
                             {/* Contraseña */}
-                            <div className="login-field">
-
-                                <div className="login-password-header">
-
-                                    <label className="login-label">
-                                        Contraseña
-                                    </label>
-
-                                </div>
-
+                            <div className="space-y-1.5">
+                                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">
+                                    Contraseña
+                                </label>
                                 <input
-                                    className="login-input"
+                                    className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                                     type="password"
                                     value={password}
-                                    onChange={(e) =>
-                                        setPassword(e.target.value)
-                                    }
+                                    disabled={bloqueado || cargando}
+                                    onChange={(e) => setPassword(e.target.value)}
                                     placeholder="••••••••"
                                 />
-
                             </div>
 
+                            {/* Error Banner */}
                             {error && (
-                                <p className="login-error">
-                                    {error}
-                                </p>
+                                <div className="p-3 rounded-lg bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/60 text-xs text-red-600 dark:text-red-400 flex items-center gap-2">
+                                    <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                    </svg>
+                                    <span>{error}</span>
+                                </div>
                             )}
 
+                            {/* Botón Submit */}
                             <button
                                 type="submit"
-                                className="login-button"
+                                className="w-full py-2.5 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold text-sm shadow-sm hover:shadow transition-all duration-150 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                disabled={bloqueado || cargando}
                             >
-                                Iniciar sesión
+                                {cargando ? "Verificando credenciales..." : (bloqueado ? "Acceso Bloqueado" : "Iniciar sesión")}
                             </button>
-
                         </form>
 
-                        {/* Cuentas demo */}
-                        <div className="login-demo">
-                            <p className="login-demo-title">
+                        {/* Cuentas Demo Rápidas */}
+                        <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800 space-y-2.5">
+                            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-center">
                                 Cuentas de prueba (clic para usar)
                             </p>
-                            <div className="login-demo-grid">
-                                <button type="button" onClick={() => usarDemo("admin")}>
+                            <div className="grid grid-cols-3 gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => usarDemo("admin")}
+                                    className="py-1.5 px-2 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 hover:border-blue-500 dark:hover:border-blue-500 text-slate-700 dark:text-slate-300 transition-all cursor-pointer text-center"
+                                >
                                     Admin / 123
                                 </button>
-                                <button type="button" onClick={() => usarDemo("almacen")}>
+                                <button
+                                    type="button"
+                                    onClick={() => usarDemo("almacen")}
+                                    className="py-1.5 px-2 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 hover:border-blue-500 dark:hover:border-blue-500 text-slate-700 dark:text-slate-300 transition-all cursor-pointer text-center"
+                                >
                                     Almacén / 123
                                 </button>
-                                <button type="button" onClick={() => usarDemo("cliente")}>
+                                <button
+                                    type="button"
+                                    onClick={() => usarDemo("cliente")}
+                                    className="py-1.5 px-2 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 hover:border-blue-500 dark:hover:border-blue-500 text-slate-700 dark:text-slate-300 transition-all cursor-pointer text-center"
+                                >
                                     Cliente / 123
                                 </button>
                             </div>
                         </div>
 
-                        <div className="login-register">
-
-                            <p className="login-register-text">
-                                ¿No tienes cuenta?{" "}
-
-                                <button
-                                    className="login-register-button"
-                                    onClick={() => navigate("/register")}
-                                >
-                                    Registrarse
-                                </button>
-                            </p>
-
+                        {/* Link a Registro */}
+                        <div className="mt-6 text-center text-xs text-slate-500 dark:text-slate-400">
+                            ¿No tienes cuenta?{" "}
+                            <button
+                                className="font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 underline underline-offset-2 cursor-pointer"
+                                onClick={() => navigate("/register")}
+                            >
+                                Registrarse
+                            </button>
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
     );
 }

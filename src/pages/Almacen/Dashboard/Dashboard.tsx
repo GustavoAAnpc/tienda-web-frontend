@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { useInventario } from "../../../context/InventarioContext";
-import "./Dashboard.css";
 
 function fechaCorta(iso: string) {
     const d = new Date(iso);
@@ -15,79 +14,113 @@ function Dashboard() {
     const ultimasEntradas = movimientos.filter((m) => m.tipo === "Entrada").slice(0, 3);
 
     return (
-        <>
-            <h1>Dashboard de Almacén</h1>
+        <div className="space-y-6">
+            <div>
+                <h1 className="text-2xl font-black text-slate-900 dark:text-white">Dashboard de Almacén</h1>
+                <p className="text-sm text-slate-500 mt-1">Control de inventario, rotación física y movimientos Kardex.</p>
+            </div>
 
-            <section className="panel-cards">
-                <div className="panel-card">
+            {/* KPIs */}
+            <section className="admin-cards grid-cols-2 md:grid-cols-4">
+                <div className="admin-card">
                     <span>Productos registrados</span>
                     <strong>{productos.length}</strong>
                 </div>
-                <div className="panel-card">
+                <div className="admin-card">
                     <span>Stock total</span>
                     <strong>{stockTotal} uds.</strong>
                 </div>
-                <div className="panel-card">
-                    <span>Stock bajo</span>
+                <div className="admin-card alerta">
+                    <span>Stock crítico bajo</span>
                     <strong>{stockBajo}</strong>
                 </div>
-                <div className="panel-card">
-                    <span>Movimientos</span>
+                <div className="admin-card">
+                    <span>Movimientos Kardex</span>
                     <strong>{movimientos.length}</strong>
                 </div>
             </section>
 
-            <section className="panel-section">
-                <h2>Últimos movimientos</h2>
-                <div className="movs">
-                    {ultimos.map((m) => (
-                        <div key={m.id} className="mov">
-                            <span className={`pill-tipo ${m.tipo === "Entrada" ? "in" : "out"}`}>
-                                {m.tipo}
-                            </span>
-                            <span className="mov-prod">{m.producto}</span>
-                            <strong className={m.tipo === "Entrada" ? "cant-in" : "cant-out"}>
-                                {m.tipo === "Entrada" ? `+${m.cantidad}` : `-${m.cantidad}`}
-                            </strong>
-                            <span className="mov-fecha">{fechaCorta(m.fecha)}</span>
-                        </div>
-                    ))}
-                    {ultimos.length === 0 && <p className="vacio">Sin movimientos todavía.</p>}
-                </div>
-            </section>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Últimos movimientos */}
+                <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-4">
+                    <h2 className="text-base font-bold text-slate-900 dark:text-white">Últimos movimientos</h2>
+                    <div className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
+                        {ultimos.map((m) => (
+                            <div key={m.id} className="py-2.5 flex items-center justify-between gap-3">
+                                <div className="flex items-center gap-2.5">
+                                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                                        m.tipo === "Entrada"
+                                            ? "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400"
+                                            : "bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-400"
+                                    }`}>
+                                        {m.tipo}
+                                    </span>
+                                    <span className="font-semibold text-slate-800 dark:text-slate-200 truncate max-w-[180px]">{m.producto}</span>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <strong className={`font-mono font-bold ${m.tipo === "Entrada" ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}>
+                                        {m.tipo === "Entrada" ? `+${m.cantidad}` : `-${m.cantidad}`}
+                                    </strong>
+                                    <span className="text-slate-400">{fechaCorta(m.fecha)}</span>
+                                </div>
+                            </div>
+                        ))}
+                        {ultimos.length === 0 && <p className="text-sm text-slate-500 py-6 text-center">Sin movimientos todavía.</p>}
+                    </div>
+                </section>
 
-            <section className="panel-section">
-                <h2>Últimas entradas</h2>
-                <div className="movs">
-                    {ultimasEntradas.map((m) => (
-                        <div key={m.id} className="mov">
-                            <span className="mov-prod">{m.producto}</span>
-                            <strong className="cant-in">+{m.cantidad}</strong>
-                            <span className="mov-fecha">{fechaCorta(m.fecha)}</span>
-                        </div>
-                    ))}
-                    {ultimasEntradas.length === 0 && <p className="vacio">Sin entradas todavía.</p>}
-                </div>
-            </section>
+                {/* Últimas entradas */}
+                <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-4">
+                    <h2 className="text-base font-bold text-slate-900 dark:text-white">Últimos ingresos de mercadería</h2>
+                    <div className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
+                        {ultimasEntradas.map((m) => (
+                            <div key={m.id} className="py-2.5 flex items-center justify-between gap-3">
+                                <span className="font-semibold text-slate-800 dark:text-slate-200 truncate max-w-[200px]">{m.producto}</span>
+                                <div className="flex items-center gap-3">
+                                    <strong className="font-mono font-bold text-emerald-600 dark:text-emerald-400">+{m.cantidad} uds.</strong>
+                                    <span className="text-slate-400">{fechaCorta(m.fecha)}</span>
+                                </div>
+                            </div>
+                        ))}
+                        {ultimasEntradas.length === 0 && <p className="text-sm text-slate-500 py-6 text-center">Sin entradas registradas aún.</p>}
+                    </div>
+                </section>
+            </div>
 
-            <section className="panel-section">
-                <h2>Accesos rápidos</h2>
-                <div className="accesos">
-                    <button onClick={() => navigate("/almacen/productos")}>
-                        <strong>Productos</strong>
-                        <span>Ver y editar el catálogo</span>
+            {/* Accesos rápidos */}
+            <section className="space-y-3">
+                <h2 className="text-base font-bold text-slate-900 dark:text-white">Accesos rápidos de almacén</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <button
+                        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-emerald-500 dark:hover:border-emerald-500 p-5 rounded-2xl text-left shadow-sm hover:shadow-md transition-all cursor-pointer group"
+                        onClick={() => navigate("/almacen/productos")}
+                    >
+                        <strong className="block text-sm font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                            Catálogo de Productos
+                        </strong>
+                        <span className="block text-xs text-slate-500 mt-1">Ver y editar stock de inventario</span>
                     </button>
-                    <button onClick={() => navigate("/almacen/entradas")}>
-                        <strong>Registrar entrada</strong>
-                        <span>Ingresar mercadería</span>
+                    <button
+                        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-emerald-500 dark:hover:border-emerald-500 p-5 rounded-2xl text-left shadow-sm hover:shadow-md transition-all cursor-pointer group"
+                        onClick={() => navigate("/almacen/entradas")}
+                    >
+                        <strong className="block text-sm font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                            Registrar Entrada
+                        </strong>
+                        <span className="block text-xs text-slate-500 mt-1">Ingresar mercadería de proveedores</span>
                     </button>
-                    <button onClick={() => navigate("/almacen/kardex")}>
-                        <strong>Kardex</strong>
-                        <span>Historial de movimientos</span>
+                    <button
+                        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-emerald-500 dark:hover:border-emerald-500 p-5 rounded-2xl text-left shadow-sm hover:shadow-md transition-all cursor-pointer group"
+                        onClick={() => navigate("/almacen/kardex")}
+                    >
+                        <strong className="block text-sm font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                            Kardex Físico
+                        </strong>
+                        <span className="block text-xs text-slate-500 mt-1">Trazabilidad de entradas y salidas</span>
                     </button>
                 </div>
             </section>
-        </>
+        </div>
     );
 }
 

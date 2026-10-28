@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { CUENTAS_BASE, obtenerEstado, cambiarEstado, cambiarRolRegistrado } from "../../../data/usuarios";
 import type { Rol } from "../../../data/usuarios";
-import "../Admin.css";
-import "./Usuarios.css";
 
 interface FilaUsuario {
     id: string;
@@ -49,28 +47,37 @@ function Usuarios() {
     };
 
     return (
-        <>
-            <h1>Usuarios</h1>
-            <p className="admin-muted">{lista.length} usuarios en el sistema.</p>
+        <div className="space-y-6">
+            <div>
+                <h1 className="text-2xl font-black text-slate-900 dark:text-white">Gestión de Usuarios</h1>
+                <p className="text-sm text-slate-500 mt-1">{lista.length} usuarios registrados en el sistema.</p>
+            </div>
 
             <div className="tabla-wrap">
                 <table className="tabla">
                     <thead>
-                        <tr><th>Nombre</th><th>Correo / acceso</th><th>Rol</th><th>Estado</th><th>Registro</th><th>Acciones</th></tr>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Correo / Acceso</th>
+                            <th>Rol</th>
+                            <th>Estado</th>
+                            <th>Fecha Registro</th>
+                            <th>Acciones</th>
+                        </tr>
                     </thead>
                     <tbody>
                         {lista.map((u) => {
                             const estado = obtenerEstado(u.id);
                             return (
                                 <tr key={u.id}>
-                                    <td>{u.nombre}</td>
-                                    <td>{u.acceso}</td>
+                                    <td className="font-semibold">{u.nombre}</td>
+                                    <td className="font-mono text-xs text-slate-600 dark:text-slate-400">{u.acceso}</td>
                                     <td>
                                         {u.fija || u.id === "admin" ? (
                                             <span className={`badge rol-${u.rol}`}>{u.rol}</span>
                                         ) : (
                                             <select
-                                                className="rol-select"
+                                                className="px-2.5 py-1 text-xs font-semibold rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer"
                                                 value={u.rol}
                                                 onChange={(e) => cambiarRol(u, e.target.value as Rol)}
                                             >
@@ -85,16 +92,16 @@ function Usuarios() {
                                             {estado === "activo" ? "Activo" : "Inactivo"}
                                         </span>
                                     </td>
-                                    <td>{u.fecha}</td>
+                                    <td className="text-xs text-slate-500">{u.fecha}</td>
                                     <td>
-                                        <span className="acciones">
+                                        <div className="flex items-center gap-2">
                                             <button className="btn-mini" onClick={() => setDetalle(u)}>Ver</button>
                                             {u.id !== "admin" && (
                                                 <button className="btn-mini sec" onClick={() => toggleEstado(u)}>
                                                     {estado === "activo" ? "Desactivar" : "Activar"}
                                                 </button>
                                             )}
-                                        </span>
+                                        </div>
                                     </td>
                                 </tr>
                             );
@@ -110,17 +117,38 @@ function Usuarios() {
                             <h2>{detalle.nombre}</h2>
                             <button className="modal-cerrar" onClick={() => setDetalle(null)}>✕</button>
                         </div>
-                        <dl className="user-datos">
-                            <div><dt>Acceso</dt><dd>{detalle.acceso}</dd></div>
-                            <div><dt>Rol</dt><dd>{detalle.rol}</dd></div>
-                            <div><dt>Estado</dt><dd>{obtenerEstado(detalle.id)}</dd></div>
-                            <div><dt>Registro</dt><dd>{detalle.fecha}</dd></div>
-                            <div><dt>Tipo</dt><dd>{detalle.fija ? "Cuenta del sistema" : "Registrado en la tienda"}</dd></div>
+                        <dl className="divide-y divide-slate-200 dark:divide-slate-800 text-sm">
+                            <div className="py-2.5 flex justify-between">
+                                <dt className="text-slate-500 font-medium">Acceso / Correo</dt>
+                                <dd className="font-semibold text-slate-900 dark:text-white font-mono text-xs">{detalle.acceso}</dd>
+                            </div>
+                            <div className="py-2.5 flex justify-between items-center">
+                                <dt className="text-slate-500 font-medium">Rol</dt>
+                                <dd><span className={`badge rol-${detalle.rol}`}>{detalle.rol}</span></dd>
+                            </div>
+                            <div className="py-2.5 flex justify-between items-center">
+                                <dt className="text-slate-500 font-medium">Estado</dt>
+                                <dd>
+                                    <span className={`badge ${obtenerEstado(detalle.id) === "activo" ? "ok" : "off"}`}>
+                                        {obtenerEstado(detalle.id)}
+                                    </span>
+                                </dd>
+                            </div>
+                            <div className="py-2.5 flex justify-between">
+                                <dt className="text-slate-500 font-medium">Registro</dt>
+                                <dd className="font-semibold text-slate-900 dark:text-white">{detalle.fecha}</dd>
+                            </div>
+                            <div className="py-2.5 flex justify-between">
+                                <dt className="text-slate-500 font-medium">Tipo</dt>
+                                <dd className="text-xs text-slate-600 dark:text-slate-400">
+                                    {detalle.fija ? "Cuenta demo del sistema" : "Registrado en tienda"}
+                                </dd>
+                            </div>
                         </dl>
                     </div>
                 </div>
             )}
-        </>
+        </div>
     );
 }
 

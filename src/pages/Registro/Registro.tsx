@@ -14,10 +14,11 @@ function Registro() {
     const [verPass, setVerPass] = useState(false);
     const [terminos, setTerminos] = useState(false);
     const [error, setError] = useState("");
+    const [cargando, setCargando] = useState(false);
     const [creada, setCreada] = useState(false);
 
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const { registro } = useAuth();
 
     // Fuerza de contraseña: 0-4 puntos (largo, número, mayúscula, símbolo)
     const fuerza = [
@@ -65,23 +66,27 @@ function Registro() {
             return;
         }
 
-        // Solo frontend: guarda el usuario (con contraseña) en el navegador
-        const guardados = JSON.parse(localStorage.getItem("techstore-usuarios") ?? "[]");
-        if (guardados.some((u: { correo: string }) => u.correo.toLowerCase() === correo.trim().toLowerCase())) {
-            setError("Ese correo ya está registrado, inicia sesión");
-            return;
+        setCargando(true);
+        try {
+            const res = await registro({
+                nombre: nombre.trim(),
+                apellido: apellido.trim(),
+                correo: correo.trim(),
+                direccion: direccion.trim(),
+                password,
+            });
+
+            if (!res.ok) {
+                setError(res.error || "Error al registrar la cuenta.");
+                return;
+            }
+
+            setCreada(true);
+        } catch {
+            setError("Ocurrió un error inesperado al registrarte.");
+        } finally {
+            setCargando(false);
         }
-        guardados.push({
-            nombre: `${nombre.trim()} ${apellido.trim()}`,
-            apellido: apellido.trim(),
-            correo: correo.trim(),
-            direccion: direccion.trim(),
-            password,
-            fechaRegistro: new Date().toLocaleDateString("es-PE")
-        });
-        localStorage.setItem("techstore-usuarios", JSON.stringify(guardados));
-        await login(correo.trim(), password);
-        setCreada(true);
     }
 
     const inputClass =
@@ -310,9 +315,10 @@ function Registro() {
 
                                 <button
                                     type="submit"
-                                    className="w-full py-2.5 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold text-sm shadow-sm transition-all duration-150 cursor-pointer"
+                                    disabled={cargando}
+                                    className="w-full py-2.5 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm shadow-sm transition-all duration-150 cursor-pointer flex items-center justify-center gap-2"
                                 >
-                                    Crear cuenta
+                                    {cargando ? "Creando cuenta..." : "Crear cuenta"}
                                 </button>
                             </form>
                         )}

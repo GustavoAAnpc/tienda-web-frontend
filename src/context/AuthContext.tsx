@@ -12,9 +12,18 @@ import type { Usuario, UsuarioRegistrado, Rol } from "../data/usuarios";
 
 export type { Rol, Usuario };
 
+export interface DatosRegistro {
+    nombre: string;
+    apellido: string;
+    correo: string;
+    direccion?: string;
+    password: string;
+}
+
 interface AuthContexto {
     usuario: Usuario | null;
     login: (acceso: string, password: string) => Promise<{ ok: boolean; error?: string; usuario?: Usuario; bloqueado?: boolean }>;
+    registro: (datos: DatosRegistro) => Promise<{ ok: boolean; error?: string; usuario?: Usuario }>;
     logout: () => void;
     actualizarNombre: (nombre: string) => void;
 }
@@ -91,6 +100,92 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { ok: false, error: "Usuario o contraseña incorrectos" };
     };
 
+    const registro = async (datos: DatosRegistro): Promise<{ ok: boolean; error?: string; usuario?: Usuario }> => {
+        const correoLimpio = datos.correo.trim().toLowerCase();
+        const nombreCompleto = `${datos.nombre.trim()} ${datos.apellido.trim()}`;
+
+        // 1. Conexión con el Backend Spring Boot (PostgreSQL)
+        try {
+            const resp = await fetch("/api/auth/registro", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    nombre: datos.nombre.trim(),
+                    apellido: datos.apellido.trim(),
+                    correo: correoLimpio,
+                    direccion: datos.direccion?.trim() || "",
+                    password: datos.password,
+                }),
+            });
+
+            const data = await resp.json().catch(() => null);
+
+            if (resp.ok && data?.exitoso) {
+                const usuarioBack: Usuario = {
+                    id: data.nombreUsuario || correoLimpio,
+                    nombre: nombreCompleto,
+                    acceso: correoLimpio,
+                    rol: "cliente",
+                };
+                setUsuario(usuarioBack);
+
+                // Sincronizar en localStorage para compatibilidad
+                try {
+                    const raw = localStorage.getItem(CLAVE_USUARIOS);
+                    const lista: UsuarioRegistrado[] = raw ? JSON.parse(raw) : [];
+                    if (!lista.some((u) => u.correo.toLowerCase() === correoLimpio)) {
+                        lista.push({
+                            nombre: nombreCompleto,
+                            correo: correoLimpio,
+                            direccion: datos.direccion?.trim() || "",
+                            password: datos.password,
+                            fechaRegistro: new Date().toLocaleDateString("es-PE"),
+                            rol: "cliente",
+                        });
+                        localStorage.setItem(CLAVE_USUARIOS, JSON.stringify(lista));
+                    }
+                } catch {
+                    // Ignorar error de storage
+                }
+
+                return { ok: true, usuario: usuarioBack };
+            } else if (data?.mensaje) {
+                return { ok: false, error: data.mensaje };
+            }
+        } catch {
+            console.warn("[Auth] Backend Spring Boot no disponible en /api/auth/registro. Usando modo de respaldo local.");
+        }
+
+        // 2. Modo Respaldo Local (localStorage)
+        try {
+            const raw = localStorage.getItem(CLAVE_USUARIOS);
+            const lista: UsuarioRegistrado[] = raw ? JSON.parse(raw) : [];
+            if (lista.some((u) => u.correo.toLowerCase() === correoLimpio)) {
+                return { ok: false, error: "Ese correo ya está registrado, inicia sesión" };
+            }
+            lista.push({
+                nombre: nombreCompleto,
+                correo: correoLimpio,
+                direccion: datos.direccion?.trim() || "",
+                password: datos.password,
+                fechaRegistro: new Date().toLocaleDateString("es-PE"),
+                rol: "cliente",
+            });
+            localStorage.setItem(CLAVE_USUARIOS, JSON.stringify(lista));
+
+            const usuarioLocal: Usuario = {
+                id: correoLimpio,
+                nombre: nombreCompleto,
+                acceso: correoLimpio,
+                rol: "cliente",
+            };
+            setUsuario(usuarioLocal);
+            return { ok: true, usuario: usuarioLocal };
+        } catch {
+            return { ok: false, error: "Error al procesar el registro localmente" };
+        }
+    };
+
     const logout = () => setUsuario(null);
 
     // Actualiza el nombre visible (y lo guarda si es usuario registrado)
@@ -112,7 +207,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         });
     };
 
-    return <AuthContext.Provider value={{ usuario, login, logout, actualizarNombre }}>{children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={{ usuario, login, registro, logout, actualizarNombre }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth(): AuthContexto {

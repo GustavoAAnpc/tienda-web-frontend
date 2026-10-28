@@ -2,8 +2,6 @@ import { useNavigate } from "react-router-dom";
 import { useInventario } from "../../../context/InventarioContext";
 import { todasLasVentas, fechaCorta } from "../../../data/ventas";
 import type { Venta } from "../../../data/ventas";
-import "../Admin.css";
-import "./Dashboard.css";
 
 function mismoDia(a: Date, b: Date) {
     return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
@@ -28,31 +26,41 @@ function Dashboard() {
     const usuarios = JSON.parse(localStorage.getItem("techstore-usuarios") ?? "[]");
     const stockBajo = productos.filter((p) => p.activo && p.stock < 10);
 
-    // Top 5 por unidades vendidas (dato base de cada producto)
+    // Top 5 por unidades vendidas
     const top = [...productos].sort((a, b) => b.vendidos - a.vendidos).slice(0, 5);
     const maxTop = top[0]?.vendidos ?? 1;
 
     const recientes: Venta[] = ventas.slice(0, 5);
 
     return (
-        <>
-            <h1>Dashboard</h1>
-            <p className="admin-muted">Resumen general del negocio.</p>
+        <div className="space-y-8">
+            <div>
+                <h1 className="text-2xl font-black text-slate-900 dark:text-white">Dashboard General</h1>
+                <p className="text-sm text-slate-500 mt-1">Métricas y resumen operativo del negocio en tiempo real.</p>
+            </div>
 
-            <section className="admin-cards dash-6">
-                <div className="admin-card"><span>Ventas de hoy</span><strong>S/ {totalHoy.toLocaleString("es-PE")}</strong></div>
-                <div className="admin-card"><span>Ventas del mes</span><strong>S/ {totalMes.toLocaleString("es-PE")}</strong></div>
-                <div className="admin-card"><span>Número de ventas</span><strong>{ventas.length}</strong></div>
+            {/* Tarjetas KPI */}
+            <section className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3.5">
+                <div className="admin-card"><span>Ventas hoy</span><strong>S/ {totalHoy.toLocaleString("es-PE")}</strong></div>
+                <div className="admin-card"><span>Ventas mes</span><strong>S/ {totalMes.toLocaleString("es-PE")}</strong></div>
+                <div className="admin-card"><span>N° Ventas</span><strong>{ventas.length}</strong></div>
                 <div className="admin-card"><span>Productos</span><strong>{productos.length}</strong></div>
                 <div className="admin-card"><span>Usuarios</span><strong>{usuarios.length + 3}</strong></div>
                 <div className="admin-card alerta"><span>Stock bajo</span><strong>{stockBajo.length}</strong></div>
             </section>
 
-            <div className="dash-grid">
-                <section className="admin-section">
-                    <div className="sec-head">
-                        <h2>Ventas recientes</h2>
-                        <button className="btn-link" onClick={() => navigate("/admin/ventas")}>Ver todas</button>
+            {/* Grid 2 Columnas */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Ventas Recientes */}
+                <section className="space-y-3">
+                    <div className="flex items-center justify-between">
+                        <h2 className="text-base font-bold text-slate-900 dark:text-white">Ventas recientes</h2>
+                        <button
+                            className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
+                            onClick={() => navigate("/admin/ventas")}
+                        >
+                            Ver todas →
+                        </button>
                     </div>
                     <div className="tabla-wrap">
                         <table className="tabla">
@@ -62,10 +70,10 @@ function Dashboard() {
                             <tbody>
                                 {recientes.map((v) => (
                                     <tr key={v.numero}>
-                                        <td>{v.numero}</td>
-                                        <td>{v.cliente}</td>
-                                        <td>{fechaCorta(v.fecha)}</td>
-                                        <td>S/ {v.total.toLocaleString("es-PE")}</td>
+                                        <td className="font-mono text-xs">{v.numero}</td>
+                                        <td className="font-medium">{v.cliente}</td>
+                                        <td className="text-xs text-slate-500">{fechaCorta(v.fecha)}</td>
+                                        <td className="font-mono font-bold">S/ {v.total.toLocaleString("es-PE")}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -73,38 +81,49 @@ function Dashboard() {
                     </div>
                 </section>
 
-                <section className="admin-section">
-                    <h2>Más vendidos</h2>
-                    <div className="ranking">
+                {/* Más Vendidos */}
+                <section className="space-y-3">
+                    <h2 className="text-base font-bold text-slate-900 dark:text-white">Más vendidos</h2>
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-4">
                         {top.map((p) => (
-                            <div key={p.id} className="rank-fila">
-                                <span className="rank-nombre">{p.nombre}</span>
-                                <div className="rank-barra">
-                                    <div style={{ width: `${Math.round((p.vendidos / maxTop) * 100)}%` }} />
+                            <div key={p.id} className="space-y-1.5">
+                                <div className="flex items-center justify-between text-xs">
+                                    <span className="font-semibold text-slate-800 dark:text-slate-200 truncate max-w-[240px]">{p.nombre}</span>
+                                    <span className="font-mono font-bold text-slate-900 dark:text-white">{p.vendidos} uds.</span>
                                 </div>
-                                <strong>{p.vendidos}</strong>
+                                <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                                    <div
+                                        className="bg-blue-600 h-full rounded-full transition-all duration-300"
+                                        style={{ width: `${Math.round((p.vendidos / maxTop) * 100)}%` }}
+                                    />
+                                </div>
                             </div>
                         ))}
                     </div>
                 </section>
             </div>
 
-            <section className="admin-section">
-                <h2>Alertas de inventario</h2>
+            {/* Alertas de Inventario */}
+            <section className="space-y-3">
+                <h2 className="text-base font-bold text-slate-900 dark:text-white">Alertas de inventario</h2>
                 {stockBajo.length === 0 ? (
-                    <p className="admin-muted">Todo el stock está en niveles normales.</p>
+                    <p className="text-sm text-slate-500">Todo el stock está en niveles normales.</p>
                 ) : (
                     <div className="tabla-wrap">
                         <table className="tabla">
                             <thead>
-                                <tr><th>Producto</th><th>Stock</th><th>Estado</th></tr>
+                                <tr><th>Producto</th><th>Stock Actual</th><th>Estado</th></tr>
                             </thead>
                             <tbody>
                                 {stockBajo.map((p) => (
                                     <tr key={p.id}>
-                                        <td>{p.nombre}</td>
-                                        <td>{p.stock}</td>
-                                        <td><span className={`badge ${p.stock === 0 ? "off" : "pend"}`}>{p.stock === 0 ? "Sin stock" : "Stock bajo"}</span></td>
+                                        <td className="font-medium">{p.nombre}</td>
+                                        <td className="font-mono font-bold">{p.stock}</td>
+                                        <td>
+                                            <span className={`badge ${p.stock === 0 ? "off" : "pend"}`}>
+                                                {p.stock === 0 ? "Sin stock" : "Stock bajo"}
+                                            </span>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -112,7 +131,7 @@ function Dashboard() {
                     </div>
                 )}
             </section>
-        </>
+        </div>
     );
 }
 

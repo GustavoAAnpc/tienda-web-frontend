@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import { useAuth } from "../../context/AuthContext";
-import "../Admin/Admin.css";
-import "./MisCompras.css";
 import { leerPedidos } from "../../data/pedidos";
 import type { Pedido } from "../../data/pedidos";
 
@@ -17,12 +15,15 @@ function MisCompras() {
 
     if (!usuario) {
         return (
-            <div className="admin-page">
+            <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
                 <Header />
-                <main className="admin-content">
-                    <h1>Mis compras</h1>
-                    <p className="admin-muted">Inicia sesión para ver tu historial.</p>
-                    <button className="btn-primary-lg" onClick={() => navigate("/login")}>
+                <main className="flex-1 max-w-7xl w-full mx-auto p-6 sm:p-8 flex flex-col items-center justify-center text-center space-y-4">
+                    <h1 className="text-2xl font-black">Mis compras</h1>
+                    <p className="text-sm text-slate-500">Inicia sesión para ver tu historial de compras.</p>
+                    <button
+                        className="px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow-sm transition-all cursor-pointer"
+                        onClick={() => navigate("/login")}
+                    >
                         Ir al login
                     </button>
                 </main>
@@ -34,54 +35,73 @@ function MisCompras() {
     const pedidos = leerPedidos().filter((p) => p.usuarioId === usuario.id);
 
     return (
-        <div className="admin-page">
+        <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
             <Header />
 
-            <main className="admin-content">
-                <h1>Mis compras</h1>
-                <p className="admin-muted">
-                    {pedidos.length === 0
-                        ? "Aquí aparecerá el historial de tus pedidos"
-                        : `${pedidos.length} pedido${pedidos.length !== 1 ? "s" : ""} realizados`}
-                </p>
+            <main className="flex-1 max-w-7xl w-full mx-auto p-6 sm:p-8 space-y-6">
+                <div>
+                    <h1 className="text-2xl font-black">Historial de Compras</h1>
+                    <p className="text-sm text-slate-500 mt-1">
+                        {pedidos.length === 0
+                            ? "Aquí aparecerá el historial de tus pedidos y facturas electrónicas"
+                            : `${pedidos.length} pedido${pedidos.length !== 1 ? "s" : ""} registrado${pedidos.length !== 1 ? "s" : ""}`}
+                    </p>
+                </div>
 
                 {pedidos.length === 0 ? (
-                    <div className="compras-vacio">
-                        <h3>Sin compras todavía</h3>
-                        <p>Cuando finalices una compra en el carrito, aparecerá aquí.</p>
-                        <button className="btn-primary-lg" onClick={() => navigate("/productos")}>
-                            Explorar productos
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-12 text-center space-y-3 shadow-sm">
+                        <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mx-auto text-2xl text-slate-400">
+                            🛒
+                        </div>
+                        <h3 className="text-lg font-bold">Sin compras todavía</h3>
+                        <p className="text-sm text-slate-500 max-w-xs mx-auto">
+                            Cuando finalices una compra en el carrito, aparecerá registrada con su estado aquí.
+                        </p>
+                        <button
+                            className="px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow-sm transition-all cursor-pointer"
+                            onClick={() => navigate("/productos")}
+                        >
+                            Explorar catálogo
                         </button>
                     </div>
                 ) : (
-                    <section className="pedidos-tabla">
-                        <div className="pedidos-head">
-                            <span>Código</span>
-                            <span>Fecha</span>
-                            <span>Estado / Entrega</span>
-                            <span>Total</span>
-                            <span></span>
-                        </div>
-
-                        {pedidos.map((p) => (
-                            <div key={p.numero} className="pedidos-fila">
-                                <strong>{p.numero}</strong>
-                                <span className="pedidos-fecha">{p.fecha}</span>
-                                <span className={`pedidos-estado ${p.estado?.toLowerCase().replace(/\s/g, "-")}`}>
-                                    {p.estado || "Pendiente"}
-                                    <small style={{display:"block", color:"var(--text-muted)", fontSize:"11px"}}>
-                                        {p.tipoEntrega === "recojo" ? "Recojo en tienda" : "Envío a domicilio"}
-                                    </small>
-                                </span>
-                                <strong className="pedidos-total">
-                                    S/ {p.total.toLocaleString("es-PE")}
-                                </strong>
-                                <button className="btn-detalle" onClick={() => setDetalle(p)}>
-                                    Ver detalle
-                                </button>
-                            </div>
-                        ))}
-                    </section>
+                    <div className="tabla-wrap">
+                        <table className="tabla">
+                            <thead>
+                                <tr>
+                                    <th>N° Pedido</th>
+                                    <th>Fecha</th>
+                                    <th>Estado / Entrega</th>
+                                    <th>Total</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {pedidos.map((p) => (
+                                    <tr key={p.numero}>
+                                        <td className="font-mono font-bold text-xs text-blue-600 dark:text-blue-400">{p.numero}</td>
+                                        <td className="text-xs text-slate-500">{p.fecha}</td>
+                                        <td>
+                                            <div className="flex flex-col">
+                                                <span className="font-semibold text-xs text-slate-800 dark:text-slate-200">{p.estado || "Pendiente"}</span>
+                                                <span className="text-[10px] text-slate-400">
+                                                    {p.tipoEntrega === "recojo" ? "Recojo en tienda" : "Envío a domicilio"}
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td className="font-mono font-bold text-slate-900 dark:text-white">
+                                            S/ {p.total.toLocaleString("es-PE")}
+                                        </td>
+                                        <td>
+                                            <button className="btn-mini" onClick={() => setDetalle(p)}>
+                                                Ver detalle
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 )}
 
                 {/* Modal con el detalle de la compra */}
@@ -90,8 +110,8 @@ function MisCompras() {
                         <div className="modal" onClick={(e) => e.stopPropagation()}>
                             <div className="modal-head">
                                 <div>
-                                    <h2>Detalle de compra</h2>
-                                    <p className="admin-muted">
+                                    <h2>Detalle de Compra</h2>
+                                    <p className="text-xs text-slate-500 mt-0.5">
                                         {detalle.numero} · {detalle.fecha}
                                     </p>
                                 </div>
@@ -101,12 +121,12 @@ function MisCompras() {
                             </div>
 
                             {detalle.comprobante && (
-                                <div style={{ marginBottom: "16px", padding: "12px 14px", background: "var(--bg-subtle)", borderRadius: "var(--radius-md)", fontSize: "13px", display: "flex", flexDirection: "column", gap: "6px" }}>
-                                    <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                        <span><strong>Estado:</strong> <span style={{ color: "var(--accent)", fontWeight: 700 }}>{detalle.estado || "Pendiente"}</span></span>
+                                <div className="mb-4 p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-800 text-xs space-y-1.5">
+                                    <div className="flex justify-between items-center">
+                                        <span><strong>Estado:</strong> <span className="text-blue-600 dark:text-blue-400 font-bold">{detalle.estado || "Pendiente"}</span></span>
                                         <span><strong>Entrega:</strong> {detalle.tipoEntrega === "recojo" ? "Recojo en tienda" : "Envío a domicilio"}</span>
                                     </div>
-                                    <hr style={{ border: 0, borderTop: "1px solid var(--border-color)", margin: "4px 0" }} />
+                                    <hr className="border-slate-200 dark:border-slate-700 my-1" />
                                     <div><strong>Comprobante:</strong> {detalle.comprobante.tipo} Electrónica ({detalle.comprobante.documento})</div>
                                     <div><strong>Titular:</strong> {detalle.comprobante.nombreRazonSocial}</div>
                                     {detalle.metodoPago && (
@@ -115,30 +135,34 @@ function MisCompras() {
                                 </div>
                             )}
 
-                            <table className="tabla">
-                                <thead>
-                                    <tr>
-                                        <th>Producto</th>
-                                        <th>Cant.</th>
-                                        <th>P. unitario</th>
-                                        <th>Subtotal</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {detalle.items.map((it) => (
-                                        <tr key={it.id}>
-                                            <td>{it.nombre}</td>
-                                            <td>{it.cantidad}</td>
-                                            <td>S/ {it.precio.toLocaleString("es-PE")}</td>
-                                            <td>S/ {(it.precio * it.cantidad).toLocaleString("es-PE")}</td>
+                            <div className="tabla-wrap mb-4">
+                                <table className="tabla">
+                                    <thead>
+                                        <tr>
+                                            <th>Producto</th>
+                                            <th>Cant.</th>
+                                            <th>P. Unitario</th>
+                                            <th>Subtotal</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {detalle.items.map((it) => (
+                                            <tr key={it.id}>
+                                                <td className="font-semibold text-xs">{it.nombre}</td>
+                                                <td className="font-mono text-xs">{it.cantidad}</td>
+                                                <td className="font-mono text-xs">S/ {it.precio.toLocaleString("es-PE")}</td>
+                                                <td className="font-mono font-bold text-xs">S/ {(it.precio * it.cantidad).toLocaleString("es-PE")}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
 
-                            <div className="modal-total">
-                                <span>Total pagado</span>
-                                <strong>S/ {detalle.total.toLocaleString("es-PE")}</strong>
+                            <div className="flex justify-between items-center pt-3 border-t border-slate-200 dark:border-slate-800">
+                                <span className="text-sm font-bold uppercase text-slate-500">Total Pagado</span>
+                                <strong className="text-2xl font-black font-mono text-blue-600 dark:text-blue-400">
+                                    S/ {detalle.total.toLocaleString("es-PE")}
+                                </strong>
                             </div>
                         </div>
                     </div>

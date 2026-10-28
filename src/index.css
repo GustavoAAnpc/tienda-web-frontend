@@ -1,3 +1,100 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer components {
+  /* Tablas Modernas Tailwind */
+  .tabla-wrap {
+    @apply overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-2xl bg-white dark:bg-slate-900 shadow-sm;
+  }
+  .tabla {
+    @apply w-full border-collapse text-sm text-left bg-white dark:bg-slate-900;
+  }
+  .tabla th {
+    @apply px-4 py-3 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800;
+  }
+  .tabla td {
+    @apply px-4 py-3.5 text-slate-900 dark:text-slate-100 border-b border-slate-200 dark:border-slate-800 whitespace-nowrap;
+  }
+  .tabla tr:last-child td {
+    @apply border-b-0;
+  }
+  .tabla tr:hover td {
+    @apply bg-slate-50/70 dark:bg-slate-800/40;
+  }
+
+  /* Badges */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold;
+  }
+  .badge.ok {
+    @apply bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/50;
+  }
+  .badge.off {
+    @apply bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800/50;
+  }
+  .badge.pend {
+    @apply bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800/50;
+  }
+  .badge.gris {
+    @apply bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700;
+  }
+  .badge.rol-admin {
+    @apply bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-400 border border-purple-200 dark:border-purple-800/50;
+  }
+  .badge.rol-almacen {
+    @apply bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-800/50;
+  }
+  .badge.rol-cliente {
+    @apply bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700;
+  }
+
+  /* Botones utilitarios */
+  .btn-mini {
+    @apply px-2.5 py-1 text-xs font-semibold rounded-md bg-blue-600 hover:bg-blue-700 text-white transition-all cursor-pointer shadow-xs inline-flex items-center justify-center;
+  }
+  .btn-mini.sec {
+    @apply bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700;
+  }
+
+  /* Tarjetas KPI de Dashboard */
+  .admin-cards {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-6;
+  }
+  .admin-card {
+    @apply bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 flex flex-col gap-1.5 shadow-sm hover:shadow-md hover:border-blue-500/50 transition-all;
+  }
+  .admin-card span {
+    @apply text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider;
+  }
+  .admin-card strong {
+    @apply text-2xl font-black text-slate-900 dark:text-white font-mono;
+  }
+  .admin-card.alerta strong {
+    @apply text-red-600 dark:text-red-400;
+  }
+
+  /* Modal */
+  .modal-fondo {
+    @apply fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4;
+  }
+  .modal, .modal-chico {
+    @apply bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto;
+  }
+  .modal-chico {
+    @apply max-w-md;
+  }
+  .modal-head {
+    @apply flex items-center justify-between pb-4 mb-4 border-b border-slate-200 dark:border-slate-800;
+  }
+  .modal-head h2 {
+    @apply text-lg font-bold text-slate-900 dark:text-white;
+  }
+  .modal-cerrar {
+    @apply w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer text-sm font-bold;
+  }
+}
+
 /* ==========================================================================
    TechStore Design System Tokens & Foundations (Impeccable Craft Floor)
    ========================================================================== */
@@ -100,104 +197,105 @@
    Global Resets & Browser Surfaces (Craft Floor)
    ========================================================================== */
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
-html {
-  font-family: var(--font-sans);
-  font-size: 16px;
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-}
+  html {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
 
-body {
-  margin: 0;
-  padding: 0;
-  background-color: var(--bg-page);
-  color: var(--text-main);
-  transition: background-color 0.2s ease, color 0.2s ease;
-  min-height: 100vh;
-}
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-page);
+    color: var(--text-main);
+    transition: background-color 0.2s ease, color 0.2s ease;
+    min-height: 100vh;
+  }
 
-#root {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background-color: var(--bg-page);
-  color: var(--text-main);
-}
+  #root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-page);
+    color: var(--text-main);
+  }
 
-/* Selección de texto con identidad de marca */
-::selection {
-  background-color: var(--accent);
-  color: #ffffff;
-}
+  /* Selección de texto con identidad de marca */
+  ::selection {
+    background-color: var(--accent);
+    color: #ffffff;
+  }
 
-/* Scrollbars personalizados y discretos */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
+  /* Scrollbars personalizados y discretos */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
 
-::-webkit-scrollbar-track {
-  background: var(--bg-page);
-}
+  ::-webkit-scrollbar-track {
+    background: var(--bg-page);
+  }
 
-::-webkit-scrollbar-thumb {
-  background: var(--border-color);
-  border-radius: 4px;
-}
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+  }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--border-hover);
-}
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--border-hover);
+  }
 
-/* Indicadores de foco accesibles */
-:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
+  /* Indicadores de foco accesibles */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
 
-/* Tipografía tabular para números, precios y métricas */
-.tabular-nums,
-table,
-.product-price,
-.admin-card strong,
-.ultimo-total,
-.cart-total {
-  font-variant-numeric: tabular-nums;
-}
+  /* Tipografía tabular para números, precios y métricas */
+  .tabular-nums,
+  table,
+  .product-price,
+  .admin-card strong,
+  .ultimo-total,
+  .cart-total {
+    font-variant-numeric: tabular-nums;
+  }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  color: var(--text-main);
-  margin-top: 0;
-  letter-spacing: -0.02em;
-}
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-top: 0;
+    letter-spacing: -0.02em;
+  }
 
-p {
-  color: var(--text-secondary);
-}
+  p {
+    margin-top: 0;
+  }
 
-a {
-  color: var(--accent);
-  text-decoration: none;
-  transition: color 0.15s ease;
-}
+  a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
 
-a:hover {
-  color: var(--accent-hover);
-}
+  a:hover {
+    color: var(--accent-hover);
+  }
 
-button {
-  font-family: inherit;
+  button {
+    font-family: inherit;
+  }
 }

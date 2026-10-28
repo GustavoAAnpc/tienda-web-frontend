@@ -3,7 +3,6 @@ import type { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import ThemeToggle from "../../components/ThemeToggle/ThemeToggle";
-import "./Registro.css";
 
 function Registro() {
     const [nombre, setNombre] = useState("");
@@ -29,8 +28,15 @@ function Registro() {
     ].filter(Boolean).length;
 
     const etiquetaFuerza = ["", "Débil", "Media", "Buena", "Fuerte"][fuerza];
+    const colorFuerza = [
+        "bg-slate-200 dark:bg-slate-700",
+        "bg-red-500",
+        "bg-amber-500",
+        "bg-blue-500",
+        "bg-emerald-500",
+    ][fuerza];
 
-    function registrarse(e: FormEvent) {
+    async function registrarse(e: FormEvent) {
         e.preventDefault();
         setError("");
 
@@ -65,108 +71,137 @@ function Registro() {
             setError("Ese correo ya está registrado, inicia sesión");
             return;
         }
-        guardados.push({ nombre: `${nombre.trim()} ${apellido.trim()}`, apellido: apellido.trim(), correo: correo.trim(), direccion: direccion.trim(), password, fechaRegistro: new Date().toLocaleDateString("es-PE") });
+        guardados.push({
+            nombre: `${nombre.trim()} ${apellido.trim()}`,
+            apellido: apellido.trim(),
+            correo: correo.trim(),
+            direccion: direccion.trim(),
+            password,
+            fechaRegistro: new Date().toLocaleDateString("es-PE")
+        });
         localStorage.setItem("techstore-usuarios", JSON.stringify(guardados));
-        login(correo.trim(), password);
+        await login(correo.trim(), password);
         setCreada(true);
     }
 
+    const inputClass =
+        "w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all";
+
     return (
-        <div className="registro-container">
-            <div className="registro-theme-toggle">
+        <div className="min-h-screen w-full flex bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 relative transition-colors">
+            {/* Theme Toggle flotante */}
+            <div className="absolute top-4 right-4 z-20">
                 <ThemeToggle />
             </div>
-            {/* Lado izquierdo - Beneficios */}
-            <div className="registro-image-section">
+
+            {/* Lado izquierdo - Beneficios (Desktop) */}
+            <div className="hidden lg:flex lg:w-1/2 relative bg-slate-900 overflow-hidden">
                 <img
                     src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=1200&auto=format&fit=crop"
                     alt="Tecnología TechStore"
-                    className="registro-image"
+                    className="w-full h-full object-cover opacity-60"
                 />
-
-                <div className="registro-image-overlay">
-                    <h2>Únete a TechStore</h2>
-                    <p>
-                        Crea tu cuenta y compra smartphones, audio,
-                        periféricos y accesorios en un solo lugar.
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent flex flex-col justify-end p-12 text-white">
+                    <span className="text-blue-400 font-bold tracking-wider text-xs uppercase mb-2">
+                        Comunidad TechStore
+                    </span>
+                    <h2 className="text-3xl font-extrabold tracking-tight mb-3 text-white">
+                        Únete a TechStore
+                    </h2>
+                    <p className="text-slate-300 text-sm max-w-md leading-relaxed mb-6">
+                        Crea tu cuenta y compra laptops, periféricos, audio y pantallas con trazabilidad completa.
                     </p>
 
-                    <ul className="registro-beneficios">
-                        <li>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                <polyline points="20 6 9 17 4 12" />
-                            </svg>
+                    <ul className="space-y-3 text-sm text-slate-200">
+                        <li className="flex items-center gap-2.5">
+                            <span className="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold">✓</span>
                             Envío gratis desde S/ 499
                         </li>
-                        <li>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                <polyline points="20 6 9 17 4 12" />
-                            </svg>
-                            Pago 100% seguro
+                        <li className="flex items-center gap-2.5">
+                            <span className="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold">✓</span>
+                            Pago 100% seguro con comprobante SUNAT
                         </li>
-                        <li>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                <polyline points="20 6 9 17 4 12" />
-                            </svg>
-                            Garantía en todos los productos
+                        <li className="flex items-center gap-2.5">
+                            <span className="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold">✓</span>
+                            Garantía de fábrica en todos los productos
                         </li>
                     </ul>
                 </div>
             </div>
 
             {/* Lado derecho - Formulario */}
-            <div className="registro-form-section">
-                <div className="registro-wrapper">
-                    <div className="registro-header">
-                        <button className="registro-logo" onClick={() => navigate("/inicio")}>
-                            <div className="registro-logo-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                    <rect x="2" y="3" width="20" height="14" rx="2" />
-                                    <line x1="8" y1="21" x2="16" y2="21" />
-                                    <line x1="12" y1="17" x2="12" y2="21" />
+            <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12">
+                <div className="w-full max-w-lg space-y-6">
+                    <div className="text-center sm:text-left space-y-2">
+                        <button
+                            className="inline-flex items-center gap-2.5 cursor-pointer group"
+                            onClick={() => navigate("/inicio")}
+                        >
+                            <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="white"
+                                    strokeWidth="2.5"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className="w-5 h-5"
+                                >
+                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
                                 </svg>
                             </div>
-                            <span className="registro-logo-text">TechStore</span>
+                            <span className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
+                                TechStore
+                            </span>
                         </button>
-
-                        <h1 className="registro-title">Crear cuenta</h1>
-                        <p className="registro-subtitle">Empieza a comprar en minutos</p>
+                        <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white pt-2">
+                            Crear cuenta
+                        </h1>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                            Empieza a comprar en minutos. Completa tus datos.
+                        </p>
                     </div>
 
-                    <div className="registro-card">
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-sm">
                         {creada ? (
-                            <div className="registro-exito">
-                                <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                                    <polyline points="22 4 12 14.01 9 11.01" />
-                                </svg>
-                                <h3>¡Cuenta creada, {nombre.split(" ")[0]}!</h3>
-                                <p>Ya puedes entrar a la tienda y armar tu carrito.</p>
+                            <div className="text-center py-8 space-y-4">
+                                <div className="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto text-3xl font-bold">
+                                    ✓
+                                </div>
+                                <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                                    ¡Cuenta creada, {nombre.split(" ")[0]}!
+                                </h3>
+                                <p className="text-sm text-slate-500 dark:text-slate-400 max-w-xs mx-auto">
+                                    Ya puedes entrar a la tienda y armar tu carrito de compras.
+                                </p>
                                 <button
-                                    className="registro-button"
+                                    className="w-full py-2.5 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow-sm transition-all cursor-pointer"
                                     onClick={() => navigate("/inicio")}
                                 >
                                     Entrar a la tienda
                                 </button>
                             </div>
                         ) : (
-                            <form className="registro-form" onSubmit={registrarse}>
-                                <div className="registro-doble">
-                                    <div className="registro-field">
-                                        <label className="registro-label">Nombre</label>
+                            <form className="space-y-4" onSubmit={registrarse}>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className="space-y-1.5">
+                                        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">
+                                            Nombre
+                                        </label>
                                         <input
-                                            className="registro-input"
+                                            className={inputClass}
                                             type="text"
                                             value={nombre}
                                             onChange={(e) => setNombre(e.target.value)}
                                             placeholder="Juan"
                                         />
                                     </div>
-
-                                    <div className="registro-field">
-                                        <label className="registro-label">Apellido</label>
+                                    <div className="space-y-1.5">
+                                        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">
+                                            Apellido
+                                        </label>
                                         <input
-                                            className="registro-input"
+                                            className={inputClass}
                                             type="text"
                                             value={apellido}
                                             onChange={(e) => setApellido(e.target.value)}
@@ -175,10 +210,12 @@ function Registro() {
                                     </div>
                                 </div>
 
-                                <div className="registro-field">
-                                    <label className="registro-label">Correo electrónico</label>
+                                <div className="space-y-1.5">
+                                    <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">
+                                        Correo electrónico
+                                    </label>
                                     <input
-                                        className="registro-input"
+                                        className={inputClass}
                                         type="email"
                                         value={correo}
                                         onChange={(e) => setCorreo(e.target.value)}
@@ -186,22 +223,26 @@ function Registro() {
                                     />
                                 </div>
 
-                                <div className="registro-field">
-                                    <label className="registro-label">Dirección</label>
+                                <div className="space-y-1.5">
+                                    <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">
+                                        Dirección
+                                    </label>
                                     <input
-                                        className="registro-input"
+                                        className={inputClass}
                                         type="text"
                                         value={direccion}
                                         onChange={(e) => setDireccion(e.target.value)}
-                                        placeholder="Av. Los Olivos 456"
+                                        placeholder="Av. Los Olivos 456, San Juan de Lurigancho"
                                     />
                                 </div>
 
-                                <div className="registro-field">
-                                    <label className="registro-label">Contraseña</label>
-                                    <div className="registro-pass-wrap">
+                                <div className="space-y-1.5">
+                                    <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">
+                                        Contraseña
+                                    </label>
+                                    <div className="relative">
                                         <input
-                                            className="registro-input"
+                                            className={`${inputClass} pr-16`}
                                             type={verPass ? "text" : "password"}
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
@@ -209,7 +250,7 @@ function Registro() {
                                         />
                                         <button
                                             type="button"
-                                            className="registro-ver"
+                                            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 px-2 py-1 cursor-pointer"
                                             onClick={() => setVerPass((v) => !v)}
                                         >
                                             {verPass ? "Ocultar" : "Ver"}
@@ -217,26 +258,30 @@ function Registro() {
                                     </div>
 
                                     {password && (
-                                        <div className="fuerza">
-                                            <div className="fuerza-barra">
+                                        <div className="pt-1.5 flex items-center justify-between gap-3">
+                                            <div className="flex-1 grid grid-cols-4 gap-1.5">
                                                 {[1, 2, 3, 4].map((n) => (
-                                                    <span
+                                                    <div
                                                         key={n}
-                                                        className={`fuerza-seg ${n <= fuerza ? `nivel-${fuerza}` : ""}`}
+                                                        className={`h-1.5 rounded-full transition-colors ${
+                                                            n <= fuerza ? colorFuerza : "bg-slate-200 dark:bg-slate-700"
+                                                        }`}
                                                     />
                                                 ))}
                                             </div>
-                                            <span className={`fuerza-texto nivel-${fuerza}`}>
+                                            <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
                                                 {etiquetaFuerza}
                                             </span>
                                         </div>
                                     )}
                                 </div>
 
-                                <div className="registro-field">
-                                    <label className="registro-label">Confirmar contraseña</label>
+                                <div className="space-y-1.5">
+                                    <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">
+                                        Confirmar contraseña
+                                    </label>
                                     <input
-                                        className="registro-input"
+                                        className={inputClass}
                                         type={verPass ? "text" : "password"}
                                         value={confirmar}
                                         onChange={(e) => setConfirmar(e.target.value)}
@@ -244,33 +289,42 @@ function Registro() {
                                     />
                                 </div>
 
-                                <label className="registro-terminos">
+                                <label className="flex items-center gap-2.5 pt-1 text-xs text-slate-600 dark:text-slate-400 cursor-pointer">
                                     <input
                                         type="checkbox"
                                         checked={terminos}
                                         onChange={(e) => setTerminos(e.target.checked)}
+                                        className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 border-slate-300 dark:border-slate-700"
                                     />
-                                    Acepto los términos y condiciones
+                                    <span>Acepto los términos y condiciones de TechStore</span>
                                 </label>
 
-                                {error && <p className="registro-error">{error}</p>}
+                                {error && (
+                                    <div className="p-3 rounded-lg bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/60 text-xs text-red-600 dark:text-red-400 flex items-center gap-2">
+                                        <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                        </svg>
+                                        <span>{error}</span>
+                                    </div>
+                                )}
 
-                                <button type="submit" className="registro-button">
+                                <button
+                                    type="submit"
+                                    className="w-full py-2.5 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold text-sm shadow-sm transition-all duration-150 cursor-pointer"
+                                >
                                     Crear cuenta
                                 </button>
                             </form>
                         )}
 
-                        <div className="registro-login">
-                            <p className="registro-login-text">
-                                ¿Ya tienes cuenta?{" "}
-                                <button
-                                    className="registro-login-button"
-                                    onClick={() => navigate("/login")}
-                                >
-                                    Iniciar sesión
-                                </button>
-                            </p>
+                        <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400">
+                            ¿Ya tienes cuenta?{" "}
+                            <button
+                                className="font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 underline underline-offset-2 cursor-pointer"
+                                onClick={() => navigate("/login")}
+                            >
+                                Iniciar sesión
+                            </button>
                         </div>
                     </div>
                 </div>

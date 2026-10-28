@@ -14,7 +14,7 @@ export type { Rol, Usuario };
 
 interface AuthContexto {
     usuario: Usuario | null;
-    login: (acceso: string, password: string) => { ok: boolean; error?: string; usuario?: Usuario };
+    login: (acceso: string, password: string) => Promise<{ ok: boolean; error?: string; usuario?: Usuario; bloqueado?: boolean }>;
     logout: () => void;
     actualizarNombre: (nombre: string) => void;
 }
@@ -29,15 +29,46 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         else localStorage.removeItem(CLAVE_SESION);
     }, [usuario]);
 
-    const login = (acceso: string, password: string) => {
+    const login = async (acceso: string, password: string): Promise<{ ok: boolean; error?: string; usuario?: Usuario; bloqueado?: boolean }> => {
         const limpio = acceso.trim();
 
-        // 1. Cuentas fijas (admin / almacen / cliente demo)
+        // 1. Conexión con el Backend Spring Boot (PostgreSQL)
+        try {
+            const resp = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ nombreUsuario: limpio, contrasena: password }),
+            });
+
+            const data = await resp.json().catch(() => null);
+
+            if (resp.ok && data?.exitoso) {
+                let rolFront: Rol = "cliente";
+                if (data.rol === "ADMINISTRADOR") rolFront = "admin";
+                else if (data.rol === "OPERADOR" || data.rol === "ALMACEN") rolFront = "almacen";
+
+                const usuarioBack: Usuario = {
+                    id: data.nombreUsuario || limpio,
+                    nombre: data.nombreUsuario || limpio,
+                    acceso: data.nombreUsuario || limpio,
+                    rol: rolFront,
+                };
+                setUsuario(usuarioBack);
+                return { ok: true, usuario: usuarioBack };
+            } else if (resp.status === 423 || data?.cuentaBloqueada) {
+                return { ok: false, error: data?.mensaje || "Cuenta bloqueada tras 3 intentos erróneos.", bloqueado: true };
+            } else if (resp.status === 401) {
+                return { ok: false, error: data?.mensaje || "Contraseña o usuario incorrecto." };
+            }
+        } catch {
+            console.warn("[Auth] Backend Spring Boot no disponible en /api/auth/login. Usando modo de respaldo.");
+        }
+
+        // 2. Modo Respaldo Local (Cuentas fijas / localStorage)
         const fija = CUENTAS_FIJAS.find(
             (c) => c.acceso.toLowerCase() === limpio.toLowerCase() && c.password === password
         );
         if (fija) {
-            // La cuenta admin fija nunca se bloquea (para no perder el acceso)
             if (fija.usuario.id !== "admin" && obtenerEstado(fija.usuario.id) === "inactivo") {
                 return { ok: false, error: "Esta cuenta está desactivada" };
             }
@@ -45,7 +76,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             return { ok: true, usuario: fija.usuario };
         }
 
-        // 2. Usuarios registrados desde la página de registro
         const reg = leerUsuarios().find(
             (u) => u.correo.toLowerCase() === limpio.toLowerCase() && u.password === password
         );

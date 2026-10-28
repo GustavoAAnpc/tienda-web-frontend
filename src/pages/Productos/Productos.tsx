@@ -4,35 +4,27 @@ import Footer from "../../components/Footer/Footer";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import { CATEGORIAS } from "../../data/productos";
 import { useInventario } from "../../context/InventarioContext";
-import "./Productos.css";
 
-// Opciones de orden disponibles en el select
 type Orden = "relevancia" | "precio-asc" | "precio-desc" | "popular" | "stock";
 
 const FILTRO_TODOS = "Todos";
 
 function Productos() {
-    // Estado de los filtros
     const [categoria, setCategoria] = useState(FILTRO_TODOS);
     const [orden, setOrden] = useState<Orden>("relevancia");
     const [busqueda, setBusqueda] = useState("");
 
-    // Productos del inventario (la tienda solo muestra los activos)
     const { productos } = useInventario();
 
-    // Nombres de categoría para las píldoras
     const nombresCategorias = [FILTRO_TODOS, ...CATEGORIAS.map((c) => c.nombre)];
 
-    // Lista filtrada + ordenada (se recalcula solo si cambia un filtro)
     const filtrados = useMemo(() => {
         let lista = productos.filter((p) => p.activo);
 
-        // 1. Filtrar por categoría
         if (categoria !== FILTRO_TODOS) {
             lista = lista.filter((p) => p.categoria === categoria);
         }
 
-        // 2. Filtrar por texto (nombre, categoría o descripción)
         const texto = busqueda.trim().toLowerCase();
         if (texto) {
             lista = lista.filter(
@@ -43,7 +35,6 @@ function Productos() {
             );
         }
 
-        // 3. Ordenar
         switch (orden) {
             case "precio-asc":
                 return lista.sort((a, b) => a.precio - b.precio);
@@ -65,24 +56,23 @@ function Productos() {
     };
 
     return (
-        <div className="productos-page">
+        <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
             <Header />
 
-            <main className="productos-content">
-                {/* Título */}
-                <div className="productos-header">
-                    <h1>Catálogo de productos</h1>
-                    <p>
-                        {filtrados.length} producto{filtrados.length !== 1 ? "s" : ""} encontrado{filtrados.length !== 1 ? "s" : ""}
+            <main className="flex-1 max-w-7xl w-full mx-auto p-6 sm:p-8 space-y-6">
+                {/* Header */}
+                <div className="space-y-1">
+                    <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">Catálogo de Productos</h1>
+                    <p className="text-sm text-slate-500">
+                        {filtrados.length} producto{filtrados.length !== 1 ? "s" : ""} disponible{filtrados.length !== 1 ? "s" : ""} con entrega inmediata.
                     </p>
                 </div>
 
-                {/* Buscador + orden */}
-                <div className="productos-toolbar">
-                    <div className="productos-search">
+                {/* Toolbar */}
+                <div className="flex flex-col sm:flex-row gap-3 items-center justify-between">
+                    <div className="relative w-full sm:max-w-md">
                         <svg
-                            width="16"
-                            height="16"
+                            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4"
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
@@ -95,64 +85,65 @@ function Productos() {
                         </svg>
                         <input
                             type="text"
-                            placeholder="Buscar productos..."
+                            placeholder="Buscar laptops, monitores, audio..."
                             value={busqueda}
                             onChange={(e) => setBusqueda(e.target.value)}
+                            className="w-full pl-10 pr-4 py-2.5 text-xs rounded-2xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-500 shadow-xs"
                         />
                     </div>
 
                     <select
                         value={orden}
                         onChange={(e) => setOrden(e.target.value as Orden)}
-                        className="productos-select"
+                        className="w-full sm:w-auto px-4 py-2.5 text-xs font-semibold rounded-2xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 cursor-pointer shadow-xs"
                     >
                         <option value="relevancia">Todos</option>
                         <option value="precio-asc">Precio: Menor a mayor</option>
                         <option value="precio-desc">Precio: Mayor a menor</option>
                         <option value="popular">Más vendidos</option>
-                        <option value="stock">Mayor stock</option>
+                        <option value="stock">Mayor stock disponible</option>
                     </select>
                 </div>
 
-                {/* Filtro por categoría */}
-                <div className="productos-categorias">
+                {/* Categorías Pills */}
+                <div className="flex flex-wrap gap-2">
                     {nombresCategorias.map((nombre) => (
                         <button
                             key={nombre}
                             onClick={() => setCategoria(nombre)}
-                            className={`pill ${categoria === nombre ? "active" : ""}`}
+                            className={`px-4 py-1.5 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
+                                categoria === nombre
+                                    ? "bg-blue-600 border-blue-600 text-white shadow-xs"
+                                    : "border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:border-blue-500"
+                            }`}
                         >
                             {nombre}
                         </button>
                     ))}
                 </div>
 
-                {/* Resultados */}
+                {/* Grid */}
                 {filtrados.length > 0 ? (
-                    <div className="productos-grid">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pt-2">
                         {filtrados.map((p) => (
                             <ProductCard key={p.id} producto={p} />
                         ))}
                     </div>
                 ) : (
-                    <div className="productos-vacio">
-                        <svg
-                            width="48"
-                            height="48"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-12 text-center space-y-4 shadow-sm my-8">
+                        <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mx-auto text-slate-400">
+                            🔍
+                        </div>
+                        <h3 className="text-lg font-bold">Sin resultados</h3>
+                        <p className="text-xs text-slate-500 max-w-xs mx-auto">
+                            No encontramos productos que coincidan con "{busqueda}". Intenta con otros términos.
+                        </p>
+                        <button
+                            className="px-5 py-2 rounded-xl text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
+                            onClick={limpiarFiltros}
                         >
-                            <circle cx="11" cy="11" r="8" />
-                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                            <line x1="8" y1="11" x2="14" y2="11" />
-                        </svg>
-                        <h3>Sin resultados</h3>
-                        <p>Intenta con otra búsqueda o categoría</p>
-                        <button onClick={limpiarFiltros}>Limpiar filtros</button>
+                            Limpiar filtros
+                        </button>
                     </div>
                 )}
             </main>

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useInventario } from "../../../context/InventarioContext";
-import "./Kardex.css";
 
 function fechaCorta(iso: string) {
     const d = new Date(iso);
@@ -9,7 +8,6 @@ function fechaCorta(iso: string) {
     return `${dia}/${mes}`;
 }
 
-// yyyy-mm-dd para comparar con los inputs de fecha
 function diaISO(iso: string) {
     return iso.slice(0, 10);
 }
@@ -22,7 +20,6 @@ function Kardex() {
     const [desde, setDesde] = useState("");
     const [hasta, setHasta] = useState("");
 
-    // Paginación: 8 filas por página para no alargar la página
     const POR_PAGINA = 8;
     const [pagina, setPagina] = useState(1);
 
@@ -34,26 +31,10 @@ function Kardex() {
         return true;
     });
 
-    const cambiarProducto = (val: string) => {
-        setProducto(val);
-        setPagina(1);
-    };
-
-    const cambiarTipo = (val: string) => {
-        setTipo(val);
-        setPagina(1);
-    };
-
-    const cambiarDesde = (val: string) => {
-        setDesde(val);
-        setPagina(1);
-    };
-
-    const cambiarHasta = (val: string) => {
-        setHasta(val);
-        setPagina(1);
-    };
-
+    const cambiarProducto = (val: string) => { setProducto(val); setPagina(1); };
+    const cambiarTipo = (val: string) => { setTipo(val); setPagina(1); };
+    const cambiarDesde = (val: string) => { setDesde(val); setPagina(1); };
+    const cambiarHasta = (val: string) => { setHasta(val); setPagina(1); };
     const limpiar = () => {
         setProducto("Todos");
         setTipo("Todos");
@@ -66,45 +47,65 @@ function Kardex() {
     const paginaActual = Math.min(pagina, totalPaginas);
     const visibles = filtrados.slice((paginaActual - 1) * POR_PAGINA, paginaActual * POR_PAGINA);
 
-    // Resumen según los filtros aplicados
     const totalEntradas = filtrados.filter((m) => m.tipo === "Entrada").length;
     const totalSalidas = filtrados.filter((m) => m.tipo === "Salida").length;
 
-    return (
-        <>
-            <h1>Kardex</h1>
+    const selectClass =
+        "px-3 py-1.5 text-xs font-semibold rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 cursor-pointer";
 
-            <div className="kardex-filtros">
-                <select value={producto} onChange={(e) => cambiarProducto(e.target.value)}>
+    return (
+        <div className="space-y-6">
+            <div>
+                <h1 className="text-2xl font-black text-slate-900 dark:text-white">Kardex Físico y Valorado</h1>
+                <p className="text-sm text-slate-500 mt-1">Control cronológico detallado de entradas, salidas y existencias.</p>
+            </div>
+
+            {/* Filtros */}
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-3 rounded-2xl flex flex-wrap gap-2.5 items-center shadow-xs">
+                <select className={selectClass} value={producto} onChange={(e) => cambiarProducto(e.target.value)}>
                     <option>Todos</option>
                     {productos.map((p) => (
-                        <option key={p.id} value={p.nombre}>
-                            {p.nombre}
-                        </option>
+                        <option key={p.id} value={p.nombre}>{p.nombre}</option>
                     ))}
                 </select>
 
-                <select value={tipo} onChange={(e) => cambiarTipo(e.target.value)}>
+                <select className={selectClass} value={tipo} onChange={(e) => cambiarTipo(e.target.value)}>
                     <option>Todos</option>
                     <option>Entrada</option>
                     <option>Salida</option>
                 </select>
 
-                <input type="date" value={desde} onChange={(e) => cambiarDesde(e.target.value)} />
-                <input type="date" value={hasta} onChange={(e) => cambiarHasta(e.target.value)} />
+                <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                    <span>Desde:</span>
+                    <input type="date" className={selectClass} value={desde} onChange={(e) => cambiarDesde(e.target.value)} />
+                </div>
+                <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                    <span>Hasta:</span>
+                    <input type="date" className={selectClass} value={hasta} onChange={(e) => cambiarHasta(e.target.value)} />
+                </div>
 
-                <button className="btn-limpiar" onClick={limpiar}>
+                <button
+                    className="ml-auto px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 transition-colors cursor-pointer"
+                    onClick={limpiar}
+                >
                     Limpiar
                 </button>
             </div>
 
-            <div className="kardex-resumen">
-                <span className="chip in">Entradas: {totalEntradas}</span>
-                <span className="chip out">Salidas: {totalSalidas}</span>
-                <span className="chip total">Total: {filtrados.length}</span>
+            {/* Chips de Resumen */}
+            <div className="flex gap-2">
+                <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400">
+                    Entradas: {totalEntradas}
+                </span>
+                <span className="px-3 py-1 rounded-full text-xs font-bold bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-400">
+                    Salidas: {totalSalidas}
+                </span>
+                <span className="px-3 py-1 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                    Total: {filtrados.length}
+                </span>
             </div>
 
-            <div className="tabla-wrap kardex-grande">
+            <div className="tabla-wrap">
                 <table className="tabla">
                     <thead>
                         <tr>
@@ -112,64 +113,78 @@ function Kardex() {
                             <th>Producto</th>
                             <th>Tipo</th>
                             <th>Cantidad</th>
-                            <th>Stock anterior</th>
-                            <th>Stock actual</th>
-                            <th>Motivo</th>
-                            <th>Usuario</th>
+                            <th>Stock Anterior</th>
+                            <th>Stock Resultante</th>
+                            <th>Motivo / Referencia</th>
+                            <th>Operador</th>
                         </tr>
                     </thead>
                     <tbody>
                         {visibles.map((m) => (
                             <tr key={m.id}>
-                                <td>{fechaCorta(m.fecha)}</td>
-                                <td>{m.producto}</td>
+                                <td className="text-xs text-slate-500">{fechaCorta(m.fecha)}</td>
+                                <td className="font-semibold text-xs">{m.producto}</td>
                                 <td>
-                                    <span className={`pill-tipo ${m.tipo === "Entrada" ? "in" : "out"}`}>
-                                        {m.tipo === "Entrada" ? "↑" : "↓"} {m.tipo}
+                                    <span className={`badge ${m.tipo === "Entrada" ? "ok" : "off"}`}>
+                                        {m.tipo === "Entrada" ? "↑ Entrada" : "↓ Salida"}
                                     </span>
                                 </td>
-                                <td className={m.tipo === "Entrada" ? "cant-in" : "cant-out"}>
-                                    {m.cantidad}
+                                <td className={`font-mono font-bold text-xs ${m.tipo === "Entrada" ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}>
+                                    {m.tipo === "Entrada" ? `+${m.cantidad}` : `-${m.cantidad}`}
                                 </td>
-                                <td>{m.stockAnterior}</td>
-                                <td>{m.stockNuevo}</td>
-                                <td>{m.motivo}</td>
-                                <td>{m.usuario}</td>
+                                <td className="font-mono text-xs text-slate-500">{m.stockAnterior}</td>
+                                <td className="font-mono font-bold text-xs">{m.stockNuevo}</td>
+                                <td className="text-xs text-slate-600 dark:text-slate-400">{m.motivo}</td>
+                                <td className="text-xs text-slate-500">{m.usuario}</td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
                 {filtrados.length === 0 && (
-                    <p className="tabla-vacia">Sin movimientos para esos filtros.</p>
+                    <div className="text-center py-10 text-sm text-slate-500">
+                        Sin movimientos para los filtros seleccionados.
+                    </div>
                 )}
             </div>
 
             {/* Paginación */}
             {filtrados.length > 0 && (
-                <div className="paginacion">
-                    <span className="pag-info">
-                        Página {paginaActual} de {totalPaginas} · {filtrados.length} movimientos
+                <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500 pt-2">
+                    <span>
+                        Página {paginaActual} de {totalPaginas} · {filtrados.length} registros
                     </span>
-                    <div className="pag-botones">
-                        <button disabled={paginaActual === 1} onClick={() => setPagina(paginaActual - 1)}>
+                    <div className="flex gap-1">
+                        <button
+                            className="px-2.5 py-1 rounded-lg border border-slate-300 dark:border-slate-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100 dark:hover:bg-slate-800"
+                            disabled={paginaActual === 1}
+                            onClick={() => setPagina(paginaActual - 1)}
+                        >
                             ‹
                         </button>
                         {Array.from({ length: totalPaginas }, (_, i) => i + 1).map((n) => (
                             <button
                                 key={n}
-                                className={n === paginaActual ? "activo" : ""}
+                                className={`px-2.5 py-1 rounded-lg text-xs font-semibold ${
+                                    n === paginaActual
+                                        ? "bg-emerald-600 text-white"
+                                        : "border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800"
+                                }`}
                                 onClick={() => setPagina(n)}
                             >
                                 {n}
                             </button>
                         ))}
-                        <button disabled={paginaActual === totalPaginas} onClick={() => setPagina(paginaActual + 1)}>
+                        <button
+                            className="px-2.5 py-1 rounded-lg border border-slate-300 dark:border-slate-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100 dark:hover:bg-slate-800"
+                            disabled={paginaActual === totalPaginas}
+                            onClick={() => setPagina(paginaActual + 1)}
+                        >
                             ›
                         </button>
                     </div>
                 </div>
             )}
-        </>
+        </div>
     );
 }
 

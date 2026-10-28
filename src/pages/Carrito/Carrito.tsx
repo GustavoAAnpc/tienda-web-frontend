@@ -9,7 +9,6 @@ import { useAuth } from "../../context/AuthContext";
 import { generarNumeroPedido, guardarPedido } from "../../data/pedidos";
 import type { TipoComprobante, MetodoPago, ComprobanteInfo } from "../../data/pedidos";
 import { consultarDNI, consultarRUC } from "../../services/sunatApi";
-import "./Carrito.css";
 
 // Envío gratis desde este monto, si no, cuesta fijo
 const UMBRAL_ENVIO_GRATIS = 499;
@@ -194,13 +193,15 @@ function Carrito() {
         .slice(0, 4);
 
     return (
-        <div className="carrito-page">
+        <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
             <Header />
 
-            <main className="carrito-content">
-                <div className="carrito-header">
-                    <h1>Tu carrito</h1>
-                    <p>
+            <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+                <div className="mb-6">
+                    <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+                        Tu carrito
+                    </h1>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
                         {lineas.length === 0
                             ? "Aún no agregaste productos"
                             : `${lineas.length} producto${lineas.length !== 1 ? "s" : ""} en tu compra`}
@@ -209,60 +210,81 @@ function Carrito() {
 
                 {/* ===== Compra confirmada ===== */}
                 {pedidoOk ? (
-                    <section className="pedido-exito">
-                        <div className="exito-icon">
-                            <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <section className="mt-6 text-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 sm:p-14 shadow-sm max-w-2xl mx-auto">
+                        <div className="w-20 h-20 mx-auto flex items-center justify-center bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 rounded-full mb-4">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                                 <polyline points="22 4 12 14.01 9 11.01" />
                             </svg>
                         </div>
-                        <h2>¡Pago procesado con éxito!</h2>
-                        <p>
-                            Pedido <strong>{pedidoOk}</strong> por <strong>S/ {totalPagado.toLocaleString("es-PE")}</strong>.
+                        <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-2">
+                            ¡Pago procesado con éxito!
+                        </h2>
+                        <p className="text-sm text-slate-600 dark:text-slate-300 mb-6 max-w-lg mx-auto">
+                            Pedido <strong className="text-slate-900 dark:text-white font-mono">{pedidoOk}</strong> por <strong className="text-slate-900 dark:text-white font-mono">S/ {totalPagado.toLocaleString("es-PE")}</strong>.
                             Tu comprobante electrónico ha sido emitido satisfactoriamente.
                         </p>
 
                         {comprobanteEmitido && (
-                            <div className="comprobante-card-exito">
-                                <div className="comp-head">
-                                    <span className="comp-badge">{comprobanteEmitido.tipo} Electrónica</span>
-                                    <span className="comp-ruc">RUC Emisor: 20601234567</span>
+                            <div className="bg-slate-50 dark:bg-slate-850/60 border border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-5 my-6 max-w-md mx-auto text-left shadow-xs">
+                                <div className="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-3 mb-3">
+                                    <span className="text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-wider">
+                                        {comprobanteEmitido.tipo} Electrónica
+                                    </span>
+                                    <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">
+                                        RUC: 20601234567
+                                    </span>
                                 </div>
-                                <div className="comp-cuerpo">
+                                <div className="flex flex-col gap-1.5 text-xs sm:text-sm text-slate-800 dark:text-slate-200">
                                     <div><strong>Receptor:</strong> {comprobanteEmitido.nombreRazonSocial}</div>
                                     <div><strong>{comprobanteEmitido.tipo === "Boleta" ? "DNI" : "RUC"}:</strong> {comprobanteEmitido.documento}</div>
                                     {comprobanteEmitido.direccion && (
                                         <div><strong>Dirección:</strong> {comprobanteEmitido.direccion}</div>
                                     )}
-                                    <div className="comp-tributos">
+                                    <div className="flex flex-col gap-1 border-t border-slate-200 dark:border-slate-800 pt-3 mt-2 text-xs text-slate-600 dark:text-slate-400">
                                         <span>Op. Gravada: S/ {comprobanteEmitido.subtotal.toFixed(2)}</span>
                                         <span>IGV (18%): S/ {comprobanteEmitido.igv.toFixed(2)}</span>
-                                        <strong className="comp-total">Total: S/ {comprobanteEmitido.total.toFixed(2)}</strong>
+                                        <strong className="text-base font-bold text-emerald-600 dark:text-emerald-400 mt-1">
+                                            Total: S/ {comprobanteEmitido.total.toFixed(2)}
+                                        </strong>
                                     </div>
                                 </div>
                             </div>
                         )}
 
-                        <div className="exito-buttons">
-                            <button className="btn-primary-lg" onClick={() => navigate("/productos")}>
+                        <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto mt-6">
+                            <button 
+                                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-all shadow-sm hover:shadow cursor-pointer" 
+                                onClick={() => navigate("/productos")}
+                            >
                                 Seguir comprando
                             </button>
-                            <button className="btn-ghost" onClick={() => navigate("/mis-compras")}>
+                            <button 
+                                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-semibold text-sm transition-all cursor-pointer" 
+                                onClick={() => navigate("/mis-compras")}
+                            >
                                 Ver en Mis compras
                             </button>
                         </div>
                     </section>
                 ) : lineas.length === 0 ? (
                     /* ===== Carrito vacío ===== */
-                    <section className="carrito-vacio">
-                        <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+                    <section className="mt-6 text-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-12 sm:p-16 shadow-sm max-w-xl mx-auto flex flex-col items-center">
+                        <svg className="text-slate-400 dark:text-slate-600 mb-4" width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
                             <circle cx="9" cy="21" r="1" />
                             <circle cx="20" cy="21" r="1" />
                             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
                         </svg>
-                        <h2>Tu carrito está vacío</h2>
-                        <p>Explora el catálogo y encuentra tecnología a buenos precios.</p>
-                        <button className="btn-primary-lg" onClick={() => navigate("/productos")}>
+                        <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-2">
+                            Tu carrito está vacío
+                        </h2>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
+                            Explora el catálogo y encuentra tecnología a los mejores precios.
+                        </p>
+                        <button 
+                            className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-all shadow-sm hover:shadow cursor-pointer" 
+                            onClick={() => navigate("/productos")}
+                        >
                             Ver productos
                         </button>
                     </section>
@@ -270,58 +292,76 @@ function Carrito() {
                     /* ===== Carrito con productos ===== */
                     <>
                         {/* Barra envío gratis */}
-                        <section className="envio-bar">
-                            <div className="envio-texto">
+                        <section className="mb-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 flex items-center gap-4 shadow-xs">
+                            <div className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium whitespace-nowrap">
                                 {envioGratis ? (
-                                    <span><strong>¡Tienes envío gratis!</strong> Aprovecha tu compra.</span>
+                                    <span><strong className="text-emerald-600 dark:text-emerald-400 font-bold">¡Tienes envío gratis!</strong> Aprovecha tu compra.</span>
                                 ) : (
-                                    <span>Te faltan <strong>S/ {faltante.toLocaleString("es-PE")}</strong> para el envío gratis</span>
+                                    <span>Te faltan <strong className="text-blue-600 dark:text-blue-400 font-bold">S/ {faltante.toLocaleString("es-PE")}</strong> para envío gratis</span>
                                 )}
                             </div>
-                            <div className="envio-progreso">
-                                <div className="envio-relleno" style={{ width: `${progreso}%` }} />
+                            <div className="flex-1 h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                <div 
+                                    className="h-full rounded-full bg-gradient-to-r from-blue-600 to-emerald-500 transition-all duration-500" 
+                                    style={{ width: `${progreso}%` }} 
+                                />
                             </div>
-                            <span className="envio-porcentaje">{progreso}%</span>
+                            <span className="text-xs font-bold text-blue-600 dark:text-blue-400 font-mono">
+                                {progreso}%
+                            </span>
                         </section>
 
-                        <div className="carrito-grid">
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                             {/* Lista de productos */}
-                            <section className="carrito-lista">
+                            <section className="lg:col-span-8 flex flex-col gap-4">
                                 {lineas.map(({ producto, cantidad }) => (
-                                    <article key={producto.id} className="carrito-item">
+                                    <article 
+                                        key={producto.id} 
+                                        className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xs hover:border-blue-500/40 hover:shadow-sm transition-all"
+                                    >
                                         <img
                                             src={producto.imagen}
                                             alt={producto.nombre}
                                             onClick={() => navigate(`/productos/${producto.id}`)}
+                                            className="w-20 h-20 sm:w-24 sm:h-24 object-contain rounded-xl bg-slate-50 dark:bg-slate-800/60 p-2 cursor-pointer flex-shrink-0 border border-slate-100 dark:border-slate-800"
                                         />
-                                        <div className="item-info">
-                                            <span className="item-categoria">{producto.categoria}</span>
-                                            <h3 onClick={() => navigate(`/productos/${producto.id}`)}>
+                                        <div className="flex-1 min-w-0 w-full sm:w-auto">
+                                            <span className="text-[11px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
+                                                {producto.categoria}
+                                            </span>
+                                            <h3 
+                                                onClick={() => navigate(`/productos/${producto.id}`)}
+                                                className="text-base font-bold text-slate-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer line-clamp-2 mt-0.5 transition-colors"
+                                            >
                                                 {producto.nombre}
                                             </h3>
-                                            <span className="item-precio-unit">
+                                            <span className="text-xs text-slate-500 dark:text-slate-400 font-mono block mt-1">
                                                 S/ {producto.precio.toLocaleString("es-PE")} c/u
                                             </span>
 
-                                            <div className="item-acciones">
-                                                <div className="stepper">
+                                            <div className="flex items-center gap-3 mt-3">
+                                                <div className="inline-flex items-center border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden bg-slate-50 dark:bg-slate-800">
                                                     <button
                                                         onClick={() => cambiarCantidad(producto.id, cantidad - 1)}
                                                         aria-label="Quitar uno"
+                                                        className="w-8 h-8 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-700 transition-colors text-base font-bold cursor-pointer"
                                                     >
                                                         −
                                                     </button>
-                                                    <span>{cantidad}</span>
+                                                    <span className="min-w-[36px] text-center text-sm font-bold text-slate-900 dark:text-white font-mono">
+                                                        {cantidad}
+                                                    </span>
                                                     <button
                                                         onClick={() => cambiarCantidad(producto.id, cantidad + 1)}
                                                         disabled={cantidad >= producto.stock}
                                                         aria-label="Agregar uno"
+                                                        className="w-8 h-8 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors text-base font-bold cursor-pointer"
                                                     >
                                                         +
                                                     </button>
                                                 </div>
                                                 <button
-                                                    className="btn-quitar"
+                                                    className="text-xs text-slate-500 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400 underline cursor-pointer transition-colors"
                                                     onClick={() => quitar(producto.id)}
                                                 >
                                                     Quitar
@@ -329,46 +369,53 @@ function Carrito() {
                                             </div>
 
                                             {cantidad >= producto.stock && (
-                                                <span className="item-stock-max">
+                                                <span className="block text-xs font-medium text-amber-600 dark:text-amber-400 mt-2">
                                                     Stock máximo disponible ({producto.stock})
                                                 </span>
                                             )}
                                         </div>
-                                        <div className="item-subtotal">
+                                        <div className="text-right sm:text-right w-full sm:w-auto border-t sm:border-t-0 pt-2 sm:pt-0 border-slate-100 dark:border-slate-800 sm:self-center font-mono text-lg font-black text-slate-900 dark:text-white whitespace-nowrap">
                                             <strong>S/ {(producto.precio * cantidad).toLocaleString("es-PE")}</strong>
                                         </div>
                                     </article>
                                 ))}
 
-                                <button className="btn-vaciar" onClick={vaciar}>
+                                <button 
+                                    className="self-start text-xs text-slate-500 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400 underline cursor-pointer transition-colors py-2" 
+                                    onClick={vaciar}
+                                >
                                     Vaciar carrito
                                 </button>
                             </section>
 
                             {/* Resumen */}
-                            <aside className="carrito-resumen">
-                                <h2>Resumen de compra</h2>
-                                <div className="resumen-fila">
+                            <aside className="lg:col-span-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm sticky top-24">
+                                <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">
+                                    Resumen de compra
+                                </h2>
+                                <div className="flex justify-between items-center text-sm text-slate-600 dark:text-slate-400 mb-2.5 font-medium">
                                     <span>Subtotal (Base Imponible)</span>
-                                    <span>S/ {baseImponible.toLocaleString("es-PE", { minimumFractionDigits: 2 })}</span>
+                                    <span className="font-mono text-slate-800 dark:text-slate-200">S/ {baseImponible.toLocaleString("es-PE", { minimumFractionDigits: 2 })}</span>
                                 </div>
-                                <div className="resumen-fila">
+                                <div className="flex justify-between items-center text-sm text-slate-600 dark:text-slate-400 mb-2.5 font-medium">
                                     <span>I.G.V. (18%)</span>
-                                    <span>S/ {igv.toLocaleString("es-PE", { minimumFractionDigits: 2 })}</span>
+                                    <span className="font-mono text-slate-800 dark:text-slate-200">S/ {igv.toLocaleString("es-PE", { minimumFractionDigits: 2 })}</span>
                                 </div>
-                                <div className="resumen-fila">
+                                <div className="flex justify-between items-center text-sm text-slate-600 dark:text-slate-400 mb-2.5 font-medium">
                                     <span>Envío</span>
-                                    <span className={envioGratis ? "gratis" : ""}>
+                                    <span className={envioGratis ? "text-emerald-600 dark:text-emerald-400 font-bold" : "font-mono text-slate-800 dark:text-slate-200"}>
                                         {envioGratis ? "Gratis" : `S/ ${envio}`}
                                     </span>
                                 </div>
-                                <div className="resumen-total">
+                                <div className="flex justify-between items-center border-t border-slate-200 dark:border-slate-800 my-4 pt-4 text-base font-bold text-slate-900 dark:text-white">
                                     <span>Total</span>
-                                    <strong>S/ {total.toLocaleString("es-PE", { minimumFractionDigits: 2 })}</strong>
+                                    <strong className="text-2xl font-black text-slate-900 dark:text-white font-mono">
+                                        S/ {total.toLocaleString("es-PE", { minimumFractionDigits: 2 })}
+                                    </strong>
                                 </div>
 
                                 <button
-                                    className="btn-primary-lg btn-pagar-ahora"
+                                    className="w-full py-3.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md hover:shadow-lg transition-all cursor-pointer"
                                     onClick={() => {
                                         setMostrarCheckout(true);
                                         setPasoCheckout(1);
@@ -376,11 +423,14 @@ function Carrito() {
                                 >
                                     Continuar al Pago
                                 </button>
-                                <button className="btn-ghost" onClick={() => navigate("/productos")}>
+                                <button 
+                                    className="w-full mt-2.5 py-2.5 px-4 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-semibold text-xs sm:text-sm transition-all cursor-pointer" 
+                                    onClick={() => navigate("/productos")}
+                                >
                                     Seguir comprando
                                 </button>
 
-                                <div className="resumen-confianza">
+                                <div className="mt-5 flex flex-col gap-1.5 text-xs text-slate-500 dark:text-slate-400 text-center font-medium">
                                     <span>🔒 Facturación Electrónica SUNAT</span>
                                     <span>🛡️ Pago 100% cifrado y seguro</span>
                                 </div>
@@ -391,15 +441,19 @@ function Carrito() {
 
                 {/* ===== MODAL DE PASARELA DE PAGOS Y FACTURACIÓN SUNAT ===== */}
                 {mostrarCheckout && (
-                    <div className="modal-fondo" onClick={() => setMostrarCheckout(false)}>
-                        <div className="modal modal-checkout" onClick={(e) => e.stopPropagation()}>
-                            <div className="checkout-head">
+                    <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto" onClick={() => setMostrarCheckout(false)}>
+                        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-7 shadow-2xl max-w-xl w-full max-h-[92vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+                            <div className="flex items-start justify-between pb-4 mb-4 border-b border-slate-200 dark:border-slate-800">
                                 <div>
-                                    <h2>Pasarela de Pago Segura</h2>
-                                    <p className="checkout-sub">Emisión electrónica SUNAT & Procesamiento cifrado</p>
+                                    <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">
+                                        Pasarela de Pago Segura
+                                    </h2>
+                                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                                        Emisión electrónica SUNAT & Procesamiento cifrado
+                                    </p>
                                 </div>
                                 <button
-                                    className="modal-cerrar"
+                                    className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer text-sm font-bold"
                                     onClick={() => setMostrarCheckout(false)}
                                     aria-label="Cerrar modal"
                                 >
@@ -408,124 +462,173 @@ function Carrito() {
                             </div>
 
                             {/* Pestañas de pasos */}
-                            <div className="checkout-tabs checkout-tabs-3">
+                            <div className="grid grid-cols-3 gap-2 border-b border-slate-200 dark:border-slate-800 pb-3 mb-5">
                                 <button
                                     type="button"
-                                    className={`tab-btn ${pasoCheckout === 1 ? "activo" : ""}`}
+                                    className={`py-2 px-2 text-center rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                                        pasoCheckout === 1 
+                                            ? "bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800/60" 
+                                            : "text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-transparent"
+                                    }`}
                                     onClick={() => setPasoCheckout(1)}
                                 >
                                     1. Envío
                                 </button>
                                 <button
                                     type="button"
-                                    className={`tab-btn ${pasoCheckout === 2 ? "activo" : ""}`}
+                                    className={`py-2 px-2 text-center rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                                        pasoCheckout === 2 
+                                            ? "bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800/60" 
+                                            : "text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-transparent"
+                                    }`}
                                     onClick={() => setPasoCheckout(2)}
                                 >
                                     2. Comprobante
                                 </button>
                                 <button
                                     type="button"
-                                    className={`tab-btn ${pasoCheckout === 3 ? "activo" : ""}`}
+                                    className={`py-2 px-2 text-center rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                                        pasoCheckout === 3 
+                                            ? "bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800/60" 
+                                            : "text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-transparent"
+                                    }`}
                                     onClick={() => setPasoCheckout(3)}
                                 >
                                     3. Pago
                                 </button>
                             </div>
 
-                            <form onSubmit={ejecutarPago} className="checkout-form">
+                            <form onSubmit={ejecutarPago} className="space-y-4">
                                 {/* ===== PASO 1: DATOS DE ENVÍO Y CONTACTO ===== */}
                                 {pasoCheckout === 1 && (
-                                    <div className="paso-contenido paso-envio">
+                                    <div className="space-y-4">
                                         {!usuario && (
-                                            <div className="checkout-invitado-alerta">
-                                                <p><strong>¿Ya tienes una cuenta?</strong> Inicia sesión para guardar tu información y ganar puntos.</p>
-                                                <button type="button" className="btn-outline-sm" onClick={() => navigate("/login")}>
+                                            <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 rounded-xl p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-2">
+                                                <p className="text-xs text-amber-900 dark:text-amber-200">
+                                                    <strong>¿Ya tienes una cuenta?</strong> Inicia sesión para guardar tu información y ganar puntos.
+                                                </p>
+                                                <button 
+                                                    type="button" 
+                                                    className="px-3 py-1.5 rounded-lg border border-amber-600 dark:border-amber-400 text-amber-700 dark:text-amber-300 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-500 text-xs font-bold transition-all cursor-pointer whitespace-nowrap" 
+                                                    onClick={() => navigate("/login")}
+                                                >
                                                     Iniciar Sesión
                                                 </button>
                                             </div>
                                         )}
 
-                                        <div className="tipo-comp-selector" style={{ marginBottom: "16px" }}>
+                                        <div className="grid grid-cols-2 gap-3 mb-3">
                                             <button
                                                 type="button"
-                                                className={`btn-comp-tipo ${tipoEntrega === "envio" ? "activo" : ""}`}
+                                                className={`flex flex-col text-left p-3.5 rounded-xl border transition-all cursor-pointer ${
+                                                    tipoEntrega === "envio" 
+                                                        ? "border-blue-600 bg-blue-50/70 dark:bg-blue-950/50 dark:border-blue-500" 
+                                                        : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 hover:border-slate-300 dark:hover:border-slate-700"
+                                                }`}
                                                 onClick={() => setTipoEntrega("envio")}
                                             >
-                                                <strong>Envío a Domicilio</strong>
-                                                <span>A todo San Juan de Lurigancho</span>
+                                                <strong className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
+                                                    Envío a Domicilio
+                                                </strong>
+                                                <span className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                                                    A todo San Juan de Lurigancho
+                                                </span>
                                             </button>
                                             <button
                                                 type="button"
-                                                className={`btn-comp-tipo ${tipoEntrega === "recojo" ? "activo" : ""}`}
+                                                className={`flex flex-col text-left p-3.5 rounded-xl border transition-all cursor-pointer ${
+                                                    tipoEntrega === "recojo" 
+                                                        ? "border-blue-600 bg-blue-50/70 dark:bg-blue-950/50 dark:border-blue-500" 
+                                                        : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 hover:border-slate-300 dark:hover:border-slate-700"
+                                                }`}
                                                 onClick={() => setTipoEntrega("recojo")}
                                             >
-                                                <strong>Recojo en Tienda</strong>
-                                                <span>Av. Próceres de la Ind. 2450</span>
+                                                <strong className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
+                                                    Recojo en Tienda
+                                                </strong>
+                                                <span className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                                                    Av. Próceres de la Ind. 2450
+                                                </span>
                                             </button>
                                         </div>
 
-                                        <div className="checkout-campo">
-                                            <label>Correo Electrónico *</label>
+                                        <div className="flex flex-col gap-1.5">
+                                            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                                                Correo Electrónico *
+                                            </label>
                                             <input 
                                                 type="email" 
                                                 placeholder="Ej. usuario@correo.com" 
                                                 value={correoContacto}
                                                 onChange={(e) => setCorreoContacto(e.target.value)}
+                                                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
                                                 required
                                             />
                                         </div>
 
-                                        <div className="checkout-campo">
-                                            <label>Teléfono Celular *</label>
+                                        <div className="flex flex-col gap-1.5">
+                                            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                                                Teléfono Celular *
+                                            </label>
                                             <input 
                                                 type="tel" 
                                                 placeholder="Ej. 999 888 777" 
                                                 value={celularContacto}
                                                 onChange={(e) => setCelularContacto(e.target.value)}
+                                                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
                                                 required
                                             />
                                         </div>
 
                                         {tipoEntrega === "envio" && (
                                             <>
-                                                <div className="checkout-campo">
-                                                    <label>Dirección de Envío *</label>
+                                                <div className="flex flex-col gap-1.5">
+                                                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                                                        Dirección de Envío *
+                                                    </label>
                                                     <input 
                                                         type="text" 
                                                         placeholder="Calle, Avenida, Jr." 
                                                         value={direccionEnvio}
                                                         onChange={(e) => setDireccionEnvio(e.target.value)}
+                                                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
                                                         required
                                                     />
                                                 </div>
 
-                                                <div className="checkout-campo-fila">
-                                                    <div className="checkout-campo">
-                                                        <label>Distrito *</label>
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                                    <div className="flex flex-col gap-1.5">
+                                                        <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                                                            Distrito *
+                                                        </label>
                                                         <input 
                                                             type="text" 
                                                             value={distritoEnvio}
                                                             onChange={(e) => setDistritoEnvio(e.target.value)}
+                                                            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
                                                             required
                                                         />
                                                     </div>
-                                                    <div className="checkout-campo">
-                                                        <label>Referencia</label>
+                                                    <div className="flex flex-col gap-1.5">
+                                                        <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                                                            Referencia
+                                                        </label>
                                                         <input 
                                                             type="text" 
                                                             placeholder="Cerca de..." 
                                                             value={referenciaEnvio}
                                                             onChange={(e) => setReferenciaEnvio(e.target.value)}
+                                                            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
                                                         />
                                                     </div>
                                                 </div>
                                             </>
                                         )}
 
-                                        <div className="checkout-acciones">
+                                        <div className="flex gap-3 justify-end mt-5 pt-3 border-t border-slate-200 dark:border-slate-800">
                                             <button
                                                 type="button"
-                                                className="btn-primary-lg"
+                                                className="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-sm hover:shadow transition-all cursor-pointer"
                                                 onClick={() => {
                                                     if (correoContacto && celularContacto && (tipoEntrega === "recojo" || (direccionEnvio && distritoEnvio))) {
                                                         setPasoCheckout(2);
@@ -542,11 +645,15 @@ function Carrito() {
 
                                 {/* ===== PASO 2: DATOS DE FACTURACIÓN SUNAT ===== */}
                                 {pasoCheckout === 2 && (
-                                    <div className="paso-contenido">
-                                        <div className="tipo-comp-selector">
+                                    <div className="space-y-4">
+                                        <div className="grid grid-cols-2 gap-3 mb-3">
                                             <button
                                                 type="button"
-                                                className={`btn-comp-tipo ${tipoComprobante === "Boleta" ? "activo" : ""}`}
+                                                className={`flex flex-col text-left p-3.5 rounded-xl border transition-all cursor-pointer ${
+                                                    tipoComprobante === "Boleta" 
+                                                        ? "border-blue-600 bg-blue-50/70 dark:bg-blue-950/50 dark:border-blue-500" 
+                                                        : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 hover:border-slate-300 dark:hover:border-slate-700"
+                                                }`}
                                                 onClick={() => {
                                                     setTipoComprobante("Boleta");
                                                     setDocumento("");
@@ -555,12 +662,20 @@ function Carrito() {
                                                     setErrorApi(null);
                                                 }}
                                             >
-                                                <strong>Boleta de Venta</strong>
-                                                <span>Para persona natural (DNI)</span>
+                                                <strong className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
+                                                    Boleta de Venta
+                                                </strong>
+                                                <span className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                                                    Para persona natural (DNI)
+                                                </span>
                                             </button>
                                             <button
                                                 type="button"
-                                                className={`btn-comp-tipo ${tipoComprobante === "Factura" ? "activo" : ""}`}
+                                                className={`flex flex-col text-left p-3.5 rounded-xl border transition-all cursor-pointer ${
+                                                    tipoComprobante === "Factura" 
+                                                        ? "border-blue-600 bg-blue-50/70 dark:bg-blue-950/50 dark:border-blue-500" 
+                                                        : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 hover:border-slate-300 dark:hover:border-slate-700"
+                                                }`}
                                                 onClick={() => {
                                                     setTipoComprobante("Factura");
                                                     setDocumento("");
@@ -569,39 +684,44 @@ function Carrito() {
                                                     setErrorApi(null);
                                                 }}
                                             >
-                                                <strong>Factura Electrónica</strong>
-                                                <span>Con RUC para empresas</span>
+                                                <strong className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
+                                                    Factura Electrónica
+                                                </strong>
+                                                <span className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                                                    Con RUC para empresas
+                                                </span>
                                             </button>
                                         </div>
 
-                                        <div className="checkout-campo">
-                                            <label>
+                                        <div className="flex flex-col gap-1.5">
+                                            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                                                 {tipoComprobante === "Boleta" ? "DNI del titular (8 dígitos)" : "RUC de la empresa (11 dígitos)"}
                                             </label>
-                                            <div className="input-con-boton">
+                                            <div className="flex gap-2">
                                                 <input
                                                     type="text"
                                                     maxLength={tipoComprobante === "Boleta" ? 8 : 11}
                                                     placeholder={tipoComprobante === "Boleta" ? "Ej. 72819402" : "Ej. 20601234567"}
                                                     value={documento}
                                                     onChange={(e) => setDocumento(e.target.value.replace(/\D/g, ""))}
+                                                    className="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all font-mono"
                                                     required
                                                 />
                                                 <button
                                                     type="button"
-                                                    className="btn-consultar-api"
+                                                    className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-bold text-xs whitespace-nowrap transition-all cursor-pointer"
                                                     onClick={handleConsultarDocumento}
                                                     disabled={cargandoApi}
                                                 >
                                                     {cargandoApi ? "Consultando..." : `Consultar ${tipoComprobante === "Boleta" ? "RENIEC" : "SUNAT"}`}
                                                 </button>
                                             </div>
-                                            {errorApi && <p className="api-error">{errorApi}</p>}
-                                            {estadoSunat && <p className="api-exito">✓ {estadoSunat}</p>}
+                                            {errorApi && <p className="text-xs font-medium text-red-600 dark:text-red-400 mt-1">{errorApi}</p>}
+                                            {estadoSunat && <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mt-1">✓ {estadoSunat}</p>}
                                         </div>
 
-                                        <div className="checkout-campo">
-                                            <label>
+                                        <div className="flex flex-col gap-1.5">
+                                            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                                                 {tipoComprobante === "Boleta" ? "Nombres y Apellidos" : "Razón Social"}
                                             </label>
                                             <input
@@ -609,42 +729,48 @@ function Carrito() {
                                                 placeholder={tipoComprobante === "Boleta" ? "Nombres del cliente" : "Razón social de la empresa"}
                                                 value={nombreRazonSocial}
                                                 onChange={(e) => setNombreRazonSocial(e.target.value)}
+                                                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
                                                 required
                                             />
                                         </div>
 
                                         {tipoComprobante === "Factura" && (
-                                            <div className="checkout-campo">
-                                                <label>Dirección Fiscal</label>
+                                            <div className="flex flex-col gap-1.5">
+                                                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                                                    Dirección Fiscal
+                                                </label>
                                                 <input
                                                     type="text"
                                                     placeholder="Dirección fiscal registrada en SUNAT"
                                                     value={direccionFiscal}
                                                     onChange={(e) => setDireccionFiscal(e.target.value)}
+                                                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
                                                     required
                                                 />
                                             </div>
                                         )}
 
-                                        <div className="desglose-sunat-box">
-                                            <div className="desglose-fila">
+                                        <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 flex flex-col gap-2 text-xs font-medium my-3">
+                                            <div className="flex justify-between text-slate-600 dark:text-slate-400">
                                                 <span>Op. Gravada:</span>
-                                                <span>S/ {baseImponible.toFixed(2)}</span>
+                                                <span className="font-mono text-slate-800 dark:text-slate-200">S/ {baseImponible.toFixed(2)}</span>
                                             </div>
-                                            <div className="desglose-fila">
+                                            <div className="flex justify-between text-slate-600 dark:text-slate-400">
                                                 <span>I.G.V. (18%):</span>
-                                                <span>S/ {igv.toFixed(2)}</span>
+                                                <span className="font-mono text-slate-800 dark:text-slate-200">S/ {igv.toFixed(2)}</span>
                                             </div>
-                                            <div className="desglose-fila total">
-                                                <strong>Total a pagar:</strong>
-                                                <strong>S/ {total.toFixed(2)}</strong>
+                                            <div className="flex justify-between items-center border-t border-dashed border-slate-300 dark:border-slate-700 pt-2 text-slate-900 dark:text-white text-sm font-bold">
+                                                <span>Total a pagar:</span>
+                                                <strong className="text-blue-600 dark:text-blue-400 font-mono text-base">
+                                                    S/ {total.toFixed(2)}
+                                                </strong>
                                             </div>
                                         </div>
 
-                                        <div className="checkout-acciones">
+                                        <div className="flex gap-3 justify-end mt-5 pt-3 border-t border-slate-200 dark:border-slate-800">
                                             <button
                                                 type="button"
-                                                className="btn-primary-lg"
+                                                className="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-sm hover:shadow transition-all cursor-pointer"
                                                 onClick={() => {
                                                     if (!nombreRazonSocial.trim()) {
                                                         handleConsultarDocumento();
@@ -660,83 +786,107 @@ function Carrito() {
 
                                 {/* ===== PASO 3: MEDIO DE PAGO ===== */}
                                 {pasoCheckout === 3 && (
-                                    <div className="paso-contenido">
-                                        <div className="metodos-grid">
+                                    <div className="space-y-4">
+                                        <div className="grid grid-cols-3 gap-2.5 mb-4">
                                             <button
                                                 type="button"
-                                                className={`metodo-card ${metodoPago === "tarjeta" ? "activo" : ""}`}
+                                                className={`flex flex-col items-center text-center p-3 rounded-xl border transition-all cursor-pointer ${
+                                                    metodoPago === "tarjeta" 
+                                                        ? "border-blue-600 bg-blue-50/70 dark:bg-blue-950/50 dark:border-blue-500" 
+                                                        : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 hover:border-slate-300 dark:hover:border-slate-700"
+                                                }`}
                                                 onClick={() => setMetodoPago("tarjeta")}
                                             >
-                                                <span className="metodo-icon">💳</span>
-                                                <strong>Tarjeta</strong>
-                                                <small>Débito / Crédito</small>
+                                                <span className="text-2xl mb-1">💳</span>
+                                                <strong className="text-xs font-bold text-slate-900 dark:text-white">Tarjeta</strong>
+                                                <small className="text-[10px] text-slate-500 dark:text-slate-400">Débito / Crédito</small>
                                             </button>
 
                                             <button
                                                 type="button"
-                                                className={`metodo-card ${metodoPago === "yape" ? "activo" : ""}`}
+                                                className={`flex flex-col items-center text-center p-3 rounded-xl border transition-all cursor-pointer ${
+                                                    metodoPago === "yape" 
+                                                        ? "border-blue-600 bg-blue-50/70 dark:bg-blue-950/50 dark:border-blue-500" 
+                                                        : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 hover:border-slate-300 dark:hover:border-slate-700"
+                                                }`}
                                                 onClick={() => setMetodoPago("yape")}
                                             >
-                                                <span className="metodo-icon">📱</span>
-                                                <strong>Yape / Plin</strong>
-                                                <small>Pago móvil QR</small>
+                                                <span className="text-2xl mb-1">📱</span>
+                                                <strong className="text-xs font-bold text-slate-900 dark:text-white">Yape / Plin</strong>
+                                                <small className="text-[10px] text-slate-500 dark:text-slate-400">Pago móvil QR</small>
                                             </button>
 
                                             <button
                                                 type="button"
-                                                className={`metodo-card ${metodoPago === "transferencia" ? "activo" : ""}`}
+                                                className={`flex flex-col items-center text-center p-3 rounded-xl border transition-all cursor-pointer ${
+                                                    metodoPago === "transferencia" 
+                                                        ? "border-blue-600 bg-blue-50/70 dark:bg-blue-950/50 dark:border-blue-500" 
+                                                        : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 hover:border-slate-300 dark:hover:border-slate-700"
+                                                }`}
                                                 onClick={() => setMetodoPago("transferencia")}
                                             >
-                                                <span className="metodo-icon">🏦</span>
-                                                <strong>Transferencia</strong>
-                                                <small>BCP / BBVA / Interbank</small>
+                                                <span className="text-2xl mb-1">🏦</span>
+                                                <strong className="text-xs font-bold text-slate-900 dark:text-white">Transferencia</strong>
+                                                <small className="text-[10px] text-slate-500 dark:text-slate-400">BCP / BBVA / Interbank</small>
                                             </button>
                                         </div>
 
                                         {/* Tarjeta de crédito/débito */}
                                         {metodoPago === "tarjeta" && (
-                                            <div className="form-tarjeta">
-                                                <div className="checkout-campo">
-                                                    <label>Número de Tarjeta</label>
+                                            <div className="space-y-3">
+                                                <div className="flex flex-col gap-1.5">
+                                                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                                                        Número de Tarjeta
+                                                    </label>
                                                     <input
                                                         type="text"
                                                         placeholder="4557 1234 5678 9010"
                                                         value={numeroTarjeta}
                                                         onChange={(e) => handleTarjetaInput(e.target.value)}
+                                                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all font-mono"
                                                         required
                                                     />
                                                 </div>
 
-                                                <div className="checkout-campo">
-                                                    <label>Nombre del Titular</label>
+                                                <div className="flex flex-col gap-1.5">
+                                                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                                                        Nombre del Titular
+                                                    </label>
                                                     <input
                                                         type="text"
                                                         placeholder="Como figura en la tarjeta"
                                                         value={nombreTitular}
                                                         onChange={(e) => setNombreTitular(e.target.value)}
+                                                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
                                                         required
                                                     />
                                                 </div>
 
-                                                <div className="doble-campo">
-                                                    <div className="checkout-campo">
-                                                        <label>Vencimiento (MM/AA)</label>
+                                                <div className="grid grid-cols-2 gap-3">
+                                                    <div className="flex flex-col gap-1.5">
+                                                        <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                                                            Vencimiento (MM/AA)
+                                                        </label>
                                                         <input
                                                             type="text"
                                                             placeholder="12/28"
                                                             value={vencimiento}
                                                             onChange={(e) => handleVencimientoInput(e.target.value)}
+                                                            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all font-mono"
                                                             required
                                                         />
                                                     </div>
-                                                    <div className="checkout-campo">
-                                                        <label>CVV (3 dígitos)</label>
+                                                    <div className="flex flex-col gap-1.5">
+                                                        <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                                                            CVV (3 dígitos)
+                                                        </label>
                                                         <input
                                                             type="password"
                                                             maxLength={4}
                                                             placeholder="•••"
                                                             value={cvv}
                                                             onChange={(e) => setCvv(e.target.value.replace(/\D/g, ""))}
+                                                            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all font-mono"
                                                             required
                                                         />
                                                     </div>
@@ -746,10 +896,10 @@ function Carrito() {
 
                                         {/* Yape / Plin */}
                                         {metodoPago === "yape" && (
-                                            <div className="form-yape">
-                                                <div className="yape-qr-box">
-                                                    <div className="yape-qr-placeholder">
-                                                        <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                                            <div className="space-y-3">
+                                                <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex flex-col sm:flex-row items-center gap-4">
+                                                    <div className="flex flex-col items-center justify-center p-3 bg-white text-slate-900 rounded-xl shadow-xs border border-slate-200">
+                                                        <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                                                             <rect x="3" y="3" width="7" height="7" rx="1" />
                                                             <rect x="14" y="3" width="7" height="7" rx="1" />
                                                             <rect x="3" y="14" width="7" height="7" rx="1" />
@@ -757,22 +907,25 @@ function Carrito() {
                                                             <rect x="18" y="14" width="3" height="7" />
                                                             <rect x="14" y="18" width="3" height="3" />
                                                         </svg>
-                                                        <span>Escanear QR con Yape o Plin</span>
+                                                        <span className="text-[10px] font-bold mt-1 text-slate-700">Escanear QR</span>
                                                     </div>
-                                                    <div className="yape-datos">
-                                                        <p>Monto a transferir: <strong>S/ {total.toFixed(2)}</strong></p>
-                                                        <p>Titular: <strong>TechStore Perú S.A.C.</strong></p>
-                                                        <p>Número: <strong>+51 999 888 777</strong></p>
+                                                    <div className="text-xs text-slate-700 dark:text-slate-300 flex flex-col gap-1.5 flex-1">
+                                                        <p>Monto a transferir: <strong className="text-blue-600 dark:text-blue-400 font-mono text-sm">S/ {total.toFixed(2)}</strong></p>
+                                                        <p>Titular: <strong className="text-slate-900 dark:text-white">TechStore Perú S.A.C.</strong></p>
+                                                        <p>Número: <strong className="font-mono text-slate-900 dark:text-white">+51 999 888 777</strong></p>
                                                     </div>
                                                 </div>
-                                                <div className="checkout-campo">
-                                                    <label>Código de Operación (6 dígitos)</label>
+                                                <div className="flex flex-col gap-1.5">
+                                                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                                                        Código de Operación (6 dígitos)
+                                                    </label>
                                                     <input
                                                         type="text"
                                                         maxLength={8}
                                                         placeholder="Ej. 481920"
                                                         value={codigoYape}
                                                         onChange={(e) => setCodigoYape(e.target.value)}
+                                                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all font-mono"
                                                         required
                                                     />
                                                 </div>
@@ -781,29 +934,29 @@ function Carrito() {
 
                                         {/* Transferencia */}
                                         {metodoPago === "transferencia" && (
-                                            <div className="form-transferencia">
-                                                <div className="bancos-box">
+                                            <div className="space-y-2">
+                                                <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 text-xs text-slate-700 dark:text-slate-300 flex flex-col gap-1.5 font-mono">
                                                     <div><strong>BCP Soles:</strong> 193-48192039-0-12 (CCI: 00219300481920390123)</div>
                                                     <div><strong>BBVA Soles:</strong> 0011-0182-0200481920 (CCI: 01118200020048192011)</div>
                                                     <div><strong>Interbank:</strong> 200-3001849102 (CCI: 00320000300184910245)</div>
                                                 </div>
-                                                <p className="transf-nota">
+                                                <p className="text-xs text-slate-500 dark:text-slate-400">
                                                     Adjunta tu confirmación o realiza el abono dentro de las próximas 2 horas para despachar tu orden de inmediato.
                                                 </p>
                                             </div>
                                         )}
 
-                                        <div className="checkout-acciones">
+                                        <div className="flex gap-3 justify-end mt-5 pt-3 border-t border-slate-200 dark:border-slate-800">
                                             <button
                                                 type="button"
-                                                className="btn-ghost"
+                                                className="w-full py-2.5 px-4 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold text-xs transition-all cursor-pointer"
                                                 onClick={() => setPasoCheckout(1)}
                                             >
                                                 ← Volver a comprobante
                                             </button>
                                             <button
                                                 type="submit"
-                                                className="btn-primary-lg btn-confirmar-pago"
+                                                className="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold text-sm shadow-md hover:shadow-lg transition-all cursor-pointer"
                                                 disabled={procesandoPago}
                                             >
                                                 {procesandoPago ? "Procesando pago con entidad..." : `Confirmar y Pagar S/ ${total.toFixed(2)}`}
@@ -818,9 +971,11 @@ function Carrito() {
 
                 {/* Sugeridos */}
                 {!pedidoOk && sugeridos.length > 0 && (
-                    <section className="carrito-sugeridos">
-                        <h2>También te puede interesar</h2>
-                        <div className="sugeridos-grid">
+                    <section className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+                        <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
+                            También te puede interesar
+                        </h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                             {sugeridos.map((p) => (
                                 <ProductCard key={p.id} producto={p} />
                             ))}

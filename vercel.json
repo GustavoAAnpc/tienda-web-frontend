@@ -1,7 +1,6 @@
 {
   "rewrites": [
     {
-      "source": "/api/(.*)",
       "destination": "https://tienda-web-backend.onrender.com/api/$1"
     },
     {

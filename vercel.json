@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://tienda-web-backonrender.com/api/:path*.com"
+      "destination": "https://tienda-web-backonrender.com/api/:path*"
     },
     {
       "source": "/(.*)",
